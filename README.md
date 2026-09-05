@@ -1,6 +1,6 @@
 # Poody Business OS — Agentic AI untuk UMKM
 
-Silky Pudding 6 rasa x 2 size (M 5100/10000, L 6100/12000) + 7 topping (2rb-3rb). Target 200rb/hari.
+Poody 6 rasa x 2 size (M 5100/10000, L 6100/12000) + 7 topping (2rb-3rb). Target 200rb/hari.
 
 ## Run lokal
 ```bash

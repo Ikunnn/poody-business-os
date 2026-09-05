@@ -1,0 +1,5228 @@
+{
+  "workflows": [
+    {
+      "workflow_id": "wf_mtnqb8bl",
+      "business_id": "biz_123",
+      "objective": "Persist test workflow",
+      "priority": "high",
+      "mode": "LLM",
+      "model": "GEMINI:gemini-3.6-flash",
+      "understanding": "Mengeksekusi dan menyimpan (persist) alur kerja pengujian (test workflow) bisnis secara end-to-end untuk produk Kemeja Linen (Harga: Rp170.000, HPP: Rp95.000) dengan target pasar Wanita 25-35 tahun di Jabodetabek.",
+      "tasks": [
+        {
+          "agent": "financial_analyst",
+          "objective": "Menganalisis unit economics dasar (Gross Profit: Rp75.000) dan menentukan batas maksimum Customer Acquisition Cost (CAC ESTIMATION) agar alur pengujian tetap profitable.",
+          "priority": "high",
+          "requires_approval": false
+        },
+        {
+          "agent": "market_research",
+          "objective": "Menganalisis tren perilaku belanja dan preferensi gaya Kemeja Linen pada demografi Wanita 25-35 tahun di area Jabodetabek.",
+          "priority": "high",
+          "requires_approval": false
+        },
+        {
+          "agent": "performance_marketing",
+          "objective": "Merancang strategi dan struktur A/B testing campaign ads (Meta/TikTok Ads) untuk validasi audience Jabodetabek beserta alokasi budget testing.",
+          "priority": "high",
+          "requires_approval": true
+        },
+        {
+          "agent": "business_strategist",
+          "objective": "Menyusun KPI/SLA kriteria keberhasilan pengujian dan merumuskan SOP persistensi workflow agar bisa di-scale jika hasil test positif.",
+          "priority": "medium",
+          "requires_approval": false
+        }
+      ],
+      "next_data_needed": [
+        "Total alokasi budget pengujian (testing budget) yang disiapkan",
+        "Jumlah stok persediaan Kemeja Linen yang siap dijual saat ini",
+        "Data histori performa iklan atau conversion rate akun (jika pernah berjalan sebelumnya)"
+      ],
+      "confidence": 85,
+      "risk_note": "Margin kotor per unit berada di angka Rp75.000 (44.1%), cukup sensitif terhadap biaya CAC Ads Jabodetabek yang cenderung tinggi. Pengujian iklan wajib dibatasi budget-nya hingga CAC ideal terbukti.",
+      "status": "planning",
+      "created_at": "2026-09-05T01:53:33.921Z",
+      "created_by": "usr_mtnqau52"
+    },
+    {
+      "workflow_id": "wf_mtnwydlr",
+      "business_id": "biz_poody",
+      "objective": "Diskon 30% untuk push stok bubblemgum yang slow, butuh approve Bos",
+      "priority": "medium",
+      "mode": "LLM",
+      "model": "GEMINI:gemini-3.6-flash",
+      "understanding": "Objective: \"Business_id: biz_poody\nObjective: \"Diskon 30% untuk push stok bubblemgum yang slow, butuh approve Bos\"\nPriority: medium\n\" - MOCK (isi GEMINI_API_KEY di .env untuk LLM real gratis)",
+      "tasks": [
+        {
+          "agent": "financial_analyst",
+          "objective": "Analisis margin per produk & BEP",
+          "priority": "high",
+          "requires_approval": false
+        },
+        {
+          "agent": "performance_marketing",
+          "objective": "Analisis CAC/ROAS per channel",
+          "priority": "high",
+          "requires_approval": false
+        },
+        {
+          "agent": "business_strategist",
+          "objective": "Simulasi pricing & competitor",
+          "priority": "medium",
+          "requires_approval": true
+        }
+      ],
+      "next_data_needed": [
+        "revenue 3 bulan",
+        "HPP per produk",
+        "spend ads"
+      ],
+      "confidence": 62,
+      "note": "MOCK - tambah GEMINI_API_KEY di .env (aistudio.google.com, gratis)",
+      "status": "working",
+      "created_at": "2026-09-05T04:59:31.551Z",
+      "created_by": "usr_anon_poody",
+      "approval": {
+        "decision": "approved",
+        "reason": "ok gas",
+        "decided_by": "usr_anon_poody",
+        "decided_at": "2026-09-05T04:59:31.888Z"
+      }
+    },
+    {
+      "workflow_id": "wf_mtnwzfqk",
+      "business_id": "biz_poody",
+      "objective": "Mau omset naik dari 200rb ke 300rb per hari dalam 30 hari dengan push topping",
+      "priority": "high",
+      "mode": "LLM",
+      "model": "GEMINI:gemini-3.6-flash",
+      "understanding": "Objective: \"Business_id: biz_poody\nObjective: \"Mau omset naik dari 200rb ke 300rb per hari dalam 30 hari dengan push topping\"\nPriori\" - MOCK (isi GEMINI_API_KEY di .env untuk LLM real gratis)",
+      "tasks": [
+        {
+          "agent": "financial_analyst",
+          "objective": "Analisis margin per produk & BEP",
+          "priority": "high",
+          "requires_approval": false
+        },
+        {
+          "agent": "performance_marketing",
+          "objective": "Analisis CAC/ROAS per channel",
+          "priority": "high",
+          "requires_approval": false
+        },
+        {
+          "agent": "business_strategist",
+          "objective": "Simulasi pricing & competitor",
+          "priority": "medium",
+          "requires_approval": true
+        }
+      ],
+      "next_data_needed": [
+        "revenue 3 bulan",
+        "HPP per produk",
+        "spend ads"
+      ],
+      "confidence": 62,
+      "note": "MOCK - tambah GEMINI_API_KEY di .env (aistudio.google.com, gratis)",
+      "status": "planning",
+      "created_at": "2026-09-05T05:00:20.972Z",
+      "created_by": "usr_anon_poody"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "tsk_wf_mtnqb8bl_0",
+      "workflow_id": "wf_mtnqb8bl",
+      "business_id": "biz_123",
+      "agent": "financial_analyst",
+      "objective": "Menganalisis unit economics dasar (Gross Profit: Rp75.000) dan menentukan batas maksimum Customer Acquisition Cost (CAC ESTIMATION) agar alur pengujian tetap profitable.",
+      "priority": "high",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T01:53:33.921Z"
+    },
+    {
+      "id": "tsk_wf_mtnqb8bl_1",
+      "workflow_id": "wf_mtnqb8bl",
+      "business_id": "biz_123",
+      "agent": "market_research",
+      "objective": "Menganalisis tren perilaku belanja dan preferensi gaya Kemeja Linen pada demografi Wanita 25-35 tahun di area Jabodetabek.",
+      "priority": "high",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T01:53:33.921Z"
+    },
+    {
+      "id": "tsk_wf_mtnqb8bl_2",
+      "workflow_id": "wf_mtnqb8bl",
+      "business_id": "biz_123",
+      "agent": "performance_marketing",
+      "objective": "Merancang strategi dan struktur A/B testing campaign ads (Meta/TikTok Ads) untuk validasi audience Jabodetabek beserta alokasi budget testing.",
+      "priority": "high",
+      "requires_approval": true,
+      "status": "awaiting_approval",
+      "created_at": "2026-09-05T01:53:33.921Z"
+    },
+    {
+      "id": "tsk_wf_mtnqb8bl_3",
+      "workflow_id": "wf_mtnqb8bl",
+      "business_id": "biz_123",
+      "agent": "business_strategist",
+      "objective": "Menyusun KPI/SLA kriteria keberhasilan pengujian dan merumuskan SOP persistensi workflow agar bisa di-scale jika hasil test positif.",
+      "priority": "medium",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T01:53:33.921Z"
+    },
+    {
+      "id": "tsk_wf_mtnwydlr_0",
+      "workflow_id": "wf_mtnwydlr",
+      "business_id": "biz_poody",
+      "agent": "financial_analyst",
+      "objective": "Analisis margin per produk & BEP",
+      "priority": "high",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T04:59:31.554Z"
+    },
+    {
+      "id": "tsk_wf_mtnwydlr_1",
+      "workflow_id": "wf_mtnwydlr",
+      "business_id": "biz_poody",
+      "agent": "performance_marketing",
+      "objective": "Analisis CAC/ROAS per channel",
+      "priority": "high",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T04:59:31.554Z"
+    },
+    {
+      "id": "tsk_wf_mtnwydlr_2",
+      "workflow_id": "wf_mtnwydlr",
+      "business_id": "biz_poody",
+      "agent": "business_strategist",
+      "objective": "Simulasi pricing & competitor",
+      "priority": "medium",
+      "requires_approval": true,
+      "status": "assigned",
+      "created_at": "2026-09-05T04:59:31.554Z"
+    },
+    {
+      "id": "tsk_wf_mtnwzfqk_0",
+      "workflow_id": "wf_mtnwzfqk",
+      "business_id": "biz_poody",
+      "agent": "financial_analyst",
+      "objective": "Analisis margin per produk & BEP",
+      "priority": "high",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T05:00:20.974Z"
+    },
+    {
+      "id": "tsk_wf_mtnwzfqk_1",
+      "workflow_id": "wf_mtnwzfqk",
+      "business_id": "biz_poody",
+      "agent": "performance_marketing",
+      "objective": "Analisis CAC/ROAS per channel",
+      "priority": "high",
+      "requires_approval": false,
+      "status": "assigned",
+      "created_at": "2026-09-05T05:00:20.974Z"
+    },
+    {
+      "id": "tsk_wf_mtnwzfqk_2",
+      "workflow_id": "wf_mtnwzfqk",
+      "business_id": "biz_poody",
+      "agent": "business_strategist",
+      "objective": "Simulasi pricing & competitor",
+      "priority": "medium",
+      "requires_approval": true,
+      "status": "awaiting_approval",
+      "created_at": "2026-09-05T05:00:20.974Z"
+    }
+  ],
+  "memories": [
+    {
+      "id": "mem_mtnty59y",
+      "business_id": "biz_123",
+      "type": "episodic",
+      "key": "chat_ceo_1788579321910",
+      "value": {
+        "agent": "ceo",
+        "user": "halo bos, apakah kamu bisa menyusun iklan di meta?",
+        "reply": "Halo! Bisa banget, dong. \n\nSebagai CEO, aku nggak akan ketik iklannya manual satu-satu, tapi aku bakal koordinasiin tim specialist AI kita buat eksekusi Meta Ads kemeja linen kita (target cewek 25-35 Jabodetabek, harga 170rb):\n\n1. **Strategy Agent:** Tentukan angle penawaran (*affordable luxury*, bahan adem cocok buat Jabodetabek).\n2. **Marketing Agent:** Buat beberapa variasi *copywriting* (headline, teks) & usulan konsep visual/video.\n3. **Finance Agent:** Hitung batas maksimal CAC (Customer Acquisition Cost) biar margin dari HPP 95rb ke harga jual 170rb tetap aman dan profit.\n\nMau langsung aku perintahkan tim buat bikin *workflow* dan draf kampanye iklannya sekarang? Kalau ada promo khusus (misal: *free ongkir* atau *diskon bundling*), kasih tahu aku dulu ya!",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T03:35:21.910Z",
+      "created_by": "usr_mtnqau52"
+    },
+    {
+      "id": "mem_mtntztyy",
+      "business_id": "biz_123",
+      "type": "episodic",
+      "key": "chat_ceo_1788579400570",
+      "value": {
+        "agent": "ceo",
+        "user": "gas perintahkan tim",
+        "reply": "Siap, *boss!* Mesin langsung kita panasin, tim specialist siap bergerak. \n\nBerdasarkan posisi produk kita (**Kemeja Linen Rp170rb**, HPP **Rp95rb** -> *Margin Kotor Rp75rb/pcs*, Target: **Wanita 25-35 thn Jabodetabek**), ini instruksi langsung yang gue turunin ke tim:\n\n1. **Marketing Agent:** \n   * Disposisi: *Gaskeun* iklan Meta & TikTok ads khusus area Jabodetabek. Highlighting: *\"Kemeja linen adem, estetik, cocok buat WFH/ngantor/coffee shop.\"*\n   * Target CAC (Customer Acquisition Cost): Maksimal **Rp30.000 - Rp35.000** `[ESTIMATION - Conf: 85%]` biar kita masih mengantongi *net profit* bersih ~Rp40.000/pcs.\n2. **Strategy Agent:** \n   * Cari *gap* dari kompetitor linen lokal range Rp150rb–Rp200rb. Penetrasi angle bundling (misal: Beli 2 Rp320rb) buat naikin *Average Order Value* (AOV).\n3. **Data Agent:** \n   * *Monitoring* data konversi per jam. Pantau materi iklan (*creative*) mana yang *hook*-nya paling kuat di audiens wanita karir/young professional.\n4. **Finance Agent:** \n   * Simulasi alokasi *ad spend* harian dan *cash flow* buat *restock* bahan kalau *demand* melunjak.\n\n---\n\n**Next Steps / Butuh Input Tambahan:**\nBiar makin tajam, ada target spesifik untuk *sprint* ini? \n*(Misal: Target jualan 1.000 pcs bulan ini / Budget iklan terbatas di Rp5 juta / mau naikin conversion rate toko)*.\n\n*Note: Kalau mau gue generate breakdown detail task & workflow teknis antar divisi, tinggal ketik **\"buat workflow\"** ya.*",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T03:36:40.570Z",
+      "created_by": "usr_mtnqau52"
+    },
+    {
+      "id": "mem_mtnw4ovz",
+      "business_id": "biz_poody",
+      "type": "briefing",
+      "key": "briefing_2026-08-31",
+      "value": {
+        "text": "☀️ BRIEFING POODY — 2026-08-31 (2026-08)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — PERLU PERHATIAN\nLaba usaha -Rp 1.100.200 (HPP Rp 0 • usaha Rp 1.100.200) • sisa kas -Rp 1.100.200\nTerlaris: -\nMTD 2026-08-01–2026-08-31: omset Rp 9.406.015 (27 hari jualan, rata Rp 348.371/hari) • laba usaha Rp 918.427 • pribadi Rp 1.000.000\nAnomali: Belum ada penjualan kemarin. | Pengeluaran terbesar: PAPERBOWL Rp 425.300.\n7 hari: 08-25 Rp 0/-Rp 379.100 • 08-26 Rp 198.000/-Rp 69.600 • 08-27 Rp 286.000/Rp 59.000 • 08-28 Rp 195.000/Rp 127.000 • 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200\nSaran: Posting sosmed pagi & cek stok topping. Kontrol HPP/bahan, tunda ambil pribadi.",
+        "briefing": {
+          "business_id": "biz_poody",
+          "date": "2026-08-31",
+          "ym": "2026-08",
+          "target": 200000,
+          "day": {
+            "date": "2026-08-31",
+            "sales": [],
+            "expenses": [
+              {
+                "id": "sheet_exp_20260831_21736",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "SKM 3 SAPI 9",
+                "category": "bahan",
+                "amount": 120900,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_88893",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "EVAPORASI 3 SAPI 8",
+                "category": "bahan",
+                "amount": 115500,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_10092",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "GULAKU 2KG",
+                "category": "bahan",
+                "amount": 35000,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_32306",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "SENDOK 6 PAK",
+                "category": "bahan",
+                "amount": 90000,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_37151",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "KEJU 2KG",
+                "category": "bahan",
+                "amount": 96000,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_83776",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "OBAT",
+                "category": "operasional",
+                "amount": 33500,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_66395",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "LIQUID",
+                "category": "operasional",
+                "amount": 155000,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_83613",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "CUKUR",
+                "category": "operasional",
+                "amount": 20000,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_62029",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "PARKIR",
+                "category": "transport",
+                "amount": 9000,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              },
+              {
+                "id": "sheet_exp_20260831_80903",
+                "business_id": "biz_poody",
+                "date": "2026-08-31",
+                "title": "PAPERBOWL",
+                "category": "bahan",
+                "amount": 425300,
+                "note": "Import Sheet Agustus 2026",
+                "source": "sheet",
+                "created_at": "2026-08-31T09:00:00.000Z",
+                "created_by": "sheet_import"
+              }
+            ],
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 1100200,
+            "expPri": 0,
+            "expBiz": 1100200,
+            "netBiz": -1100200,
+            "net": -1100200,
+            "cups": 0,
+            "byVariant": {},
+            "byTopping": {},
+            "toppingRev": 0,
+            "bestV": null,
+            "bestT": null
+          },
+          "mtd": {
+            "from": "2026-08-01",
+            "to": "2026-08-31",
+            "rev": 9406015,
+            "cost": 0,
+            "profit": 9406015,
+            "expTot": 9487588,
+            "expBiz": 8487588,
+            "expPri": 1000000,
+            "netBiz": 918427,
+            "net": -81573,
+            "days": 27,
+            "avg": 348371,
+            "salesCount": 27,
+            "expCount": 120
+          },
+          "seven": [
+            {
+              "date": "2026-08-25",
+              "rev": 0,
+              "netBiz": -379100
+            },
+            {
+              "date": "2026-08-26",
+              "rev": 198000,
+              "netBiz": -69600
+            },
+            {
+              "date": "2026-08-27",
+              "rev": 286000,
+              "netBiz": 59000
+            },
+            {
+              "date": "2026-08-28",
+              "rev": 195000,
+              "netBiz": 127000
+            },
+            {
+              "date": "2026-08-29",
+              "rev": 414000,
+              "netBiz": 343000
+            },
+            {
+              "date": "2026-08-30",
+              "rev": 362000,
+              "netBiz": 299000
+            },
+            {
+              "date": "2026-08-31",
+              "rev": 0,
+              "netBiz": -1100200
+            }
+          ],
+          "anomalies": [
+            "Belum ada penjualan kemarin.",
+            "Pengeluaran terbesar: PAPERBOWL Rp 425.300."
+          ],
+          "vsTarget": "kurang Rp 200.000",
+          "health": "PERLU PERHATIAN",
+          "generated_at": "2026-09-05T04:36:26.493Z"
+        }
+      },
+      "created_at": "2026-09-05T04:36:26.495Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnw5jq2",
+      "business_id": "biz_poody",
+      "type": "briefing",
+      "key": "briefing_2026-09-04",
+      "value": {
+        "text": "☀️ BRIEFING POODY — 2026-09-04 (2026-09)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — CUKUP\nLaba usaha Rp 0 (HPP Rp 0 • usaha Rp 0) • sisa kas Rp 0\nTerlaris: -\nMTD 2026-09-01–2026-09-04: omset Rp 0 (0 hari jualan, rata Rp 0/hari) • laba usaha Rp 0\nAnomali: Belum ada penjualan kemarin.\n7 hari: 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200 • 09-01 Rp 0/Rp 0 • 09-02 Rp 0/Rp 0 • 09-03 Rp 0/Rp 0 • 09-04 Rp 0/Rp 0\nSaran: Posting sosmed pagi & cek stok topping.",
+        "briefing": {
+          "business_id": "biz_poody",
+          "date": "2026-09-04",
+          "ym": "2026-09",
+          "target": 200000,
+          "day": {
+            "date": "2026-09-04",
+            "sales": [],
+            "expenses": [],
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 0,
+            "expPri": 0,
+            "expBiz": 0,
+            "netBiz": 0,
+            "net": 0,
+            "cups": 0,
+            "byVariant": {},
+            "byTopping": {},
+            "toppingRev": 0,
+            "bestV": null,
+            "bestT": null
+          },
+          "mtd": {
+            "from": "2026-09-01",
+            "to": "2026-09-04",
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 0,
+            "expBiz": 0,
+            "expPri": 0,
+            "netBiz": 0,
+            "net": 0,
+            "days": 0,
+            "avg": 0,
+            "salesCount": 0,
+            "expCount": 0
+          },
+          "seven": [
+            {
+              "date": "2026-08-29",
+              "rev": 414000,
+              "netBiz": 343000
+            },
+            {
+              "date": "2026-08-30",
+              "rev": 362000,
+              "netBiz": 299000
+            },
+            {
+              "date": "2026-08-31",
+              "rev": 0,
+              "netBiz": -1100200
+            },
+            {
+              "date": "2026-09-01",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-02",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-03",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-04",
+              "rev": 0,
+              "netBiz": 0
+            }
+          ],
+          "anomalies": [
+            "Belum ada penjualan kemarin."
+          ],
+          "vsTarget": "kurang Rp 200.000",
+          "health": "CUKUP",
+          "generated_at": "2026-09-05T04:37:06.456Z"
+        }
+      },
+      "created_at": "2026-09-05T04:37:06.458Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnw5jui",
+      "business_id": "biz_poody",
+      "type": "briefing",
+      "key": "briefing_2026-09-04",
+      "value": {
+        "text": "☀️ BRIEFING POODY — 2026-09-04 (2026-09)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — CUKUP\nLaba usaha Rp 0 (HPP Rp 0 • usaha Rp 0) • sisa kas Rp 0\nTerlaris: -\nMTD 2026-09-01–2026-09-04: omset Rp 0 (0 hari jualan, rata Rp 0/hari) • laba usaha Rp 0\nAnomali: Belum ada penjualan kemarin.\n7 hari: 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200 • 09-01 Rp 0/Rp 0 • 09-02 Rp 0/Rp 0 • 09-03 Rp 0/Rp 0 • 09-04 Rp 0/Rp 0\nSaran: Posting sosmed pagi & cek stok topping.",
+        "briefing": {
+          "business_id": "biz_poody",
+          "date": "2026-09-04",
+          "ym": "2026-09",
+          "target": 200000,
+          "day": {
+            "date": "2026-09-04",
+            "sales": [],
+            "expenses": [],
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 0,
+            "expPri": 0,
+            "expBiz": 0,
+            "netBiz": 0,
+            "net": 0,
+            "cups": 0,
+            "byVariant": {},
+            "byTopping": {},
+            "toppingRev": 0,
+            "bestV": null,
+            "bestT": null
+          },
+          "mtd": {
+            "from": "2026-09-01",
+            "to": "2026-09-04",
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 0,
+            "expBiz": 0,
+            "expPri": 0,
+            "netBiz": 0,
+            "net": 0,
+            "days": 0,
+            "avg": 0,
+            "salesCount": 0,
+            "expCount": 0
+          },
+          "seven": [
+            {
+              "date": "2026-08-29",
+              "rev": 414000,
+              "netBiz": 343000
+            },
+            {
+              "date": "2026-08-30",
+              "rev": 362000,
+              "netBiz": 299000
+            },
+            {
+              "date": "2026-08-31",
+              "rev": 0,
+              "netBiz": -1100200
+            },
+            {
+              "date": "2026-09-01",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-02",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-03",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-04",
+              "rev": 0,
+              "netBiz": 0
+            }
+          ],
+          "anomalies": [
+            "Belum ada penjualan kemarin."
+          ],
+          "vsTarget": "kurang Rp 200.000",
+          "health": "CUKUP",
+          "generated_at": "2026-09-05T04:37:06.615Z"
+        }
+      },
+      "created_at": "2026-09-05T04:37:06.618Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnw5suy",
+      "business_id": "biz_poody",
+      "type": "briefing",
+      "key": "briefing_2026-09-04",
+      "value": {
+        "text": "☀️ BRIEFING POODY — 2026-09-04 (2026-09)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — CUKUP\nLaba usaha Rp 0 (HPP Rp 0 • usaha Rp 0) • sisa kas Rp 0\nTerlaris: -\nMTD 2026-09-01–2026-09-04: omset Rp 0 (0 hari jualan, rata Rp 0/hari) • laba usaha Rp 0\nAnomali: Belum ada penjualan kemarin.\n7 hari: 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200 • 09-01 Rp 0/Rp 0 • 09-02 Rp 0/Rp 0 • 09-03 Rp 0/Rp 0 • 09-04 Rp 0/Rp 0\nSaran: Posting sosmed pagi & cek stok topping.",
+        "briefing": {
+          "business_id": "biz_poody",
+          "date": "2026-09-04",
+          "ym": "2026-09",
+          "target": 200000,
+          "day": {
+            "date": "2026-09-04",
+            "sales": [],
+            "expenses": [],
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 0,
+            "expPri": 0,
+            "expBiz": 0,
+            "netBiz": 0,
+            "net": 0,
+            "cups": 0,
+            "byVariant": {},
+            "byTopping": {},
+            "toppingRev": 0,
+            "bestV": null,
+            "bestT": null
+          },
+          "mtd": {
+            "from": "2026-09-01",
+            "to": "2026-09-04",
+            "rev": 0,
+            "cost": 0,
+            "profit": 0,
+            "expTot": 0,
+            "expBiz": 0,
+            "expPri": 0,
+            "netBiz": 0,
+            "net": 0,
+            "days": 0,
+            "avg": 0,
+            "salesCount": 0,
+            "expCount": 0
+          },
+          "seven": [
+            {
+              "date": "2026-08-29",
+              "rev": 414000,
+              "netBiz": 343000
+            },
+            {
+              "date": "2026-08-30",
+              "rev": 362000,
+              "netBiz": 299000
+            },
+            {
+              "date": "2026-08-31",
+              "rev": 0,
+              "netBiz": -1100200
+            },
+            {
+              "date": "2026-09-01",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-02",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-03",
+              "rev": 0,
+              "netBiz": 0
+            },
+            {
+              "date": "2026-09-04",
+              "rev": 0,
+              "netBiz": 0
+            }
+          ],
+          "anomalies": [
+            "Belum ada penjualan kemarin."
+          ],
+          "vsTarget": "kurang Rp 200.000",
+          "health": "CUKUP",
+          "generated_at": "2026-09-05T04:37:18.297Z"
+        }
+      },
+      "created_at": "2026-09-05T04:37:18.298Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnwfsj7",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_ceo_1788583504435",
+      "value": {
+        "agent": "ceo",
+        "user": "Halo, omset kemarin berapa?",
+        "reply": "Halo! Untuk angka pastinya, saya perlu data pencatatan penjualan/POS kemarin nih. \n\nKalau berdasarkan tren rata-rata harian kita:\n* **Omset Kemarin:** ~Rp200.000 *(ESTIMATION - Confidence: Medium)*, atau setara penjualan sekitar 20 cup (campuran Size M dan L).\n\nBoleh tolong kirimkan rekap penjualan kemarin (berapa cup Size M & L yang keluar)? Begitu datanya ada, saya langsung minta tim **Data & Finance** buat hitung omset persis beserta profit bersihnya!",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T04:45:04.435Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnwge3o",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_financial_analyst_1788583532388",
+      "value": {
+        "agent": "financial_analyst",
+        "user": "Analisis Juli vs Agustus dong",
+        "reply": "**Saya tidak memiliki data cukup** untuk melakukan analisis keuangan komparatif antara bulan Juli dan Agustus.\n\nUntuk dapat memberikan analisis yang akurat, mohon sediakan data keuangan berikut untuk masing-masing bulan (Juli & Agustus):\n1. Total Revenue / Pendapatan\n2. HPP / COGS (Cost of Goods Sold) & Biaya Variabel\n3. Biaya Operasional & Biaya Tetap (Fixed Costs)\n4. Biaya Pemasaran & Penjualan (Marketing & Sales Expenses)\n5. Jumlah Pelanggan Baru & Total Pelanggan Aktif\n6. Harga Jual per Unit & Biaya Variabel per Unit\n7. Rata-rata Umur Pelanggan / Churn Rate\n\n---\n\n### **ESTIMASI SIMULASI (Jika Dipaksa Mengestimasi Tanpa Data)**\n*Catatan: Angka di bawah ini adalah estimasi/hipotesis semata untuk memberikan gambaran struktur analisis.*\n\n#### **1. Revenue (Pendapatan)**\n* **Juli (Est.):** Rp 100.000.000 | **Agustus (Est.):** Rp 120.000.000\n* **Rumus:** $\\text{Total Unit Terjual} \\times \\text{Harga per Unit}$\n* **Sumber:** Estimasi Asumsi Dasar\n* **Confidence Level:** 20 / 100 (Sangat Rendah - Data tidak ada)\n\n#### **2. COGS / HPP (Harga Pokok Penjualan)**\n* **Juli (Est.):** Rp 40.000.000 | **Agustus (Est.):** Rp 45.000.000\n* **Rumus:** $\\text{Biaya Bahan Baku} + \\text{Biaya Tenaga Kerja Langsung} + \\text{Overhead Pabrik}$\n* **Sumber:** Estimasi Asumsi (40% & 37.5% dari Revenue)\n* **Confidence Level:** 20 / 100\n\n#### **3. Gross Profit & Gross Profit Margin**\n* **Juli (Est.):** Rp 60.000.000 (Margin: 60%)\n* **Agustus (Est.):** Rp 75.000.000 (Margin: 62.5%)\n* **Rumus:** \n  * $\\text{Gross Profit} = \\text{Revenue} - \\text{COGS}$\n  * $\\text{Gross Margin} = \\left(\\frac{\\text{Gross Profit}}{\\text{Revenue}}\\right) \\times 100\\%$\n* **Sumber:** Kalkulasi Simulasi\n* **Confidence Level:** 20 / 100\n\n#### **4. Contribution Margin**\n* **Juli (Est.):** Rp 55.000.000 (55%) | **Agustus (Est.):** Rp 70.000.000 (58.3%)\n* **Rumus:** $\\text{Revenue} - \\text{Total Biaya Variabel}$\n* **Sumber:** Kalkulasi Simulasi\n* **Confidence Level:** 20 / 100\n\n#### **5. Net Profit & Net Profit Margin**\n* **Juli (Est.):** Rp 20.000.000 (Margin: 20%)\n* **Agustus (Est.):** Rp 30.000.000 (Margin: 25%)\n* **Rumus:** \n  * $\\text{Net Profit} = \\text{Gross Profit} - \\text{Biaya Operasional (Biaya Tetap)}$\n  * $\\text{Net Margin} = \\left(\\frac{\\text{Net Profit}}{\\text{Revenue}}\\right) \\times 100\\%$\n* **Sumber:** Kalkulasi Simulasi (Biaya Tetap diamsusikan Rp 40.000.000/bulan)\n* **Confidence Level:** 20 / 100\n\n#### **6. BEP (Break-Even Point) dalam Rupiah**\n* **Juli (Est.):** Rp 72.727.272\n* **Agustus (Est.):** Rp 68.610.634\n* **Rumus:** $\\frac{\\text{Biaya Tetap}}{\\text{Contribution Margin Ratio}}$\n* **Sumber:** Kalkulasi Simulasi\n* **Confidence Level:** 20 / 100\n\n#### **7. CAC (Customer Acquisition Cost)**\n* **Juli (Est.):** Rp 100.000 / pelanggan baru\n* **Agustus (Est.):** Rp 90.000 / pelanggan baru\n* **Rumus:** $\\frac{\\text{Total Biaya Pemasaran \\& Penjualan}}{\\text{Jumlah Pelanggan Baru}}$\n* **Sumber:** Estimasi Asumsi\n* **Confidence Level:** 15 / 100\n\n#### **8. LTV (Customer Lifetime Value)**\n* **Juli (Est.):** Rp 600.000 / pelanggan\n* **Agustus (Est.):** Rp 650.000 / pelanggan\n* **Rumus:** $\\text{Rata-rata Profit Margin per Pelanggan} \\times \\text{Rata-rata Masa Retention}$\n* **Sumber:** Estimasi Asumsi\n* **Confidence Level:** 15 / 100\n\n---\n\n**Silakan kirimkan data aktual Anda agar saya dapat menyajikan analisis presisi tinggi (Confidence > 90%).**",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T04:45:32.388Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnwhr70",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_ceo_1788583596012",
+      "value": {
+        "agent": "ceo",
+        "user": "bos kenapa bulan agustus bisa rugi",
+        "reply": "Halo! Wah, mari kita bedah sama-sama kenapa bulan Agustus kemarin bisa sampai *minus*.\n\nSecara kalkulasi dasar, margin kotor Poody ini sebenarnya lumayan sehat (sekitar 49%). Kalau rata-rata omset Rp200.000/hari (~Rp6.000.000/bulan), estimasi margin kotor yang didapat sekitar **Rp2.940.000 - Rp3.000.000** `[ESTIMATION - Confidence: High]`.\n\nKalau sampai rugi di bulan Agustus, ada beberapa hipotesis utama dari saya:\n\n---\n\n### **Hipotesis Penyebab Rugi:**\n1. **Beban Operasional/Fixed Cost Membengkak:** Biaya sewa, listrik, promo/diskon yang terlalu agresif, atau ongkir yang tidak ter-cover memakan habis seluruh margin kotor.\n2. **Penjualan Drop di Bawah BEP (Break-Even Point):** Volume penjualan harian turun drastis di bawah rata-rata 20 cup/hari.\n3. **Bahan Terbuang (*Waste/Spoilage*):** Karena produk *fresh dessert*, ada potensi stok terbuang yang HPP-nya tetap terhitung sebagai beban.\n\n---\n\n### **Data yang Saya Butuhkan:**\nAgar analisisnya akurat dan tidak asal tebak, tolong kirimkan data berikut:\n1. **Total Penjualan Agustus:** Jumlah cup terjuual (Size M & L) serta breakdown rasanya.\n2. **Rincian Biaya Operasional Agustus:** Sewa, listrik, pemasaran/ads, promo, dan biaya tak terduga lainnya.\n3. **Data Waste:** Jumlah produk/bahan baku yang rusak atau kadaluarsa selama Agustus.\n\n---\n\n### **Next Steps:**\n1. **Delegasi ke Finance Agent:** Audit laporan arus kas & hitung BEP aktual bulan Agustus begitu datanya siap.\n2. **Delegasi ke Data & Marketing Agent:** Cek efektivitas promo dan analisis varian rasa yang kurang laku (*slow-moving*).\n3. **Action Plan Efisiensi:** Buat strategi penyesuaian operasional agar September langsung *turnaround* balik profit.\n\nKirim datanya ya, nanti langsung saya perintahkan tim specialist buat bedah detailnya!",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T04:46:36.012Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnwk6py",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_ceo_1788583709446",
+      "value": {
+        "agent": "ceo",
+        "user": "Halo, omset kemarin berapa?",
+        "reply": "{\n  \"understanding\": \"Objective: \\\"Konteks: Kamu CEO Agent Poody Silky Pudding (UMKM dessert). Katalog: 6 rasa chocolatte/matcha/mango/strawberry/taro/bubb\\\" - MOCK (isi GEMINI_API_KEY di .env untuk LLM real gratis)\",\n  \"tasks\": [\n    {\n      \"agent\": \"financial_analyst\",\n      \"objective\": \"Analisis margin per produk & BEP\",\n      \"priority\": \"high\",\n      \"requires_approval\": false\n    },\n    {\n      \"agent\": \"performance_marketing\",\n      \"objective\": \"Analisis CAC/ROAS per channel\",\n      \"priority\": \"high\",\n      \"requires_approval\": false\n    },\n    {\n      \"agent\": \"business_strategist\",\n      \"objective\": \"Simulasi pricing & competitor\",\n      \"priority\": \"medium\",\n      \"requires_approval\": true\n    }\n  ],\n  \"next_data_needed\": [\n    \"revenue 3 bulan\",\n    \"HPP per produk\",\n    \"spend ads\"\n  ],\n  \"confidence\": 62,\n  \"note\": \"MOCK - tambah GEMINI_API_KEY di .env (aistudio.google.com, gratis)\"\n}",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T04:48:29.446Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnwk6vp",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_financial_analyst_1788583709653",
+      "value": {
+        "agent": "financial_analyst",
+        "user": "Analisis Juli vs Agustus dong, laba usaha gimana?",
+        "reply": "[MOCK financial_analyst] Gemini error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 29.633118751s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"model\":\"gemini-3.6-flash\",\"location\":\"global\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"29s\"}]",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T04:48:29.653Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnx83n6",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_ceo_1788584825202",
+      "value": {
+        "agent": "ceo",
+        "user": "topping mana paling cuan?",
+        "reply": "{\n  \"understanding\": \"Objective: \\\"Konteks: Kamu CEO Agent Poody Silky Pudding (UMKM dessert). Katalog: 6 rasa chocolatte/matcha/mango/strawberry/taro/bubb\\\" - MOCK (isi GEMINI_API_KEY di .env untuk LLM real gratis)\",\n  \"tasks\": [\n    {\n      \"agent\": \"financial_analyst\",\n      \"objective\": \"Analisis margin per produk & BEP\",\n      \"priority\": \"high\",\n      \"requires_approval\": false\n    },\n    {\n      \"agent\": \"performance_marketing\",\n      \"objective\": \"Analisis CAC/ROAS per channel\",\n      \"priority\": \"high\",\n      \"requires_approval\": false\n    },\n    {\n      \"agent\": \"business_strategist\",\n      \"objective\": \"Simulasi pricing & competitor\",\n      \"priority\": \"medium\",\n      \"requires_approval\": true\n    }\n  ],\n  \"next_data_needed\": [\n    \"revenue 3 bulan\",\n    \"HPP per produk\",\n    \"spend ads\"\n  ],\n  \"confidence\": 62,\n  \"note\": \"MOCK - tambah GEMINI_API_KEY di .env (aistudio.google.com, gratis)\"\n}",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T05:07:05.202Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "mem_mtnx8bmd",
+      "business_id": "biz_poody",
+      "type": "episodic",
+      "key": "chat_financial_analyst_1788584835541",
+      "value": {
+        "agent": "financial_analyst",
+        "user": "topping mana paling cuan? bandingkan keju vs oreo",
+        "reply": "[MOCK financial_analyst] Gemini error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 43.743077617s. [{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.6-flash\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"43s\"}]",
+        "model": "GEMINI:gemini-3.6-flash"
+      },
+      "created_at": "2026-09-05T05:07:15.541Z",
+      "created_by": "usr_anon_poody"
+    }
+  ],
+  "metrics": [],
+  "businesses": [
+    {
+      "id": "biz_123",
+      "name": "Brand Fashion A"
+    },
+    {
+      "id": "biz_poody",
+      "name": "Poody Silky Pudding",
+      "type": "F&B Dessert",
+      "avg_daily_revenue": 200000
+    }
+  ],
+  "catalog": {
+    "business": {
+      "id": "biz_poody",
+      "name": "Poody Silky Pudding",
+      "type": "F&B Dessert",
+      "avg_daily_revenue": 200000
+    },
+    "variants": [
+      "chocolatte",
+      "matcha",
+      "mango",
+      "strawberry",
+      "taro",
+      "bubblemgum"
+    ],
+    "sizes": {
+      "M": {
+        "label": "Size M",
+        "hpp": 5100,
+        "price": 10000,
+        "profit": 4900
+      },
+      "L": {
+        "label": "Size L",
+        "hpp": 6100,
+        "price": 12000,
+        "profit": 5900
+      }
+    },
+    "toppings": {
+      "keju": {
+        "label": "Keju",
+        "price": 2000,
+        "hpp": 900,
+        "profit": 1100
+      },
+      "oreo crumb": {
+        "label": "Oreo Crumb",
+        "price": 2000,
+        "hpp": 900,
+        "profit": 1100
+      },
+      "red velvet crumb": {
+        "label": "Red Velvet Crumb",
+        "price": 3000,
+        "hpp": 1300,
+        "profit": 1700
+      },
+      "matcha crumb": {
+        "label": "Matcha Crumb",
+        "price": 3000,
+        "hpp": 1300,
+        "profit": 1700
+      },
+      "regal crumb": {
+        "label": "Regal Crumb",
+        "price": 3000,
+        "hpp": 1200,
+        "profit": 1800
+      },
+      "froot loops": {
+        "label": "Froot Loops",
+        "price": 3000,
+        "hpp": 1400,
+        "profit": 1600
+      },
+      "koko krunch": {
+        "label": "Koko Krunch",
+        "price": 3000,
+        "hpp": 1400,
+        "profit": 1600
+      }
+    }
+  },
+  "sales": [
+    {
+      "id": "sheet_sale_20260706_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-06",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 37,
+          "price": 11135,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11135,
+          "unit_hpp": 0,
+          "revenue": 412000,
+          "cost": 0,
+          "profit": 412000
+        }
+      ],
+      "revenue": 412000,
+      "cost": 0,
+      "profit": 412000,
+      "total_cups": 37,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-06T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260707_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-07",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 16,
+          "price": 10750,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10750,
+          "unit_hpp": 0,
+          "revenue": 172000,
+          "cost": 0,
+          "profit": 172000
+        }
+      ],
+      "revenue": 172000,
+      "cost": 0,
+      "profit": 172000,
+      "total_cups": 16,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-07T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260708_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-08",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 15,
+          "price": 10933,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10933,
+          "unit_hpp": 0,
+          "revenue": 164000,
+          "cost": 0,
+          "profit": 164000
+        }
+      ],
+      "revenue": 164000,
+      "cost": 0,
+      "profit": 164000,
+      "total_cups": 15,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-08T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260709_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-09",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 16,
+          "price": 10813,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10813,
+          "unit_hpp": 0,
+          "revenue": 173000,
+          "cost": 0,
+          "profit": 173000
+        }
+      ],
+      "revenue": 173000,
+      "cost": 0,
+      "profit": 173000,
+      "total_cups": 16,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-09T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260710_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-10",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 18,
+          "price": 10944,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10944,
+          "unit_hpp": 0,
+          "revenue": 197000,
+          "cost": 0,
+          "profit": 197000
+        }
+      ],
+      "revenue": 197000,
+      "cost": 0,
+      "profit": 197000,
+      "total_cups": 18,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-10T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260711_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-11",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 28,
+          "price": 10857,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10857,
+          "unit_hpp": 0,
+          "revenue": 304000,
+          "cost": 0,
+          "profit": 304000
+        }
+      ],
+      "revenue": 304000,
+      "cost": 0,
+      "profit": 304000,
+      "total_cups": 28,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-11T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260712_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-12",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 28,
+          "price": 11107,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11107,
+          "unit_hpp": 0,
+          "revenue": 311000,
+          "cost": 0,
+          "profit": 311000
+        }
+      ],
+      "revenue": 311000,
+      "cost": 0,
+      "profit": 311000,
+      "total_cups": 28,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-12T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260714_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 18,
+          "price": 10722,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10722,
+          "unit_hpp": 0,
+          "revenue": 193000,
+          "cost": 0,
+          "profit": 193000
+        }
+      ],
+      "revenue": 193000,
+      "cost": 0,
+      "profit": 193000,
+      "total_cups": 18,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260715_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-15",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 10,
+          "price": 10900,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10900,
+          "unit_hpp": 0,
+          "revenue": 109000,
+          "cost": 0,
+          "profit": 109000
+        }
+      ],
+      "revenue": 109000,
+      "cost": 0,
+      "profit": 109000,
+      "total_cups": 10,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-15T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260716_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-16",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 4,
+          "price": 10750,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10750,
+          "unit_hpp": 0,
+          "revenue": 43000,
+          "cost": 0,
+          "profit": 43000
+        }
+      ],
+      "revenue": 43000,
+      "cost": 0,
+      "profit": 43000,
+      "total_cups": 4,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-16T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260717_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-17",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 5,
+          "price": 11600,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11600,
+          "unit_hpp": 0,
+          "revenue": 58000,
+          "cost": 0,
+          "profit": 58000
+        }
+      ],
+      "revenue": 58000,
+      "cost": 0,
+      "profit": 58000,
+      "total_cups": 5,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-17T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260718_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-18",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 25,
+          "price": 10800,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10800,
+          "unit_hpp": 0,
+          "revenue": 270000,
+          "cost": 0,
+          "profit": 270000
+        }
+      ],
+      "revenue": 270000,
+      "cost": 0,
+      "profit": 270000,
+      "total_cups": 25,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-18T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260719_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-19",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 22,
+          "price": 10909,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10909,
+          "unit_hpp": 0,
+          "revenue": 240000,
+          "cost": 0,
+          "profit": 240000
+        }
+      ],
+      "revenue": 240000,
+      "cost": 0,
+      "profit": 240000,
+      "total_cups": 22,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-19T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260721_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-21",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 18,
+          "price": 11278,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11278,
+          "unit_hpp": 0,
+          "revenue": 203000,
+          "cost": 0,
+          "profit": 203000
+        }
+      ],
+      "revenue": 203000,
+      "cost": 0,
+      "profit": 203000,
+      "total_cups": 18,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-21T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260722_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-22",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 12,
+          "price": 11000,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11000,
+          "unit_hpp": 0,
+          "revenue": 132000,
+          "cost": 0,
+          "profit": 132000
+        }
+      ],
+      "revenue": 132000,
+      "cost": 0,
+      "profit": 132000,
+      "total_cups": 12,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-22T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260723_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-23",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 21,
+          "price": 11048,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11048,
+          "unit_hpp": 0,
+          "revenue": 232000,
+          "cost": 0,
+          "profit": 232000
+        }
+      ],
+      "revenue": 232000,
+      "cost": 0,
+      "profit": 232000,
+      "total_cups": 21,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-23T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260724_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-24",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 17,
+          "price": 11294,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11294,
+          "unit_hpp": 0,
+          "revenue": 192000,
+          "cost": 0,
+          "profit": 192000
+        }
+      ],
+      "revenue": 192000,
+      "cost": 0,
+      "profit": 192000,
+      "total_cups": 17,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-24T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260725_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-25",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 27,
+          "price": 11111,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11111,
+          "unit_hpp": 0,
+          "revenue": 300000,
+          "cost": 0,
+          "profit": 300000
+        }
+      ],
+      "revenue": 300000,
+      "cost": 0,
+      "profit": 300000,
+      "total_cups": 27,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-25T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260726_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-26",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 23,
+          "price": 11087,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11087,
+          "unit_hpp": 0,
+          "revenue": 255000,
+          "cost": 0,
+          "profit": 255000
+        }
+      ],
+      "revenue": 255000,
+      "cost": 0,
+      "profit": 255000,
+      "total_cups": 23,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-26T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260729_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-29",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 28,
+          "price": 10893,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10893,
+          "unit_hpp": 0,
+          "revenue": 305000,
+          "cost": 0,
+          "profit": 305000
+        }
+      ],
+      "revenue": 305000,
+      "cost": 0,
+      "profit": 305000,
+      "total_cups": 28,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-29T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260730_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-30",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 29,
+          "price": 11000,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11000,
+          "unit_hpp": 0,
+          "revenue": 319000,
+          "cost": 0,
+          "profit": 319000
+        }
+      ],
+      "revenue": 319000,
+      "cost": 0,
+      "profit": 319000,
+      "total_cups": 29,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-30T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260731_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-31",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 37,
+          "price": 10892,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10892,
+          "unit_hpp": 0,
+          "revenue": 403000,
+          "cost": 0,
+          "profit": 403000
+        }
+      ],
+      "revenue": 403000,
+      "cost": 0,
+      "profit": 403000,
+      "total_cups": 37,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-31T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260801_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-01",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 31,
+          "price": 11161,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11161,
+          "unit_hpp": 0,
+          "revenue": 346000,
+          "cost": 0,
+          "profit": 346000
+        }
+      ],
+      "revenue": 346000,
+      "cost": 0,
+      "profit": 346000,
+      "total_cups": 31,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-01T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260803_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 26,
+          "price": 10846,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10846,
+          "unit_hpp": 0,
+          "revenue": 282000,
+          "cost": 0,
+          "profit": 282000
+        }
+      ],
+      "revenue": 282000,
+      "cost": 0,
+      "profit": 282000,
+      "total_cups": 26,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260804_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-04",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 35,
+          "price": 10857,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10857,
+          "unit_hpp": 0,
+          "revenue": 380000,
+          "cost": 0,
+          "profit": 380000
+        }
+      ],
+      "revenue": 380000,
+      "cost": 0,
+      "profit": 380000,
+      "total_cups": 35,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-04T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260805_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-05",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 28,
+          "price": 10893,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10893,
+          "unit_hpp": 0,
+          "revenue": 305000,
+          "cost": 0,
+          "profit": 305000
+        }
+      ],
+      "revenue": 305000,
+      "cost": 0,
+      "profit": 305000,
+      "total_cups": 28,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-05T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260806_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-06",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 32,
+          "price": 10844,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10844,
+          "unit_hpp": 0,
+          "revenue": 347000,
+          "cost": 0,
+          "profit": 347000
+        }
+      ],
+      "revenue": 347000,
+      "cost": 0,
+      "profit": 347000,
+      "total_cups": 32,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-06T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260807_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 38,
+          "price": 10947,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10947,
+          "unit_hpp": 0,
+          "revenue": 416000,
+          "cost": 0,
+          "profit": 416000
+        }
+      ],
+      "revenue": 416000,
+      "cost": 0,
+      "profit": 416000,
+      "total_cups": 38,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260808_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-08",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 49,
+          "price": 10927,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10927,
+          "unit_hpp": 0,
+          "revenue": 535400,
+          "cost": 0,
+          "profit": 535400
+        }
+      ],
+      "revenue": 535400,
+      "cost": 0,
+      "profit": 535400,
+      "total_cups": 49,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-08T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260811_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-11",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 21,
+          "price": 10857,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10857,
+          "unit_hpp": 0,
+          "revenue": 228000,
+          "cost": 0,
+          "profit": 228000
+        }
+      ],
+      "revenue": 228000,
+      "cost": 0,
+      "profit": 228000,
+      "total_cups": 21,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-11T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260812_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-12",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 25,
+          "price": 10840,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10840,
+          "unit_hpp": 0,
+          "revenue": 271000,
+          "cost": 0,
+          "profit": 271000
+        }
+      ],
+      "revenue": 271000,
+      "cost": 0,
+      "profit": 271000,
+      "total_cups": 25,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-12T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260813_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-13",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 21,
+          "price": 10810,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10810,
+          "unit_hpp": 0,
+          "revenue": 227000,
+          "cost": 0,
+          "profit": 227000
+        }
+      ],
+      "revenue": 227000,
+      "cost": 0,
+      "profit": 227000,
+      "total_cups": 21,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-13T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260814_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-14",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 24,
+          "price": 11125,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11125,
+          "unit_hpp": 0,
+          "revenue": 267000,
+          "cost": 0,
+          "profit": 267000
+        }
+      ],
+      "revenue": 267000,
+      "cost": 0,
+      "profit": 267000,
+      "total_cups": 24,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-14T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260815_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-15",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 36,
+          "price": 11056,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11056,
+          "unit_hpp": 0,
+          "revenue": 398000,
+          "cost": 0,
+          "profit": 398000
+        }
+      ],
+      "revenue": 398000,
+      "cost": 0,
+      "profit": 398000,
+      "total_cups": 36,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-15T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260816_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-16",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 32,
+          "price": 11125,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11125,
+          "unit_hpp": 0,
+          "revenue": 356000,
+          "cost": 0,
+          "profit": 356000
+        }
+      ],
+      "revenue": 356000,
+      "cost": 0,
+      "profit": 356000,
+      "total_cups": 32,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-16T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260817_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-17",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 32,
+          "price": 10938,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10938,
+          "unit_hpp": 0,
+          "revenue": 350000,
+          "cost": 0,
+          "profit": 350000
+        }
+      ],
+      "revenue": 350000,
+      "cost": 0,
+      "profit": 350000,
+      "total_cups": 32,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-17T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260818_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 89,
+          "price": 10996,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10996,
+          "unit_hpp": 0,
+          "revenue": 978615,
+          "cost": 0,
+          "profit": 978615
+        }
+      ],
+      "revenue": 978615,
+      "cost": 0,
+      "profit": 978615,
+      "total_cups": 89,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260819_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-19",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 23,
+          "price": 10957,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10957,
+          "unit_hpp": 0,
+          "revenue": 252000,
+          "cost": 0,
+          "profit": 252000
+        }
+      ],
+      "revenue": 252000,
+      "cost": 0,
+      "profit": 252000,
+      "total_cups": 23,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-19T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260820_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-20",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 24,
+          "price": 11208,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11208,
+          "unit_hpp": 0,
+          "revenue": 269000,
+          "cost": 0,
+          "profit": 269000
+        }
+      ],
+      "revenue": 269000,
+      "cost": 0,
+      "profit": 269000,
+      "total_cups": 24,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-20T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260821_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-21",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 12,
+          "price": 11167,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11167,
+          "unit_hpp": 0,
+          "revenue": 134000,
+          "cost": 0,
+          "profit": 134000
+        }
+      ],
+      "revenue": 134000,
+      "cost": 0,
+      "profit": 134000,
+      "total_cups": 12,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-21T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260822_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-22",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 39,
+          "price": 10923,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10923,
+          "unit_hpp": 0,
+          "revenue": 426000,
+          "cost": 0,
+          "profit": 426000
+        }
+      ],
+      "revenue": 426000,
+      "cost": 0,
+      "profit": 426000,
+      "total_cups": 39,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-22T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260823_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-23",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 33,
+          "price": 10879,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10879,
+          "unit_hpp": 0,
+          "revenue": 359000,
+          "cost": 0,
+          "profit": 359000
+        }
+      ],
+      "revenue": 359000,
+      "cost": 0,
+      "profit": 359000,
+      "total_cups": 33,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-23T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260824_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-24",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 27,
+          "price": 11111,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11111,
+          "unit_hpp": 0,
+          "revenue": 300000,
+          "cost": 0,
+          "profit": 300000
+        }
+      ],
+      "revenue": 300000,
+      "cost": 0,
+      "profit": 300000,
+      "total_cups": 27,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-24T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260826_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 44,
+          "price": 11000,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 11000,
+          "unit_hpp": 0,
+          "revenue": 484000,
+          "cost": 0,
+          "profit": 484000
+        }
+      ],
+      "revenue": 484000,
+      "cost": 0,
+      "profit": 484000,
+      "total_cups": 44,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260828_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-28",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 18,
+          "price": 10833,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10833,
+          "unit_hpp": 0,
+          "revenue": 195000,
+          "cost": 0,
+          "profit": 195000
+        }
+      ],
+      "revenue": 195000,
+      "cost": 0,
+      "profit": 195000,
+      "total_cups": 18,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-28T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260829_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-29",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 38,
+          "price": 10895,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10895,
+          "unit_hpp": 0,
+          "revenue": 414000,
+          "cost": 0,
+          "profit": 414000
+        }
+      ],
+      "revenue": 414000,
+      "cost": 0,
+      "profit": 414000,
+      "total_cups": 38,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-29T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_sale_20260830_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-30",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 33,
+          "price": 10970,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10970,
+          "unit_hpp": 0,
+          "revenue": 362000,
+          "cost": 0,
+          "profit": 362000
+        }
+      ],
+      "revenue": 362000,
+      "cost": 0,
+      "profit": 362000,
+      "total_cups": 33,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-30T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sale_mtnue6fv",
+      "business_id": "biz_poody",
+      "date": "2026-09-05",
+      "items": [
+        {
+          "variant": "chocolatte",
+          "size": "M",
+          "qty": 5,
+          "price": 10000,
+          "hpp": 5100,
+          "revenue": 50000,
+          "cost": 25500,
+          "profit": 24500
+        },
+        {
+          "variant": "matcha",
+          "size": "L",
+          "qty": 3,
+          "price": 12000,
+          "hpp": 6100,
+          "revenue": 36000,
+          "cost": 18300,
+          "profit": 17700
+        },
+        {
+          "variant": "mango",
+          "size": "M",
+          "qty": 2,
+          "price": 10000,
+          "hpp": 5100,
+          "revenue": 20000,
+          "cost": 10200,
+          "profit": 9800
+        },
+        {
+          "variant": "taro",
+          "size": "L",
+          "qty": 1,
+          "price": 12000,
+          "hpp": 6100,
+          "revenue": 12000,
+          "cost": 6100,
+          "profit": 5900
+        }
+      ],
+      "revenue": 118000,
+      "cost": 60100,
+      "profit": 57900,
+      "total_cups": 11,
+      "note": "",
+      "created_at": "2026-09-05T03:47:49.915Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "sale_mtnuksd8",
+      "business_id": "biz_poody",
+      "date": "2026-09-05",
+      "items": [
+        {
+          "variant": "strawberry",
+          "size": "M",
+          "qty": 1,
+          "price": 10000,
+          "hpp": 5100,
+          "revenue": 10000,
+          "cost": 5100,
+          "profit": 4900
+        }
+      ],
+      "revenue": 10000,
+      "cost": 5100,
+      "profit": 4900,
+      "total_cups": 1,
+      "note": "",
+      "created_at": "2026-09-05T03:52:58.268Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "sale_mtnusaj5",
+      "business_id": "biz_poody",
+      "date": "2026-09-05",
+      "items": [
+        {
+          "variant": "chocolatte",
+          "size": "M",
+          "qty": 2,
+          "price": 10000,
+          "hpp": 5100,
+          "toppings": [
+            "keju",
+            "oreo crumb"
+          ],
+          "topping_price": 4000,
+          "topping_hpp": 1800,
+          "unit_price": 14000,
+          "unit_hpp": 6900,
+          "revenue": 28000,
+          "cost": 13800,
+          "profit": 14200
+        },
+        {
+          "variant": "mango",
+          "size": "L",
+          "qty": 1,
+          "price": 12000,
+          "hpp": 6100,
+          "toppings": [
+            "regal crumb"
+          ],
+          "topping_price": 3000,
+          "topping_hpp": 1200,
+          "unit_price": 15000,
+          "unit_hpp": 7300,
+          "revenue": 15000,
+          "cost": 7300,
+          "profit": 7700
+        }
+      ],
+      "revenue": 43000,
+      "cost": 21100,
+      "profit": 21900,
+      "total_cups": 3,
+      "note": "",
+      "created_at": "2026-09-05T03:58:48.401Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "sheet_sale_20260908_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "items": [
+        {
+          "variant": "import-mix",
+          "size": "M",
+          "qty": 48,
+          "price": 10917,
+          "hpp": 0,
+          "toppings": [],
+          "topping_price": 0,
+          "topping_hpp": 0,
+          "unit_price": 10917,
+          "unit_hpp": 0,
+          "revenue": 524000,
+          "cost": 0,
+          "profit": 524000
+        }
+      ],
+      "revenue": 524000,
+      "cost": 0,
+      "profit": 524000,
+      "total_cups": 48,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T08:00:00.000Z",
+      "created_by": "sheet_sync"
+    }
+  ],
+  "expenses": [
+    {
+      "id": "sheet_exp_20260705_791_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] LISTRIK",
+      "category": "utilitas",
+      "amount": 50000,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260705_862_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] AZZUMAR",
+      "category": "operasional",
+      "amount": 276500,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260705_797_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] TOPPING",
+      "category": "bahan",
+      "amount": 93000,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260705_899_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] ICE CREAM",
+      "category": "bahan",
+      "amount": 172000,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260705_1319_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] STANDING BANNER",
+      "category": "operasional",
+      "amount": 36000,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260705_1090_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] PAPPER BOWL",
+      "category": "bahan",
+      "amount": 123000,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260705_822_AWAL",
+      "business_id": "biz_poody",
+      "date": "2026-07-05",
+      "title": "[AWAL] ICE PACK",
+      "category": "operasional",
+      "amount": 204000,
+      "note": "PENGELUARAN AWAL JULI (sheet col 9-11)",
+      "source": "sheet",
+      "created_at": "2026-07-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260710_820_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-10",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 107100,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-10T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260710_941_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-10",
+      "title": "EVAPORASI",
+      "category": "bahan",
+      "amount": 74800,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-10T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260711_1005_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-11",
+      "title": "NASI PADANG",
+      "category": "operasional",
+      "amount": 34000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-11T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260711_841_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-11",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 494823,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-11T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260712_1078_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-12",
+      "title": "SAMPAH LAPAK",
+      "category": "sewa",
+      "amount": 12000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-12T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260712_606_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-12",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 28000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-12T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_1410_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "TOPPING. PLASTIK",
+      "category": "bahan",
+      "amount": 83000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_817_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 102300,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_681_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "ES BATU",
+      "category": "bahan",
+      "amount": 5000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_651_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "PARKIR",
+      "category": "transport",
+      "amount": 2000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_1112_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "PAPPER BOWL",
+      "category": "bahan",
+      "amount": 258832,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_824_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 223006,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260714_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-14",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260715_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-15",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-15T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260715_725_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-15",
+      "title": "ES BATU",
+      "category": "bahan",
+      "amount": 10000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-15T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260716_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-16",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-16T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260716_1441_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-16",
+      "title": "SEWA TITIP BARANG",
+      "category": "sewa",
+      "amount": 75000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-16T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260717_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-17",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-17T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260718_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-18",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260718_599_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-18",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 12000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260719_901_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-19",
+      "title": "ICE CREAM",
+      "category": "bahan",
+      "amount": 216300,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-19T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260719_1069_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-19",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 10000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-19T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260720_701_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-20",
+      "title": "SENDOK",
+      "category": "bahan",
+      "amount": 27000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260720_550_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-20",
+      "title": "OREO",
+      "category": "bahan",
+      "amount": 10000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260720_946_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-20",
+      "title": "EVAPORASI",
+      "category": "bahan",
+      "amount": 89700,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260720_777_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-20",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 62600,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260720_779_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-20",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 44800,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260721_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-21",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-21T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260722_759_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-22",
+      "title": "CREAMER",
+      "category": "bahan",
+      "amount": 17000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-22T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260723_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-23",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-23T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260724_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-24",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260724_557_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-24",
+      "title": "KEJU",
+      "category": "bahan",
+      "amount": 95000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260724_550_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-24",
+      "title": "OREO",
+      "category": "bahan",
+      "amount": 10000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260724_1042_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-24",
+      "title": "FROOTLOOPS",
+      "category": "bahan",
+      "amount": 29000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260724_839_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-24",
+      "title": "AIR MINUM",
+      "category": "operasional",
+      "amount": 5000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260725_602_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-25",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 24000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-25T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260725_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-25",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-25T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260725_785_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-25",
+      "title": "ES KRIM",
+      "category": "bahan",
+      "amount": 150000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-25T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260725_979_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-25",
+      "title": "MAIN TGL 20",
+      "category": "pribadi",
+      "amount": 500000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-25T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260725_750_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-25",
+      "title": "LIQUID",
+      "category": "bahan",
+      "amount": 150000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-25T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260726_1073_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-26",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 14000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260726_598_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-26",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 20000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260726_1338_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-26",
+      "title": "PLASTIK & SENDOK",
+      "category": "bahan",
+      "amount": 17000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260727_810_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-27",
+      "title": "CREAMER",
+      "category": "bahan",
+      "amount": 164000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-27T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260727_1045_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-27",
+      "title": "FROOTLOOPS",
+      "category": "bahan",
+      "amount": 86000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-27T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260727_781_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-27",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 76500,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-27T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260727_980_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-27",
+      "title": "KEPERLUAN",
+      "category": "operasional",
+      "amount": 139000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-27T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260727_780_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-27",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 89000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-27T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260728_774_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-28",
+      "title": "CREAMER",
+      "category": "bahan",
+      "amount": 59900,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-28T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260729_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-29",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-29T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260729_701_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-29",
+      "title": "SENDOK",
+      "category": "bahan",
+      "amount": 36000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-29T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260730_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-30",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-30T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260731_781_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-31",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 28800,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260731_757_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-31",
+      "title": "ESKRIM",
+      "category": "operasional",
+      "amount": 143200,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260731_989_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-31",
+      "title": "PAPERBOWL",
+      "category": "bahan",
+      "amount": 147500,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260731_1027_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-31",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260731_597_JUL-26",
+      "business_id": "biz_poody",
+      "date": "2026-07-31",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 10000,
+      "note": "Import JUL-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-07-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260801_1551_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-01",
+      "title": "EVAPORASI & PUDDING",
+      "category": "bahan",
+      "amount": 40000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260801_1027_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-01",
+      "title": "LAPAK HARIAN",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260801_599_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-01",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 12000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-01T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260802_1603_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-02",
+      "title": "PUDDING & EVAVORASI",
+      "category": "bahan",
+      "amount": 200000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-02T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260802_584_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-02",
+      "title": "MAIN",
+      "category": "pribadi",
+      "amount": 120000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-02T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_1816_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "PDG STRAWBERRY POUCH 9",
+      "category": "operasional",
+      "amount": 74678,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_1314_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "PDG COKLAT BOX 9",
+      "category": "operasional",
+      "amount": 94208,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_1032_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "PDG MATCHA 8",
+      "category": "operasional",
+      "amount": 66380,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_679_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "ES BATU",
+      "category": "bahan",
+      "amount": 3000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_1020_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "SPAYLATTER",
+      "category": "operasional",
+      "amount": 30000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_788_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "ES KRIM",
+      "category": "bahan",
+      "amount": 153000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_533_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "KAHF",
+      "category": "operasional",
+      "amount": 25400,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260803_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-03",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-03T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260804_1075_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-04",
+      "title": "PAPPERBOWL",
+      "category": "bahan",
+      "amount": 150656,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-04T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260804_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-04",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-04T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260805_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-05",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260805_1084_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-05",
+      "title": "TITIP TENDA",
+      "category": "sewa",
+      "amount": 150000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260805_1150_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-05",
+      "title": "LIQUID & COIL",
+      "category": "bahan",
+      "amount": 180000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-05T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260806_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-06",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-06T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260807_862_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "title": "PUDDING 5",
+      "category": "bahan",
+      "amount": 54500,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260807_753_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "title": "ESKRIM",
+      "category": "operasional",
+      "amount": 150000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260807_679_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "title": "ES BATU",
+      "category": "bahan",
+      "amount": 3000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260807_651_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "title": "PARKIR",
+      "category": "transport",
+      "amount": 2000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260807_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260807_600_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-07",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 40000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-07T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260808_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-08",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260808_924_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-08",
+      "title": "KEPERLUAN",
+      "category": "operasional",
+      "amount": 41000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260808_791_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-08",
+      "title": "LISTRIK",
+      "category": "utilitas",
+      "amount": 50000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260810_894_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-10",
+      "title": "ICE CREAM",
+      "category": "bahan",
+      "amount": 140000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-10T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260810_817_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-10",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 121200,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-10T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260811_1250_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-11",
+      "title": "PUDDING 95 PCS",
+      "category": "bahan",
+      "amount": 788345,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-11T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260811_976_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-11",
+      "title": "KEPERLUAN",
+      "category": "operasional",
+      "amount": 450000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-11T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260811_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-11",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-11T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260811_598_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-11",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 20000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-11T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260812_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-12",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-12T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260812_678_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-12",
+      "title": "ES BATU",
+      "category": "bahan",
+      "amount": 2000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-12T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260812_799_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-12",
+      "title": "GULA 1 KG",
+      "category": "bahan",
+      "amount": 12000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-12T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260813_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-13",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-13T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260813_679_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-13",
+      "title": "ES BATU",
+      "category": "bahan",
+      "amount": 3000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-13T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260814_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-14",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260814_1359_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-14",
+      "title": "IURAN AGUSTUSAN",
+      "category": "operasional",
+      "amount": 50000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-14T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260815_893_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-15",
+      "title": "ICE CREAM",
+      "category": "bahan",
+      "amount": 130000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-15T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260815_1115_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-15",
+      "title": "PAPPER BOWL",
+      "category": "bahan",
+      "amount": 237784,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-15T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260815_817_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-15",
+      "title": "PISAHIN",
+      "category": "pribadi",
+      "amount": 500000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-15T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260816_606_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-16",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 14000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-16T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260816_924_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-16",
+      "title": "KEPERLUAN",
+      "category": "operasional",
+      "amount": 50000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-16T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260817_558_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-17",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 5000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-17T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260817_1792_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-17",
+      "title": "SERVICE MOTOR SAFFANA",
+      "category": "operasional",
+      "amount": 428000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-17T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260817_817_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-17",
+      "title": "PISAHIN",
+      "category": "pribadi",
+      "amount": 500000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-17T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_692_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "BENSIN",
+      "category": "transport",
+      "amount": 50000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_924_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "KEPERLUAN",
+      "category": "operasional",
+      "amount": 50000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_1072_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "CREAMER 6 KG",
+      "category": "bahan",
+      "amount": 180000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_1320_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "KRESEK (15) 1 PACK",
+      "category": "bahan",
+      "amount": 57000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_364_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "SP",
+      "category": "operasional",
+      "amount": 4500,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_1282_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "REDVELVET CRUM",
+      "category": "operasional",
+      "amount": 28000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_1140_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "SKM TIGA SAPI",
+      "category": "bahan",
+      "amount": 13300,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_1589_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "EVAPORASI TIGA SAPI",
+      "category": "bahan",
+      "amount": 72000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_965_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "GULAKU 2 KG",
+      "category": "bahan",
+      "amount": 35000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_853_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "REGAL 120 G",
+      "category": "operasional",
+      "amount": 9700,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260818_1378_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-18",
+      "title": "FROOT LOOPS 600 G",
+      "category": "bahan",
+      "amount": 76188,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-18T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260819_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-19",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-19T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260820_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-20",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260820_1103_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-20",
+      "title": "SENDOK 3 PACK",
+      "category": "bahan",
+      "amount": 45000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-20T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260821_558_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-21",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 5000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-21T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260822_844_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-22",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 763449,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-22T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260822_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-22",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-22T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260822_566_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-22",
+      "title": "SKM 2",
+      "category": "bahan",
+      "amount": 27000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-22T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260822_603_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-22",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 43000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-22T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260823_604_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-23",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 12000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-23T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260823_604_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-23",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 26000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-23T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260823_745_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-23",
+      "title": "LIQUID",
+      "category": "bahan",
+      "amount": 100000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-23T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260824_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-24",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260824_493_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-24",
+      "title": "AQUA",
+      "category": "operasional",
+      "amount": 5000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260824_1242_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-24",
+      "title": "SKM EVAPORASI",
+      "category": "bahan",
+      "amount": 113000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260824_651_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-24",
+      "title": "PARKIR",
+      "category": "transport",
+      "amount": 2000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-24T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260825_987_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-25",
+      "title": "KEPERLUAN",
+      "category": "operasional",
+      "amount": 379100,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-25T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_1557_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "KOKO KRUNCH 300 GRAM",
+      "category": "bahan",
+      "amount": 41700,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_933_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "GULAKU 2KG",
+      "category": "bahan",
+      "amount": 35000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_863_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "PUDDING 4",
+      "category": "bahan",
+      "amount": 37600,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_885_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "OREO 119 GR",
+      "category": "bahan",
+      "amount": 9300,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_540_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "KAHF",
+      "category": "operasional",
+      "amount": 37800,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_693_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "MASKER",
+      "category": "operasional",
+      "amount": 11000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_651_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "PARKIR",
+      "category": "transport",
+      "amount": 2000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "ADMIN",
+      "category": "operasional",
+      "amount": 2500,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_817_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "OREO 1 KG",
+      "category": "bahan",
+      "amount": 27000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_1238_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "RED VELVET 1 KG",
+      "category": "operasional",
+      "amount": 56700,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_680_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "KARTU",
+      "category": "operasional",
+      "amount": 100000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260826_973_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-26",
+      "title": "EVAPORASI",
+      "category": "bahan",
+      "amount": 120000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-26T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260828_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-28",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-28T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260828_782_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-28",
+      "title": "STEMPEL",
+      "category": "operasional",
+      "amount": 31000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-28T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260828_409_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-28",
+      "title": "SP",
+      "category": "operasional",
+      "amount": 15000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-28T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260828_400_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-28",
+      "title": "TF",
+      "category": "operasional",
+      "amount": 15000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-28T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260829_560_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-29",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 7000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-29T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260829_692_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-29",
+      "title": "BENSIN",
+      "category": "transport",
+      "amount": 50000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-29T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260829_601_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-29",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 14000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-29T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260830_606_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-30",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 14000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-30T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260830_600_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-30",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 31000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-30T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260830_605_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-30",
+      "title": "JAJAN",
+      "category": "operasional",
+      "amount": 18000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-30T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_1040_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "SKM 3 SAPI 9",
+      "category": "bahan",
+      "amount": 120900,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_1486_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "EVAPORASI 3 SAPI 8",
+      "category": "bahan",
+      "amount": 115500,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_933_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "GULAKU 2KG",
+      "category": "bahan",
+      "amount": 35000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_1039_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "SENDOK 6 PAK",
+      "category": "bahan",
+      "amount": 90000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_786_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "KEJU 2KG",
+      "category": "bahan",
+      "amount": 96000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_545_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "OBAT",
+      "category": "operasional",
+      "amount": 33500,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_755_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "LIQUID",
+      "category": "bahan",
+      "amount": 155000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_636_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "CUKUR",
+      "category": "operasional",
+      "amount": 20000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_658_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "PARKIR",
+      "category": "transport",
+      "amount": 9000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260831_986_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "title": "PAPERBOWL",
+      "category": "bahan",
+      "amount": 425300,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-08-31T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "exp_mtnue6lx",
+      "business_id": "biz_poody",
+      "date": "2026-09-05",
+      "title": "Beli topping",
+      "category": "bahan",
+      "amount": 50000,
+      "note": "",
+      "created_at": "2026-09-05T03:47:50.133Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "sheet_exp_20260908_606_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "LAPAK",
+      "category": "sewa",
+      "amount": 14000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_696_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "BENSIN",
+      "category": "transport",
+      "amount": 45000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_940_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "EVAPORASI",
+      "category": "bahan",
+      "amount": 86400,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_769_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "PUDDING",
+      "category": "bahan",
+      "amount": 33000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_1105_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "KRESEK 1 PACK",
+      "category": "bahan",
+      "amount": 57000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_1111_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "KRESEK 2 IKAT",
+      "category": "bahan",
+      "amount": 25000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_550_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "OREO",
+      "category": "bahan",
+      "amount": 10000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_958_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "KEJU 1 PACK",
+      "category": "bahan",
+      "amount": 96000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_1617_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "SENDOK 2 PACK (200 PCS)",
+      "category": "bahan",
+      "amount": 30000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    },
+    {
+      "id": "sheet_exp_20260908_641_AGUST-26",
+      "business_id": "biz_poody",
+      "date": "2026-09-08",
+      "title": "DISHUB",
+      "category": "transport",
+      "amount": 2000,
+      "note": "Import AGUST-26 Google Sheet",
+      "source": "sheet",
+      "created_at": "2026-09-08T09:00:00.000Z",
+      "created_by": "sheet_sync"
+    }
+  ],
+  "briefings": [
+    {
+      "id": "brf_mtnw4ovz",
+      "business_id": "biz_poody",
+      "date": "2026-08-31",
+      "ym": "2026-08",
+      "target": 200000,
+      "day": {
+        "date": "2026-08-31",
+        "sales": [],
+        "expenses": [
+          {
+            "id": "sheet_exp_20260831_21736",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "SKM 3 SAPI 9",
+            "category": "bahan",
+            "amount": 120900,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_88893",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "EVAPORASI 3 SAPI 8",
+            "category": "bahan",
+            "amount": 115500,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_10092",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "GULAKU 2KG",
+            "category": "bahan",
+            "amount": 35000,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_32306",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "SENDOK 6 PAK",
+            "category": "bahan",
+            "amount": 90000,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_37151",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "KEJU 2KG",
+            "category": "bahan",
+            "amount": 96000,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_83776",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "OBAT",
+            "category": "operasional",
+            "amount": 33500,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_66395",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "LIQUID",
+            "category": "operasional",
+            "amount": 155000,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_83613",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "CUKUR",
+            "category": "operasional",
+            "amount": 20000,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_62029",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "PARKIR",
+            "category": "transport",
+            "amount": 9000,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          },
+          {
+            "id": "sheet_exp_20260831_80903",
+            "business_id": "biz_poody",
+            "date": "2026-08-31",
+            "title": "PAPERBOWL",
+            "category": "bahan",
+            "amount": 425300,
+            "note": "Import Sheet Agustus 2026",
+            "source": "sheet",
+            "created_at": "2026-08-31T09:00:00.000Z",
+            "created_by": "sheet_import"
+          }
+        ],
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 1100200,
+        "expPri": 0,
+        "expBiz": 1100200,
+        "netBiz": -1100200,
+        "net": -1100200,
+        "cups": 0,
+        "byVariant": {},
+        "byTopping": {},
+        "toppingRev": 0,
+        "bestV": null,
+        "bestT": null
+      },
+      "mtd": {
+        "from": "2026-08-01",
+        "to": "2026-08-31",
+        "rev": 9406015,
+        "cost": 0,
+        "profit": 9406015,
+        "expTot": 9487588,
+        "expBiz": 8487588,
+        "expPri": 1000000,
+        "netBiz": 918427,
+        "net": -81573,
+        "days": 27,
+        "avg": 348371,
+        "salesCount": 27,
+        "expCount": 120
+      },
+      "seven": [
+        {
+          "date": "2026-08-25",
+          "rev": 0,
+          "netBiz": -379100
+        },
+        {
+          "date": "2026-08-26",
+          "rev": 198000,
+          "netBiz": -69600
+        },
+        {
+          "date": "2026-08-27",
+          "rev": 286000,
+          "netBiz": 59000
+        },
+        {
+          "date": "2026-08-28",
+          "rev": 195000,
+          "netBiz": 127000
+        },
+        {
+          "date": "2026-08-29",
+          "rev": 414000,
+          "netBiz": 343000
+        },
+        {
+          "date": "2026-08-30",
+          "rev": 362000,
+          "netBiz": 299000
+        },
+        {
+          "date": "2026-08-31",
+          "rev": 0,
+          "netBiz": -1100200
+        }
+      ],
+      "anomalies": [
+        "Belum ada penjualan kemarin.",
+        "Pengeluaran terbesar: PAPERBOWL Rp 425.300."
+      ],
+      "vsTarget": "kurang Rp 200.000",
+      "health": "PERLU PERHATIAN",
+      "generated_at": "2026-09-05T04:36:26.493Z",
+      "text": "☀️ BRIEFING POODY — 2026-08-31 (2026-08)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — PERLU PERHATIAN\nLaba usaha -Rp 1.100.200 (HPP Rp 0 • usaha Rp 1.100.200) • sisa kas -Rp 1.100.200\nTerlaris: -\nMTD 2026-08-01–2026-08-31: omset Rp 9.406.015 (27 hari jualan, rata Rp 348.371/hari) • laba usaha Rp 918.427 • pribadi Rp 1.000.000\nAnomali: Belum ada penjualan kemarin. | Pengeluaran terbesar: PAPERBOWL Rp 425.300.\n7 hari: 08-25 Rp 0/-Rp 379.100 • 08-26 Rp 198.000/-Rp 69.600 • 08-27 Rp 286.000/Rp 59.000 • 08-28 Rp 195.000/Rp 127.000 • 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200\nSaran: Posting sosmed pagi & cek stok topping. Kontrol HPP/bahan, tunda ambil pribadi.",
+      "created_at": "2026-09-05T04:36:26.495Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "brf_mtnw5jq2",
+      "business_id": "biz_poody",
+      "date": "2026-09-04",
+      "ym": "2026-09",
+      "target": 200000,
+      "day": {
+        "date": "2026-09-04",
+        "sales": [],
+        "expenses": [],
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 0,
+        "expPri": 0,
+        "expBiz": 0,
+        "netBiz": 0,
+        "net": 0,
+        "cups": 0,
+        "byVariant": {},
+        "byTopping": {},
+        "toppingRev": 0,
+        "bestV": null,
+        "bestT": null
+      },
+      "mtd": {
+        "from": "2026-09-01",
+        "to": "2026-09-04",
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 0,
+        "expBiz": 0,
+        "expPri": 0,
+        "netBiz": 0,
+        "net": 0,
+        "days": 0,
+        "avg": 0,
+        "salesCount": 0,
+        "expCount": 0
+      },
+      "seven": [
+        {
+          "date": "2026-08-29",
+          "rev": 414000,
+          "netBiz": 343000
+        },
+        {
+          "date": "2026-08-30",
+          "rev": 362000,
+          "netBiz": 299000
+        },
+        {
+          "date": "2026-08-31",
+          "rev": 0,
+          "netBiz": -1100200
+        },
+        {
+          "date": "2026-09-01",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-02",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-03",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-04",
+          "rev": 0,
+          "netBiz": 0
+        }
+      ],
+      "anomalies": [
+        "Belum ada penjualan kemarin."
+      ],
+      "vsTarget": "kurang Rp 200.000",
+      "health": "CUKUP",
+      "generated_at": "2026-09-05T04:37:06.456Z",
+      "text": "☀️ BRIEFING POODY — 2026-09-04 (2026-09)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — CUKUP\nLaba usaha Rp 0 (HPP Rp 0 • usaha Rp 0) • sisa kas Rp 0\nTerlaris: -\nMTD 2026-09-01–2026-09-04: omset Rp 0 (0 hari jualan, rata Rp 0/hari) • laba usaha Rp 0\nAnomali: Belum ada penjualan kemarin.\n7 hari: 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200 • 09-01 Rp 0/Rp 0 • 09-02 Rp 0/Rp 0 • 09-03 Rp 0/Rp 0 • 09-04 Rp 0/Rp 0\nSaran: Posting sosmed pagi & cek stok topping.",
+      "created_at": "2026-09-05T04:37:06.458Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "brf_mtnw5jui",
+      "business_id": "biz_poody",
+      "date": "2026-09-04",
+      "ym": "2026-09",
+      "target": 200000,
+      "day": {
+        "date": "2026-09-04",
+        "sales": [],
+        "expenses": [],
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 0,
+        "expPri": 0,
+        "expBiz": 0,
+        "netBiz": 0,
+        "net": 0,
+        "cups": 0,
+        "byVariant": {},
+        "byTopping": {},
+        "toppingRev": 0,
+        "bestV": null,
+        "bestT": null
+      },
+      "mtd": {
+        "from": "2026-09-01",
+        "to": "2026-09-04",
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 0,
+        "expBiz": 0,
+        "expPri": 0,
+        "netBiz": 0,
+        "net": 0,
+        "days": 0,
+        "avg": 0,
+        "salesCount": 0,
+        "expCount": 0
+      },
+      "seven": [
+        {
+          "date": "2026-08-29",
+          "rev": 414000,
+          "netBiz": 343000
+        },
+        {
+          "date": "2026-08-30",
+          "rev": 362000,
+          "netBiz": 299000
+        },
+        {
+          "date": "2026-08-31",
+          "rev": 0,
+          "netBiz": -1100200
+        },
+        {
+          "date": "2026-09-01",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-02",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-03",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-04",
+          "rev": 0,
+          "netBiz": 0
+        }
+      ],
+      "anomalies": [
+        "Belum ada penjualan kemarin."
+      ],
+      "vsTarget": "kurang Rp 200.000",
+      "health": "CUKUP",
+      "generated_at": "2026-09-05T04:37:06.615Z",
+      "text": "☀️ BRIEFING POODY — 2026-09-04 (2026-09)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — CUKUP\nLaba usaha Rp 0 (HPP Rp 0 • usaha Rp 0) • sisa kas Rp 0\nTerlaris: -\nMTD 2026-09-01–2026-09-04: omset Rp 0 (0 hari jualan, rata Rp 0/hari) • laba usaha Rp 0\nAnomali: Belum ada penjualan kemarin.\n7 hari: 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200 • 09-01 Rp 0/Rp 0 • 09-02 Rp 0/Rp 0 • 09-03 Rp 0/Rp 0 • 09-04 Rp 0/Rp 0\nSaran: Posting sosmed pagi & cek stok topping.",
+      "created_at": "2026-09-05T04:37:06.618Z",
+      "created_by": "usr_anon_poody"
+    },
+    {
+      "id": "brf_mtnw5suy",
+      "business_id": "biz_poody",
+      "date": "2026-09-04",
+      "ym": "2026-09",
+      "target": 200000,
+      "day": {
+        "date": "2026-09-04",
+        "sales": [],
+        "expenses": [],
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 0,
+        "expPri": 0,
+        "expBiz": 0,
+        "netBiz": 0,
+        "net": 0,
+        "cups": 0,
+        "byVariant": {},
+        "byTopping": {},
+        "toppingRev": 0,
+        "bestV": null,
+        "bestT": null
+      },
+      "mtd": {
+        "from": "2026-09-01",
+        "to": "2026-09-04",
+        "rev": 0,
+        "cost": 0,
+        "profit": 0,
+        "expTot": 0,
+        "expBiz": 0,
+        "expPri": 0,
+        "netBiz": 0,
+        "net": 0,
+        "days": 0,
+        "avg": 0,
+        "salesCount": 0,
+        "expCount": 0
+      },
+      "seven": [
+        {
+          "date": "2026-08-29",
+          "rev": 414000,
+          "netBiz": 343000
+        },
+        {
+          "date": "2026-08-30",
+          "rev": 362000,
+          "netBiz": 299000
+        },
+        {
+          "date": "2026-08-31",
+          "rev": 0,
+          "netBiz": -1100200
+        },
+        {
+          "date": "2026-09-01",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-02",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-03",
+          "rev": 0,
+          "netBiz": 0
+        },
+        {
+          "date": "2026-09-04",
+          "rev": 0,
+          "netBiz": 0
+        }
+      ],
+      "anomalies": [
+        "Belum ada penjualan kemarin."
+      ],
+      "vsTarget": "kurang Rp 200.000",
+      "health": "CUKUP",
+      "generated_at": "2026-09-05T04:37:18.297Z",
+      "text": "☀️ BRIEFING POODY — 2026-09-04 (2026-09)\nOmset kemarin Rp 0 (0 cup) • kurang Rp 200.000 (target Rp 200.000) — CUKUP\nLaba usaha Rp 0 (HPP Rp 0 • usaha Rp 0) • sisa kas Rp 0\nTerlaris: -\nMTD 2026-09-01–2026-09-04: omset Rp 0 (0 hari jualan, rata Rp 0/hari) • laba usaha Rp 0\nAnomali: Belum ada penjualan kemarin.\n7 hari: 08-29 Rp 414.000/Rp 343.000 • 08-30 Rp 362.000/Rp 299.000 • 08-31 Rp 0/-Rp 1.100.200 • 09-01 Rp 0/Rp 0 • 09-02 Rp 0/Rp 0 • 09-03 Rp 0/Rp 0 • 09-04 Rp 0/Rp 0\nSaran: Posting sosmed pagi & cek stok topping.",
+      "created_at": "2026-09-05T04:37:18.298Z",
+      "created_by": "usr_anon_poody"
+    }
+  ]
+}

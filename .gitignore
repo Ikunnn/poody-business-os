@@ -1,7 +1,6 @@
 node_modules/
 agentic-prototype/node_modules/
 mock-server/node_modules/
-agentic-prototype/data/db.json
 agentic-prototype/data/*.xlsx
 backups/
 logs/

@@ -513,4 +513,7 @@ app.get('/api/v1/export/receipt', (req,res)=>{
   res.send(html);
 });
 
-app.listen(PORT, ()=>{ console.log(`✅ Agentic Prototype (Poody) jalan di http://localhost:${PORT} mode=${isMock()?'MOCK':'LLM:'+model()}`); console.log(`   Catalog: 6 rasa x M 5100/10000 L 6100/12000 | Sales: POST /api/v1/sales {date,items:[{variant,size,qty}]}`); });
+if (!process.env.VERCEL) {
+  app.listen(PORT, ()=>{ console.log(`✅ Agentic Prototype (Poody) jalan di http://localhost:${PORT} mode=${isMock()?'MOCK':'LLM:'+model()}`); console.log(`   Catalog: 6 rasa x M 5100/10000 L 6100/12000 | Sales: POST /api/v1/sales {date,items:[{variant,size,qty}]}`); });
+}
+module.exports = app;

@@ -1,7 +1,8 @@
 // Persist A+ - JSON file DB dengan katalog Poody + sales/expenses
 const fs = require('fs');
 const path = require('path');
-const dataDir = path.join(__dirname, '..', 'data');
+const isVercel = !!process.env.VERCEL;
+const dataDir = isVercel ? path.join('/tmp', 'poody-data') : path.join(__dirname, '..', 'data');
 const dbPath = path.join(dataDir, 'db.json');
 const usersPath = path.join(dataDir, 'users.json');
 
@@ -25,6 +26,19 @@ const POODY_CATALOG = {
 
 function ensure() {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+  // Vercel: seed db.json from bundled template if /tmp empty
+  if (isVercel && !fs.existsSync(dbPath)) {
+    try {
+      const seed = path.join(__dirname, '..', 'data', 'db.json');
+      if (fs.existsSync(seed)) fs.copyFileSync(seed, dbPath);
+    } catch {}
+  }
+  if (isVercel && !fs.existsSync(usersPath)) {
+    try {
+      const seedU = path.join(__dirname, '..', 'data', 'users.json');
+      if (fs.existsSync(seedU)) fs.copyFileSync(seedU, usersPath);
+    } catch {}
+  }
   if (!fs.existsSync(dbPath)) {
     fs.writeFileSync(dbPath, JSON.stringify({
       businesses: [POODY_CATALOG.business],

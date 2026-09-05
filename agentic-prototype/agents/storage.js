@@ -1,10 +1,15 @@
 // Persist A+ - JSON file DB dengan katalog Poody + sales/expenses
+// Lokal: file ./data/db.json | Vercel: Vercel Blob private (poody/db.json + poody/users.json) + /tmp cache
 const fs = require('fs');
 const path = require('path');
 const isVercel = !!process.env.VERCEL;
+const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
 const dataDir = isVercel ? path.join('/tmp', 'poody-data') : path.join(__dirname, '..', 'data');
 const dbPath = path.join(dataDir, 'db.json');
 const usersPath = path.join(dataDir, 'users.json');
+
+const BLOB_DB = 'poody/db.json';
+const BLOB_USERS = 'poody/users.json';
 
 const POODY_CATALOG = {
   business: { id: 'biz_poody', name: 'Poody', type: 'F&B Dessert', avg_daily_revenue: 200000 },
@@ -24,9 +29,64 @@ const POODY_CATALOG = {
   }
 };
 
+// ---- Blob helpers (lazy require, non-blocking) ----
+let blobHydrating = false;
+let blobReady = false;
+
+async function blobGet(pathname) {
+  try {
+    const { list } = require('@vercel/blob');
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    if (!token) return null;
+    const res = await list({ prefix: pathname });
+    const blob = (res.blobs || []).find(b => b.pathname === pathname);
+    if (!blob) return null;
+    // private blob needs Bearer
+    const r = await fetch(blob.url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!r.ok) return null;
+    return await r.text();
+  } catch (e) {
+    console.warn('[blob] get', pathname, e.message);
+    return null;
+  }
+}
+
+async function blobPut(pathname, text) {
+  try {
+    const { put } = require('@vercel/blob');
+    await put(pathname, text, {
+      access: 'private',
+      contentType: 'application/json',
+      addRandomSuffix: false,
+      cacheControlMaxAge: 0,
+    });
+    return true;
+  } catch (e) {
+    console.warn('[blob] put', pathname, e.message);
+    return false;
+  }
+}
+
+async function hydrateFromBlob() {
+  if (!isVercel || !hasBlob || blobHydrating) return;
+  blobHydrating = true;
+  try {
+    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+    const dbText = await blobGet(BLOB_DB);
+    if (dbText) {
+      try { JSON.parse(dbText); fs.writeFileSync(dbPath, dbText); console.log('[blob] hydrated db.json', dbText.length); } catch {}
+    }
+    const usersText = await blobGet(BLOB_USERS);
+    if (usersText) {
+      try { JSON.parse(usersText); fs.writeFileSync(usersPath, usersText); console.log('[blob] hydrated users.json'); } catch {}
+    }
+    blobReady = true;
+  } catch (e) { console.warn('[blob] hydrate err', e.message); }
+  blobHydrating = false;
+}
+
 function ensure() {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  // Vercel: seed db.json from bundled template if /tmp empty
   if (isVercel && !fs.existsSync(dbPath)) {
     try {
       const seed = path.join(__dirname, '..', 'data', 'db.json');
@@ -52,16 +112,12 @@ function ensure() {
       let changed=false;
       if (!db.catalog) { db.catalog = POODY_CATALOG; changed=true; }
       else {
-        // patch toppings if missing
         if (!db.catalog.toppings) { db.catalog.toppings = POODY_CATALOG.toppings; changed=true; }
-        // ensure business
         if (!db.businesses || !db.businesses.find(b=>b.id==='biz_poody')) { db.businesses = db.businesses||[]; db.businesses.push(POODY_CATALOG.business); changed=true; }
       }
       if (!db.sales) { db.sales=[]; changed=true; }
       if (!db.expenses) { db.expenses=[]; changed=true; }
-      // also update hpp/profit if catalog changed version
       if (db.catalog && db.catalog.toppings) {
-        // ensure all 7 toppings exist
         for (const k of Object.keys(POODY_CATALOG.toppings)) {
           if (!db.catalog.toppings[k]) { db.catalog.toppings[k]=POODY_CATALOG.toppings[k]; changed=true; }
         }
@@ -70,6 +126,8 @@ function ensure() {
     } catch {}
   }
   if (!fs.existsSync(usersPath)) fs.writeFileSync(usersPath, JSON.stringify([], null, 2));
+  // trigger async hydrate di Vercel (non-blocking, jangan tahan startup)
+  if (isVercel && hasBlob) { hydrateFromBlob().catch(()=>{}); }
 }
 ensure();
 
@@ -77,8 +135,21 @@ function loadDB() {
   try { return JSON.parse(fs.readFileSync(dbPath, 'utf8')); }
   catch { return { businesses:[POODY_CATALOG.business], catalog:POODY_CATALOG, workflows:[], tasks:[], memories:[], metrics:[], sales:[], expenses:[] }; }
 }
-function saveDB(db) { fs.writeFileSync(dbPath, JSON.stringify(db, null, 2)); }
+function saveDB(db) {
+  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
+  if (isVercel && hasBlob) {
+    const text = JSON.stringify(db, null, 2);
+    // fire-and-forget, jangan block response (serverless harus cepat)
+    blobPut(BLOB_DB, text).then(ok=> { if(ok) console.log('[blob] saved db.json'); });
+  }
+}
 function loadUsers() { try { return JSON.parse(fs.readFileSync(usersPath, 'utf8')); } catch { return []; } }
-function saveUsers(u) { fs.writeFileSync(usersPath, JSON.stringify(u, null, 2)); }
+function saveUsers(u) {
+  fs.writeFileSync(usersPath, JSON.stringify(u, null, 2));
+  if (isVercel && hasBlob) {
+    const text = JSON.stringify(u, null, 2);
+    blobPut(BLOB_USERS, text).then(ok=> { if(ok) console.log('[blob] saved users.json'); });
+  }
+}
 
-module.exports = { loadDB, saveDB, loadUsers, saveUsers, dbPath, usersPath, POODY_CATALOG };
+module.exports = { loadDB, saveDB, loadUsers, saveUsers, dbPath, usersPath, POODY_CATALOG, hydrateFromBlob };

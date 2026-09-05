@@ -5,5 +5,7 @@ agentic-prototype/data/*.xlsx
 backups/
 logs/
 .env
+.env.local
+.vercel
 tok.txt
 .DS_Store

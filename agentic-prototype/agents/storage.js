@@ -1,4 +1,4 @@
-// Persist A+ - JSON file DB dengan katalog Poody + sales/expenses
+// Persist A+ - JSON file DB dengan katalog Poody + sales/expenses/wastes
 // Lokal: file ./data/db.json | Vercel: Vercel Blob private (poody/db.json + poody/users.json) + /tmp cache (blocking hydrate)
 const fs = require('fs');
 const path = require('path');
@@ -114,7 +114,7 @@ function ensure() {
       businesses: [POODY_CATALOG.business],
       catalog: POODY_CATALOG,
       workflows: [], tasks: [], memories: [], metrics: [],
-      sales: [], expenses: []
+      sales: [], expenses: [], wastes: []
     }, null, 2));
   } else {
     try {
@@ -127,6 +127,7 @@ function ensure() {
       }
       if (!db.sales) { db.sales=[]; changed=true; }
       if (!db.expenses) { db.expenses=[]; changed=true; }
+      if (!db.wastes) { db.wastes=[]; changed=true; }
       if (db.catalog && db.catalog.toppings) {
         for (const k of Object.keys(POODY_CATALOG.toppings)) {
           if (!db.catalog.toppings[k]) { db.catalog.toppings[k]=POODY_CATALOG.toppings[k]; changed=true; }
@@ -142,7 +143,7 @@ ensure();
 
 function loadDB() {
   try { return JSON.parse(fs.readFileSync(dbPath, 'utf8')); }
-  catch { return { businesses:[POODY_CATALOG.business], catalog:POODY_CATALOG, workflows:[], tasks:[], memories:[], metrics:[], sales:[], expenses:[] }; }
+  catch { return { businesses:[POODY_CATALOG.business], catalog:POODY_CATALOG, workflows:[], tasks:[], memories:[], metrics:[], sales:[], expenses:[], wastes:[] }; }
 }
 async function saveDB(db) {
   fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));

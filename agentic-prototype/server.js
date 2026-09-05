@@ -64,8 +64,8 @@ app.use('/api/v1', (req,res,next)=>{
     if(!req.user) req.user={ id:'usr_anon_poody', role:'owner' };
     return next();
   }
-  const openExact = ['/catalog','/sales','/expenses','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
-  const openPrefix = ['/catalog','/sales','/expenses','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
+  const openExact = ['/catalog','/sales','/expenses','/wastes','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
+  const openPrefix = ['/catalog','/sales','/expenses','/wastes','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
   const isOpen = openExact.includes(p) || openPrefix.some(pref => p === pref || p.startsWith(pref + '/') || p.startsWith(pref));
   if(isOpen){
     const h = req.headers.authorization;
@@ -175,6 +175,47 @@ app.delete('/api/v1/expenses/:id', async (req,res)=>{
   const removed=db.expenses.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
 });
 
+// WASTES - bahan baku terbuang
+const WASTE_REASONS=['basi','tumpah','salah_buat','kadaluarsa','sisa_jualan','lain'];
+function wasteHpp(bahan, qty){
+  const v=bahan||'';
+  const t=POODY_CATALOG.toppings[v];
+  if(t) return t.hpp * (qty||1);
+  // variants approx HPP base M
+  if(POODY_CATALOG.variants.includes(v)) return POODY_CATALOG.sizes.M.hpp * (qty||1);
+  return 0;
+}
+app.post('/api/v1/wastes', async (req,res)=>{
+  const business_id=req.body.business_id||DEFAULT_BIZ;
+  const date=(req.body.date||todayStr()).slice(0,10);
+  const bahan=(req.body.bahan||req.body.title||'').toString().trim();
+  const qty=Math.max(0, parseInt(req.body.qty||0,10)) || 1;
+  const unit=(req.body.unit||'cup').toString();
+  let amount=parseInt(req.body.amount||0,10);
+  if(!amount || isNaN(amount)){ amount=wasteHpp(bahan, qty) || 0; }
+  if(!amount || amount<=0) return res.status(400).json({error:'amount required >0 atau isi bahan+qty biar auto HPP'});
+  const reason=(req.body.reason||'lain').toString();
+  const title=(req.body.title||`${bahan} x${qty} ${unit}`).toString();
+  const db=loadDB();
+  const rec={ id:`waste_${Date.now().toString(36)}`, business_id, date, title, bahan: bahan||title, qty, unit, amount, reason: WASTE_REASONS.includes(reason)?reason:'lain', note:req.body.note||'', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
+  db.wastes=db.wastes||[]; db.wastes.push(rec); await saveDB(db);
+  res.status(201).json(rec);
+});
+app.get('/api/v1/wastes', (req,res)=>{
+  const db=loadDB(); let data=db.wastes||[];
+  if(req.query.business_id) data=data.filter(e=>e.business_id===req.query.business_id);
+  if(req.query.date) data=data.filter(e=>e.date===req.query.date);
+  if(req.query.from) data=data.filter(e=>e.date>=req.query.from);
+  if(req.query.to) data=data.filter(e=>e.date<=req.query.to);
+  data=data.slice().sort((a,b)=> b.created_at.localeCompare(a.created_at));
+  res.json({ data });
+});
+app.delete('/api/v1/wastes/:id', async (req,res)=>{
+  const db=loadDB(); const idx=(db.wastes||[]).findIndex(e=>e.id===req.params.id);
+  if(idx===-1) return res.status(404).json({error:'not_found'});
+  const removed=db.wastes.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
+});
+
 // DASHBOARD SUMMARY per tanggal
 app.get('/api/v1/dashboard/summary', (req,res)=>{
   const business_id=req.query.business_id||DEFAULT_BIZ;
@@ -182,14 +223,17 @@ app.get('/api/v1/dashboard/summary', (req,res)=>{
   const db=loadDB();
   const sales=(db.sales||[]).filter(s=>s.business_id===business_id && s.date===date);
   const expenses=(db.expenses||[]).filter(e=>e.business_id===business_id && e.date===date);
+  const wastes=(db.wastes||[]).filter(e=>e.business_id===business_id && e.date===date);
   const salesRevenue=sales.reduce((a,b)=>a+b.revenue,0);
   const salesCost=sales.reduce((a,b)=>a+b.cost,0);
   const salesProfit=salesRevenue-salesCost;
   const expenseTotal=expenses.reduce((a,b)=>a+b.amount,0);
   const expensePribadi=expenses.filter(e=>(e.category||'').toLowerCase()==='pribadi').reduce((a,b)=>a+b.amount,0);
   const expenseBiz=expenseTotal-expensePribadi;
-  const netBiz=salesProfit-expenseBiz;
-  const netProfit=salesProfit-expenseTotal;
+  const wasteTotal=wastes.reduce((a,b)=>a+b.amount,0);
+  const byWasteReason={}; wastes.forEach(e=>{ const k=e.reason||'lain'; byWasteReason[k]=(byWasteReason[k]||0)+e.amount; });
+  const netBiz=salesProfit-expenseBiz-wasteTotal;
+  const netProfit=salesProfit-expenseTotal-wasteTotal;
   // per varian/size/topping
   const byVariant={}; const bySize={M:0,L:0}; const byTopping={}; let toppingRevenue=0, toppingCost=0;
   for(const s of sales) for(const it of s.items){
@@ -206,7 +250,8 @@ app.get('/api/v1/dashboard/summary', (req,res)=>{
     business_id, date,
     sales:{ count:sales.length, cups:sales.reduce((a,b)=>a+b.total_cups,0), revenue:salesRevenue, cost:salesCost, profit:salesProfit, byVariant, bySize, byTopping, toppingRevenue, toppingCost, toppingProfit: toppingRevenue-toppingCost, bestVariant: bestVariant? {variant:bestVariant[0], qty:bestVariant[1]}:null, bestTopping: bestTopping? {topping:bestTopping[0], qty:bestTopping[1]}:null },
     expenses:{ count:expenses.length, total:expenseTotal, totalBiz:expenseBiz, totalPribadi:expensePribadi, items:expenses },
-    net:{ revenue:salesRevenue, expenseTotal, expenseBiz, expensePribadi, profit:netProfit, profitBiz:netBiz, margin: salesRevenue? (netProfit/salesRevenue*100).toFixed(1)+'%':'-', marginBiz: salesRevenue? (netBiz/salesRevenue*100).toFixed(1)+'%':'-' },
+    wastes:{ count:wastes.length, total:wasteTotal, byReason:byWasteReason, items:wastes },
+    net:{ revenue:salesRevenue, expenseTotal, expenseBiz, expensePribadi, wasteTotal, profit:netProfit, profitBiz:netBiz, margin: salesRevenue? (netProfit/salesRevenue*100).toFixed(1)+'%':'-', marginBiz: salesRevenue? (netBiz/salesRevenue*100).toFixed(1)+'%':'-' },
     catalog: POODY_CATALOG,
     sales_raw: sales
   });
@@ -305,7 +350,7 @@ app.get('/api/v1/rag/search', (req,res)=>{
 
 app.get('/api/v1/dashboard/overview', (req,res)=>{
   const db=loadDB();
-  res.json({ ok:true, persist:{workflows:db.workflows.length, tasks:db.tasks.length, memories:db.memories.length, sales:(db.sales||[]).length, expenses:(db.expenses||[]).length }, catalog: POODY_CATALOG });
+  res.json({ ok:true, persist:{workflows:db.workflows.length, tasks:db.tasks.length, memories:db.memories.length, sales:(db.sales||[]).length, expenses:(db.expenses||[]).length, wastes:(db.wastes||[]).length }, catalog: POODY_CATALOG });
 });
 
 // CHAT

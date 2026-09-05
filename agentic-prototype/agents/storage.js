@@ -135,21 +135,24 @@ function loadDB() {
   try { return JSON.parse(fs.readFileSync(dbPath, 'utf8')); }
   catch { return { businesses:[POODY_CATALOG.business], catalog:POODY_CATALOG, workflows:[], tasks:[], memories:[], metrics:[], sales:[], expenses:[] }; }
 }
-function saveDB(db) {
+async function saveDB(db) {
   fs.writeFileSync(dbPath, JSON.stringify(db, null, 2));
   if (isVercel && hasBlob) {
     const text = JSON.stringify(db, null, 2);
-    // fire-and-forget, jangan block response (serverless harus cepat)
-    blobPut(BLOB_DB, text).then(ok=> { if(ok) console.log('[blob] saved db.json'); });
+    const ok = await blobPut(BLOB_DB, text);
+    if (ok) console.log('[blob] saved db.json', text.length);
+    else console.warn('[blob] save db.json failed');
   }
 }
+function saveDBSync(db){ fs.writeFileSync(dbPath, JSON.stringify(db, null, 2)); }
 function loadUsers() { try { return JSON.parse(fs.readFileSync(usersPath, 'utf8')); } catch { return []; } }
-function saveUsers(u) {
+async function saveUsers(u) {
   fs.writeFileSync(usersPath, JSON.stringify(u, null, 2));
   if (isVercel && hasBlob) {
     const text = JSON.stringify(u, null, 2);
-    blobPut(BLOB_USERS, text).then(ok=> { if(ok) console.log('[blob] saved users.json'); });
+    const ok = await blobPut(BLOB_USERS, text);
+    if (ok) console.log('[blob] saved users.json');
   }
 }
 
-module.exports = { loadDB, saveDB, loadUsers, saveUsers, dbPath, usersPath, POODY_CATALOG, hydrateFromBlob };
+module.exports = { loadDB, saveDB, saveDBSync, loadUsers, saveUsers, dbPath, usersPath, POODY_CATALOG, hydrateFromBlob, blobGet, blobPut };

@@ -106,8 +106,8 @@ function computeSalesTotals(items){
 }
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 
-// SALES
-app.post('/api/v1/sales', (req,res)=>{
+ // SALES
+app.post('/api/v1/sales', async (req,res)=>{
   try{
     const business_id=req.body.business_id||DEFAULT_BIZ;
     const date=(req.body.date||todayStr()).slice(0,10);
@@ -118,7 +118,7 @@ app.post('/api/v1/sales', (req,res)=>{
     const db=loadDB();
     const id=`sale_${Date.now().toString(36)}`;
     const rec={ id, business_id, date, ...calc, note:req.body.note||'', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
-    db.sales=db.sales||[]; db.sales.push(rec); saveDB(db);
+    db.sales=db.sales||[]; db.sales.push(rec); await saveDB(db);
     res.status(201).json(rec);
   }catch(e){ res.status(400).json({error:e.message}); }
 });
@@ -132,21 +132,21 @@ app.get('/api/v1/sales', (req,res)=>{
   data=data.slice().sort((a,b)=> b.created_at.localeCompare(a.created_at));
   res.json({ data, catalog: POODY_CATALOG });
 });
-app.delete('/api/v1/sales/:id', (req,res)=>{
+app.delete('/api/v1/sales/:id', async (req,res)=>{
   const db=loadDB(); const idx=(db.sales||[]).findIndex(s=>s.id===req.params.id);
   if(idx===-1) return res.status(404).json({error:'not_found'});
-  const removed=db.sales.splice(idx,1)[0]; saveDB(db); res.json({ok:true, removed});
+  const removed=db.sales.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
 });
 
 // EXPENSES
-app.post('/api/v1/expenses', (req,res)=>{
+app.post('/api/v1/expenses', async (req,res)=>{
   const business_id=req.body.business_id||DEFAULT_BIZ;
   const date=(req.body.date||todayStr()).slice(0,10);
   const amount=Math.max(0, parseInt(req.body.amount||0,10));
   if(!amount) return res.status(400).json({error:'amount required >0'});
   const db=loadDB();
   const rec={ id:`exp_${Date.now().toString(36)}`, business_id, date, title:req.body.title||'Pengeluaran', category:req.body.category||'operasional', amount, note:req.body.note||'', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
-  db.expenses=db.expenses||[]; db.expenses.push(rec); saveDB(db);
+  db.expenses=db.expenses||[]; db.expenses.push(rec); await saveDB(db);
   res.status(201).json(rec);
 });
 app.get('/api/v1/expenses', (req,res)=>{
@@ -158,10 +158,10 @@ app.get('/api/v1/expenses', (req,res)=>{
   data=data.slice().sort((a,b)=> b.created_at.localeCompare(a.created_at));
   res.json({ data });
 });
-app.delete('/api/v1/expenses/:id', (req,res)=>{
+app.delete('/api/v1/expenses/:id', async (req,res)=>{
   const db=loadDB(); const idx=(db.expenses||[]).findIndex(e=>e.id===req.params.id);
   if(idx===-1) return res.status(404).json({error:'not_found'});
-  const removed=db.expenses.splice(idx,1)[0]; saveDB(db); res.json({ok:true, removed});
+  const removed=db.expenses.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
 });
 
 // DASHBOARD SUMMARY per tanggal
@@ -226,7 +226,7 @@ app.get('/api/v1/briefing/latest', (req,res)=>{
   if(!latest) return res.json({ briefing:null, text:'Belum ada briefing tersimpan. Generate dulu.' });
   res.json({ briefing:latest, text:latest.text || formatBriefingText(latest) });
 });
-app.post('/api/v1/briefing/run', (req,res)=>{
+app.post('/api/v1/briefing/run', async (req,res)=>{
   const biz=req.body.business_id||DEFAULT_BIZ;
   const date=(req.body.date||'').slice(0,10) || null;
   const targetDate = date || new Date(Date.now()-86400000).toISOString().slice(0,10);
@@ -238,7 +238,7 @@ app.post('/api/v1/briefing/run', (req,res)=>{
   db.briefings.push(rec);
   if(db.briefings.length>200) db.briefings=db.briefings.slice(-200);
   db.memories.push({ id:`mem_${Date.now().toString(36)}`, business_id:biz, type:'briefing', key:`briefing_${b.date}`, value:{ text, briefing:b }, created_at:new Date().toISOString(), created_by:req.user?.id||'anon' });
-  saveDB(db);
+  await saveDB(db);
   res.status(201).json({ ...rec, text });
 });
 
@@ -264,7 +264,7 @@ app.get('/api/v1/businesses', (req,res)=>{
   const db=loadDB();
   res.json({ data: db.businesses||[], catalog: POODY_CATALOG });
 });
-app.post('/api/v1/businesses', (req,res)=>{
+app.post('/api/v1/businesses', async (req,res)=>{
   const { id, name, type, avg_daily_revenue } = req.body;
   if(!id || !name) return res.status(400).json({error:'id & name required, e.g. {id:"biz_cikarang", name:"Poody Cikarang"}'});
   const db=loadDB();
@@ -272,7 +272,7 @@ app.post('/api/v1/businesses', (req,res)=>{
   const biz={ id, name, type: type||'F&B Dessert', avg_daily_revenue: parseInt(avg_daily_revenue||200000,10) };
   db.businesses=db.businesses||[];
   db.businesses.push(biz);
-  saveDB(db);
+  await saveDB(db);
   res.status(201).json(biz);
 });
 app.post('/api/v1/sync/sheets', async (req,res)=>{
@@ -349,7 +349,7 @@ app.post('/api/v1/agents/:key/chat', async (req,res)=>{
   try{
     const reply=await callLLM(key, chatMessage);
     const db=loadDB(); db.memories.push({ id:`mem_${Date.now().toString(36)}`, business_id: req.body.business_id||DEFAULT_BIZ, type:'episodic', key:`chat_${key}_${Date.now()}`, value:{agent:key,user:message,reply,model:model()}, created_at:new Date().toISOString(), created_by:req.user?.id||'anon' });
-    if(db.memories.length>500) db.memories=db.memories.slice(-500); saveDB(db);
+    if(db.memories.length>500) db.memories=db.memories.slice(-500); await saveDB(db);
     res.json({ conversation_id:`conv_${Date.now()}`, agent:key, reply, mode: isMock()?'MOCK':'LLM', model:model(), rag: _ragHits });
   }catch(e){ console.error(e); res.status(500).json({error:'llm_error',message:e.message}); }
 });
@@ -366,17 +366,17 @@ app.post('/api/v1/workflows', async (req,res)=>{
     const wf={ workflow_id:`wf_${Date.now().toString(36)}`, business_id:business_id||DEFAULT_BIZ, objective, priority:priority||'medium', mode:isMock()?'MOCK':'LLM', model:model(), ...parsed, status:'planning', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
     const db=loadDB(); db.workflows.push(wf);
     const tasks=(parsed.tasks||[]).map((t,i)=>({ id:`tsk_${wf.workflow_id}_${i}`, workflow_id:wf.workflow_id, business_id:wf.business_id, agent:t.agent, objective:t.objective, priority:t.priority||'medium', requires_approval:!!t.requires_approval, status:t.requires_approval?'awaiting_approval':'assigned', created_at:new Date().toISOString() }));
-    db.tasks.push(...tasks); saveDB(db);
+    db.tasks.push(...tasks); await saveDB(db);
     res.status(201).json({...wf, tasks});
   }catch(e){ console.error(e); res.status(500).json({error:'llm_error',message:e.message}); }
 });
 app.get('/api/v1/workflows', (req,res)=>{ const db=loadDB(); let data=db.workflows; if(req.query.business_id) data=data.filter(w=>w.business_id===req.query.business_id); if(req.query.status) data=data.filter(w=>w.status===req.query.status); res.json({data:data.slice(-50).reverse()}); });
 app.get('/api/v1/workflows/:id', (req,res)=>{ const db=loadDB(); const w=db.workflows.find(x=>x.workflow_id===req.params.id); if(!w) return res.status(404).json({error:'not_found'}); const tasks=db.tasks.filter(t=>t.workflow_id===w.workflow_id); res.json({...w,tasks}); });
-app.post('/api/v1/workflows/:id/approve', (req,res)=>{ const db=loadDB(); const w=db.workflows.find(x=>x.workflow_id===req.params.id); if(!w) return res.status(404).json({error:'not_found'}); w.status=req.body.decision==='approved'?'working':'rejected'; w.approval={decision:req.body.decision,reason:req.body.reason,decided_by:req.user?.id,decided_at:new Date().toISOString()}; db.tasks.filter(t=>t.workflow_id===w.workflow_id && t.requires_approval).forEach(t=> t.status=req.body.decision==='approved'?'assigned':'rejected'); saveDB(db); res.json({ok:true, workflow:w}); });
+app.post('/api/v1/workflows/:id/approve', async (req,res)=>{ const db=loadDB(); const w=db.workflows.find(x=>x.workflow_id===req.params.id); if(!w) return res.status(404).json({error:'not_found'}); w.status=req.body.decision==='approved'?'working':'rejected'; w.approval={decision:req.body.decision,reason:req.body.reason,decided_by:req.user?.id,decided_at:new Date().toISOString()}; db.tasks.filter(t=>t.workflow_id===w.workflow_id && t.requires_approval).forEach(t=> t.status=req.body.decision==='approved'?'assigned':'rejected'); await saveDB(db); res.json({ok:true, workflow:w}); });
 app.get('/api/v1/tasks', (req,res)=>{ const db=loadDB(); let data=db.tasks; if(req.query.workflow_id) data=data.filter(t=>t.workflow_id===req.query.workflow_id); if(req.query.agent) data=data.filter(t=>t.agent===req.query.agent); res.json({data:data.slice(-100).reverse()}); });
-app.patch('/api/v1/tasks/:id', (req,res)=>{ const db=loadDB(); const t=db.tasks.find(x=>x.id===req.params.id); if(!t) return res.status(404).json({error:'not_found'}); Object.assign(t, req.body, {updated_at:new Date().toISOString()}); saveDB(db); res.json(t); });
+app.patch('/api/v1/tasks/:id', async (req,res)=>{ const db=loadDB(); const t=db.tasks.find(x=>x.id===req.params.id); if(!t) return res.status(404).json({error:'not_found'}); Object.assign(t, req.body, {updated_at:new Date().toISOString()}); await saveDB(db); res.json(t); });
 app.get('/api/v1/memories', (req,res)=>{ const db=loadDB(); let data=db.memories; if(req.query.business_id) data=data.filter(m=>m.business_id===req.query.business_id); if(req.query.type) data=data.filter(m=>m.type===req.query.type); res.json({data:data.slice(-50).reverse()}); });
-app.post('/api/v1/memories', (req,res)=>{ const db=loadDB(); const m={ id:`mem_${Date.now().toString(36)}`, created_at:new Date().toISOString(), created_by:req.user?.id, ...req.body }; db.memories.push(m); saveDB(db); res.status(201).json(m); });
+app.post('/api/v1/memories', async (req,res)=>{ const db=loadDB(); const m={ id:`mem_${Date.now().toString(36)}`, created_at:new Date().toISOString(), created_by:req.user?.id, ...req.body }; db.memories.push(m); await saveDB(db); res.status(201).json(m); });
 
 // IMAGE
 app.post('/api/v1/image/summarize', upload.single('image'), async (req,res)=>{
@@ -385,7 +385,7 @@ app.post('/api/v1/image/summarize', upload.single('image'), async (req,res)=>{
     const prompt=req.body.prompt||'Deskripsikan foto Poody ini (rasa, size, topping, kemasan, pencahayaan) lalu beri 3 saran agar foto lebih laku dijual.';
     const base64=req.file.buffer.toString('base64'); const mime=req.file.mimetype||'image/jpeg';
     const reply=await callLLM('data_analyst', prompt, {imageBase64:base64,imageMime:mime,maxTokens:900});
-    const db=loadDB(); db.memories.push({id:`mem_${Date.now().toString(36)}`,business_id:DEFAULT_BIZ,type:'episodic',key:'image_summarize',value:{prompt,mime,size:req.file.size,reply},created_at:new Date().toISOString()}); saveDB(db);
+    const db=loadDB(); db.memories.push({id:`mem_${Date.now().toString(36)}`,business_id:DEFAULT_BIZ,type:'episodic',key:'image_summarize',value:{prompt,mime,size:req.file.size,reply},created_at:new Date().toISOString()}); await saveDB(db);
     res.json({ok:true,model:model(),mime,size:req.file.size,prompt,reply});
   }catch(e){ res.status(500).json({error:e.message}); }
 });
@@ -396,7 +396,7 @@ app.post('/api/v1/image/transform', upload.single('image'), async (req,res)=>{
     const base64=req.file.buffer.toString('base64'); const mime=req.file.mimetype||'image/jpeg';
     const prompt=`Kamu Image-to-Image specialist Poody Dessert. Gaya: "${style}". Extra: "${extra}". 1. Deskripsikan foto asli singkat 2. Buat optimized prompt untuk SDXL agar foto katalog pudding konsisten 3. 3 tips foto. Bahasa Indonesia.`;
     const reply=await callLLM('copywriter', prompt, {imageBase64:base64,imageMime:mime,maxTokens:900});
-    const db=loadDB(); db.memories.push({id:`mem_${Date.now().toString(36)}`,business_id:DEFAULT_BIZ,type:'episodic',key:'image_transform',value:{style,extra,mime,reply},created_at:new Date().toISOString()}); saveDB(db);
+    const db=loadDB(); db.memories.push({id:`mem_${Date.now().toString(36)}`,business_id:DEFAULT_BIZ,type:'episodic',key:'image_transform',value:{style,extra,mime,reply},created_at:new Date().toISOString()}); await saveDB(db);
     res.json({ok:true,model:model(),style,reply});
   }catch(e){ res.status(500).json({error:e.message}); }
 });

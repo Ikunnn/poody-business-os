@@ -58,6 +58,7 @@ async function blobPut(pathname, text) {
       access: 'private',
       contentType: 'application/json',
       addRandomSuffix: false,
+      allowOverwrite: true,
       cacheControlMaxAge: 0,
     });
     return true;

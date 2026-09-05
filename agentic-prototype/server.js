@@ -51,43 +51,12 @@ app.get('/api/v1/auth/me', authMiddleware, (req,res)=>res.json({user:req.user}))
 
 // allow anon for catalog/salesExpenses/dashboard overview (UMKM quick input); protect workflows/chat
 
-// DEBUG blob - public (no auth) for persist check
-app.get('/api/v1/debug/blob', async (req,res)=>{
-  const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
-  const hasVercel = !!process.env.VERCEL;
-  let listOk=null, blobDbSize=null, blobDbSales=null, err=null;
-  try{
-    if(hasBlob){
-      const { list } = require('@vercel/blob');
-      const l = await list({ prefix: 'poody/db.json' });
-      listOk = l.blobs.map(b=>({pathname:b.pathname,size:b.size,uploadedAt:b.uploadedAt}));
-      if(l.blobs.length){
-        const token=process.env.BLOB_READ_WRITE_TOKEN;
-        const r=await fetch(l.blobs.find(b=>b.pathname==='poody/db.json')?.url || l.blobs[0].url, { headers:{Authorization:`Bearer ${token}`}});
-        const t=await r.text();
-        const j=JSON.parse(t);
-        blobDbSize=t.length; blobDbSales=(j.sales||[]).length;
-      }
-    }
-  }catch(e){ err=e.message + ' ' + (e.stack||'').slice(0,600); }
-  res.json({ hasBlob, hasVercel, VERCEL: process.env.VERCEL, listOk, blobDbSize, blobDbSales, err });
-});
-app.post('/api/v1/debug/blob/put', async (req,res)=>{
-  try{
-    const { saveDB, loadDB } = require('./agents/storage');
-    const db=loadDB();
-    const id=`dbg_${Date.now()}`;
-    db.sales=db.sales||[];
-    db.sales.push({id, business_id:'biz_poody', date:'2026-09-05', items:[{variant:'chocolatte',size:'M',qty:1,price:10000,hpp:5100,toppings:[],topping_price:0,topping_hpp:0,unit_price:10000,unit_hpp:5100,revenue:10000,cost:5100,profit:4900}], revenue:10000,cost:5100,profit:4900,total_cups:1, note:'debug-blob'});
-    await saveDB(db);
-    res.json({ok:true, id, sales:db.sales.length});
-  }catch(e){ res.status(500).json({error:e.message, stack:e.stack?.slice(0,800)}); }
-});
+
 
 app.use('/api/v1', (req,res,next)=>{
   const p = req.path; // sudah strip /api/v1
   // briefing/forecast/kpi/rag/business/sync/workflows/tasks/memories/export terbuka tanpa login untuk UMKM
-  if(p.startsWith('/debug') || p.startsWith('/briefing') || p.startsWith('/forecast') || p.startsWith('/kpi') || p.startsWith('/rag') || p.startsWith('/businesses') || p.startsWith('/sync') || p.startsWith('/workflows') || p.startsWith('/tasks') || p.startsWith('/memories') || p.startsWith('/export/') || p==='/export/excel' || p==='/export/receipt') {
+  if(p.startsWith('/briefing') || p.startsWith('/forecast') || p.startsWith('/kpi') || p.startsWith('/rag') || p.startsWith('/businesses') || p.startsWith('/sync') || p.startsWith('/workflows') || p.startsWith('/tasks') || p.startsWith('/memories') || p.startsWith('/export/') || p==='/export/excel' || p==='/export/receipt') {
     const h = req.headers.authorization;
     if(h && h.startsWith('Bearer ')){
       try{ const jwt=require('jsonwebtoken'); const sec=process.env.JWT_SECRET||'dev-secret-change-in-prod-32chars!'; req.user=jwt.verify(h.slice(7), sec);}catch{}
@@ -96,7 +65,7 @@ app.use('/api/v1', (req,res,next)=>{
     return next();
   }
   const openExact = ['/catalog','/sales','/expenses','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
-  const openPrefix = ['/catalog','/sales','/expenses','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/','/debug'];
+  const openPrefix = ['/catalog','/sales','/expenses','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
   const isOpen = openExact.includes(p) || openPrefix.some(pref => p === pref || p.startsWith(pref + '/') || p.startsWith(pref));
   if(isOpen){
     const h = req.headers.authorization;

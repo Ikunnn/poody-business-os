@@ -1,0 +1,495 @@
+{
+  "info": {
+    "name": "AI Business OS - API Collection",
+    "description": "Import langsung ke Postman. Set variable baseUrl & access_token dulu. Dibuat dari PRD Agentic AI Business OS (CEO + 16 agents). Base URL default production, ganti ke localhost:8000 untuk dev.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.aicompanyos.com/api/v1" },
+    { "key": "localUrl", "value": "http://localhost:8000/api/v1" },
+    { "key": "access_token", "value": "PASTE_JWT_HERE" },
+    { "key": "business_id", "value": "biz_123" },
+    { "key": "workflow_id", "value": "wf_abc123" },
+    { "key": "task_id", "value": "tsk_1" },
+    { "key": "approval_id", "value": "apr_123" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": ["// Auto-set baseUrl ke local jika mau dev", "// pm.variables.set('baseUrl', pm.variables.get('localUrl'))"],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Auth",
+      "item": [
+        {
+          "name": "POST Login - dapat JWT",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"owner@brand.com\",\n  \"password\": \"rahasia123\"\n}" },
+            "description": "Login, copy access_token ke variable {{access_token}}. Tanpa auth."
+          }
+        },
+        {
+          "name": "POST Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/refresh", "host": ["{{baseUrl}}"], "path": ["auth", "refresh"] },
+            "body": { "mode": "raw", "raw": "{\n  \"refresh_token\": \"PASTE_REFRESH_HERE\"\n}" }
+          }
+        },
+        {
+          "name": "GET Me - cek user login",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Businesses (Onboarding)",
+      "item": [
+        {
+          "name": "POST Create Business",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/businesses", "host": ["{{baseUrl}}"], "path": ["businesses"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Brand Fashion A\",\n  \"industry\": \"Fashion Retail\",\n  \"products\": [{ \"name\": \"Kemeja Linen\", \"price\": 170000, \"cogs\": 95000 }],\n  \"target_market\": \"Wanita 25-35 Jabodetabek\",\n  \"business_model\": \"D2C via Marketplace + IG\",\n  \"goals\": [\"profit +20% dalam 3 bulan\"]\n}" }
+          }
+        },
+        {
+          "name": "GET List Businesses",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/businesses", "host": ["{{baseUrl}}"], "path": ["businesses"] }
+          }
+        },
+        {
+          "name": "GET Business Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/businesses/{{business_id}}", "host": ["{{baseUrl}}"], "path": ["businesses", "{{business_id}}"] }
+          }
+        },
+        {
+          "name": "PATCH Update Business",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/businesses/{{business_id}}", "host": ["{{baseUrl}}"], "path": ["businesses", "{{business_id}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"target_market\": \"Wanita 25-35 + Pria 28-40 Jabodetabek & Surabaya\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Agents & Chat",
+      "item": [
+        {
+          "name": "GET List 16 Agents",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/agents", "host": ["{{baseUrl}}"], "path": ["agents"] }
+          }
+        },
+        {
+          "name": "POST Chat CEO (SSE streaming)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "text/event-stream" }
+            ],
+            "url": { "raw": "{{baseUrl}}/agents/ceo/chat", "host": ["{{baseUrl}}"], "path": ["agents", "ceo", "chat"] },
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Kenapa profit turun bulan ini?\",\n  \"business_id\": \"{{business_id}}\",\n  \"stream\": true\n}" },
+            "description": "Di Postman akan terlihat sebagai SSE events: agent_thinking -> delegate -> token -> done"
+          }
+        },
+        {
+          "name": "POST Chat Finance Manager",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/agents/finance_manager/chat", "host": ["{{baseUrl}}"], "path": ["agents", "finance_manager", "chat"] },
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Apakah bisnis saya untung bulan ini? Hitung margin per produk.\",\n  \"business_id\": \"{{business_id}}\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Workflows (CEO Orchestrator) - PENTING",
+      "item": [
+        {
+          "name": "POST Create Workflow - Naikkan Profit 20%",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/workflows", "host": ["{{baseUrl}}"], "path": ["workflows"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"objective\": \"Naikkan profit 20% dalam 3 bulan\",\n  \"priority\": \"high\"\n}" },
+            "description": "Kirim 1 kalimat, CEO pecah jadi DAG task untuk Finance/Marketing/Strategy"
+          }
+        },
+        {
+          "name": "POST Create Workflow - Buat Campaign",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/workflows", "host": ["{{baseUrl}}"], "path": ["workflows"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"objective\": \"Buat campaign untuk meningkatkan penjualan produk A\",\n  \"priority\": \"high\"\n}" }
+          }
+        },
+        {
+          "name": "GET List Workflows",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/workflows?business_id={{business_id}}", "host": ["{{baseUrl}}"], "path": ["workflows"], "query": [{ "key": "business_id", "value": "{{business_id}}" }] }
+          }
+        },
+        {
+          "name": "GET Workflow Detail + Progress",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/workflows/{{workflow_id}}", "host": ["{{baseUrl}}"], "path": ["workflows", "{{workflow_id}}"] }
+          }
+        },
+        {
+          "name": "POST Approve Workflow (HITL)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/workflows/{{workflow_id}}/approve", "host": ["{{baseUrl}}"], "path": ["workflows", "{{workflow_id}}", "approve"] },
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"approved\",\n  \"reason\": \"Setuju scenario E (kombinasi naik harga + optimasi ROAS)\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Tasks",
+      "item": [
+        {
+          "name": "POST Create Task Manual",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/tasks", "host": ["{{baseUrl}}"], "path": ["tasks"] },
+            "body": { "mode": "raw", "raw": "{\n  \"workflow_id\": \"{{workflow_id}}\",\n  \"agent\": \"financial_analyst\",\n  \"objective\": \"Analisis margin per produk Q1\",\n  \"priority\": \"high\"\n}" }
+          }
+        },
+        {
+          "name": "GET List Tasks by Workflow",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/tasks?workflow_id={{workflow_id}}", "host": ["{{baseUrl}}"], "path": ["tasks"], "query": [{ "key": "workflow_id", "value": "{{workflow_id}}" }] }
+          }
+        },
+        {
+          "name": "GET Task Detail",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/tasks/{{task_id}}", "host": ["{{baseUrl}}"], "path": ["tasks", "{{task_id}}"] }
+          }
+        },
+        {
+          "name": "PATCH Update Task Status",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/tasks/{{task_id}}", "host": ["{{baseUrl}}"], "path": ["tasks", "{{task_id}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"completed\",\n  \"confidence\": 82,\n  \"output\": { \"summary\": \"Margin tertinggi produk A 42%\" }\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Finance",
+      "item": [
+        {
+          "name": "GET Cashflow + Runway 13w",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/finance/cashflow?business_id={{business_id}}", "host": ["{{baseUrl}}"], "path": ["finance", "cashflow"], "query": [{ "key": "business_id", "value": "{{business_id}}" }] }
+          }
+        },
+        {
+          "name": "POST Finance Analysis (margin/BEP/CAC)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/finance/analysis", "host": ["{{baseUrl}}"], "path": ["finance", "analysis"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"period\": \"2026-Q1\",\n  \"questions\": [\"Apakah bisnis untung?\", \"Produk paling profitable?\"]\n}" }
+          }
+        },
+        {
+          "name": "POST Forecast 3 Bulan (best/base/worst)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/finance/forecast", "host": ["{{baseUrl}}"], "path": ["finance", "forecast"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"months\": 3,\n  \"scenario\": \"all\"\n}" }
+          }
+        },
+        {
+          "name": "GET List Transactions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/finance/transactions?business_id={{business_id}}&period=2026-09", "host": ["{{baseUrl}}"], "path": ["finance", "transactions"], "query": [{ "key": "business_id", "value": "{{business_id}}" }, { "key": "period", "value": "2026-09" }] }
+          }
+        },
+        {
+          "name": "POST Import Transactions",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/finance/transactions", "host": ["{{baseUrl}}"], "path": ["finance", "transactions"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"transactions\": [{ \"type\": \"revenue\", \"amount\": 15000000, \"category\": \"sales\", \"occurred_at\": \"2026-09-05T00:00:00+07:00\", \"source\": \"sheets\" }]\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Marketing",
+      "item": [
+        {
+          "name": "POST Create Campaign (budget 10jt)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/marketing/campaigns", "host": ["{{baseUrl}}"], "path": ["marketing", "campaigns"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"objective\": \"Naikkan revenue 30%\",\n  \"budget\": 10000000,\n  \"channels\": [\"meta\", \"google\", \"tiktok\"]\n}" }
+          }
+        },
+        {
+          "name": "GET List Campaigns",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/marketing/campaigns", "host": ["{{baseUrl}}"], "path": ["marketing", "campaigns"] }
+          }
+        },
+        {
+          "name": "POST Generate Content Calendar",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/marketing/content", "host": ["{{baseUrl}}"], "path": ["marketing", "content"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"period\": \"2026-10\",\n  \"platforms\": [\"instagram\", \"tiktok\"]\n}" }
+          }
+        },
+        {
+          "name": "POST Generate Copy (AIDA)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/marketing/copy/generate", "host": ["{{baseUrl}}"], "path": ["marketing", "copy", "generate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"objective\": \"Ads copy untuk kemeja linen, Meta Ads\",\n  \"framework\": \"AIDA\",\n  \"platform\": \"meta\",\n  \"brand_voice\": \"casual_premium\"\n}" }
+          }
+        },
+        {
+          "name": "POST SEO Keyword Cluster",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/marketing/seo/keywords", "host": ["{{baseUrl}}"], "path": ["marketing", "seo", "keywords"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"seed_keyword\": \"kemeja linen pria\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - Strategy",
+      "item": [
+        {
+          "name": "GET Competitor Analysis",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/strategy/competitors?business_id={{business_id}}", "host": ["{{baseUrl}}"], "path": ["strategy", "competitors"], "query": [{ "key": "business_id", "value": "{{business_id}}" }] }
+          }
+        },
+        {
+          "name": "POST Market Research (TAM/SAM/SOM)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/strategy/market-research", "host": ["{{baseUrl}}"], "path": ["strategy", "market-research"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"topic\": \"Market kemeja linen di Jawa\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 - KPI & Metrics",
+      "item": [
+        {
+          "name": "GET List KPIs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/kpis", "host": ["{{baseUrl}}"], "path": ["kpis"] }
+          }
+        },
+        {
+          "name": "GET Metrics (untuk chart)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/metrics?business_id={{business_id}}&kpi=revenue&period=2026-09", "host": ["{{baseUrl}}"], "path": ["metrics"], "query": [{ "key": "business_id", "value": "{{business_id}}" }, { "key": "kpi", "value": "revenue" }, { "key": "period", "value": "2026-09" }] }
+          }
+        },
+        {
+          "name": "POST Import Metrics Bulk",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/metrics/import", "host": ["{{baseUrl}}"], "path": ["metrics", "import"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"metrics\": [{ \"kpi\": \"revenue\", \"value\": 250000000, \"period_start\": \"2026-09-01T00:00:00+07:00\", \"period_end\": \"2026-09-30T23:59:59+07:00\", \"source\": \"sheets\" }]\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 - Reports",
+      "item": [
+        {
+          "name": "POST Generate Daily Report",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/reports/generate", "host": ["{{baseUrl}}"], "path": ["reports", "generate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"type\": \"daily\",\n  \"period\": \"2026-09-05\"\n}" }
+          }
+        },
+        {
+          "name": "GET List Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/reports?business_id={{business_id}}", "host": ["{{baseUrl}}"], "path": ["reports"], "query": [{ "key": "business_id", "value": "{{business_id}}" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 - Memory (Shared Business Memory)",
+      "item": [
+        {
+          "name": "GET Decision Memory",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/memories?business_id={{business_id}}&type=decision", "host": ["{{baseUrl}}"], "path": ["memories"], "query": [{ "key": "business_id", "value": "{{business_id}}" }, { "key": "type", "value": "decision" }] }
+          }
+        },
+        {
+          "name": "POST Write Memory",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/memories", "host": ["{{baseUrl}}"], "path": ["memories"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"type\": \"business\",\n  \"key\": \"pricing_kemeja_linen\",\n  \"value\": { \"price\": 170000, \"cogs\": 95000 }\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 - Integrations",
+      "item": [
+        {
+          "name": "GET List Integrations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/integrations", "host": ["{{baseUrl}}"], "path": ["integrations"] }
+          }
+        },
+        {
+          "name": "POST Connect Meta Ads (OAuth)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/integrations/meta_ads/connect", "host": ["{{baseUrl}}"], "path": ["integrations", "meta_ads", "connect"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\",\n  \"oauth_code\": \"PASTE_CODE_FROM_OAUTH_CALLBACK\"\n}" }
+          }
+        },
+        {
+          "name": "POST Sync Sheets Manual",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/integrations/sheets/sync", "host": ["{{baseUrl}}"], "path": ["integrations", "sheets", "sync"] },
+            "body": { "mode": "raw", "raw": "{\n  \"business_id\": \"{{business_id}}\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 - Approvals (Human-in-the-Loop)",
+      "item": [
+        {
+          "name": "GET List Pending Approvals",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/approvals?status=pending", "host": ["{{baseUrl}}"], "path": ["approvals"], "query": [{ "key": "status", "value": "pending" }] }
+          }
+        },
+        {
+          "name": "POST Decide Approval - APPROVE",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/approvals/{{approval_id}}/decide", "host": ["{{baseUrl}}"], "path": ["approvals", "{{approval_id}}", "decide"] },
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"approved\",\n  \"reason\": \"Budget disetujui, max 12jt sesuai rekomendasi Finance\"\n}" }
+          }
+        },
+        {
+          "name": "POST Decide Approval - REJECT",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/approvals/{{approval_id}}/decide", "host": ["{{baseUrl}}"], "path": ["approvals", "{{approval_id}}", "decide"] },
+            "body": { "mode": "raw", "raw": "{\n  \"decision\": \"rejected\",\n  \"reason\": \"Tunda dulu, cashflow ketat minggu ini\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 - Dashboard",
+      "item": [
+        {
+          "name": "GET Executive Overview",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{baseUrl}}/dashboard/overview?business_id={{business_id}}", "host": ["{{baseUrl}}"], "path": ["dashboard", "overview"], "query": [{ "key": "business_id", "value": "{{business_id}}" }] },
+            "description": "Balikin health_score, kpis, insights (opportunity/warning/critical), active_tasks, alerts"
+          }
+        }
+      ]
+    }
+  ]
+}

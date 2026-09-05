@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Business OS — Dashboard ala Pin (Dark Premium)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box}html,body{margin:0;font-family:Inter,system-ui;background:#0D0D0D;color:#fff}
+a{color:#9aa8ff}
+.layout{display:grid;grid-template-columns:84px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;background:#161616;border-right:1px solid #222;display:flex;flex-direction:column;align-items:center;padding:14px 10px;gap:14px}
+.logo{width:40px;height:40px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;font-weight:800}
+.nav{display:flex;flex-direction:column;gap:10px}
+.ico{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:transparent;color:#9CA3AF;cursor:pointer;border:1px solid transparent;font-size:18px}
+.ico.active{background:#fff;color:#0D0D0D;border-color:#fff}
+.ico:hover{background:#1f1f1f;color:#fff}
+.bottom{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.main{padding:18px 18px 28px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.search{flex:1;max-width:520px;display:flex;align-items:center;gap:10px;background:#1A1A1A;border:1px solid #232323;border-radius:999px;padding:10px 14px}
+.search input{flex:1;background:transparent;border:0;outline:0;color:#fff}
+.header-right{display:flex;gap:10px;align-items:center}
+.icon-btn{width:38px;height:38px;border-radius:50%;background:#1A1A1A;border:1px solid #232323;display:grid;place-items:center;color:#cbd5e1}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#5D5FEF,#22d3ee);display:grid;place-items:center;font-weight:700}
+.greet{font-size:26px;font-weight:800;margin:6px 0 14px}
+.cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1100px){.cards4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.cards4{grid-template-columns:1fr} .layout{grid-template-columns:1fr} .sidebar{display:none}}
+.card{background:#1A1A1A;border:1px solid #222;border-radius:22px;padding:16px}
+.metric{display:flex;justify-content:space-between;align-items:flex-start}
+.metric .label{font-size:12px;color:#9CA3AF}
+.metric .val{font-size:26px;font-weight:800;margin-top:6px}
+.badge{font-size:12px;padding:5px 8px;border-radius:999px;background:#0f2417;color:#86efac;border:1px solid #14532d}
+.badge.down{background:#2a1214;color:#fca5a5;border-color:#7f1d1d}
+.icon-circle{width:34px;height:34px;border-radius:50%;background:#222;display:grid;place-items:center}
+.grid2{display:grid;grid-template-columns:1.7fr .9fr;gap:12px;margin-top:12px}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.chart-card{padding:16px}
+.chart-head{display:flex;justify-content:space-between;align-items:center}
+.tabs{display:flex;gap:8px}
+.tab{padding:6px 10px;border-radius:999px;background:#232323;border:1px solid #2a2a2a;color:#9CA3AF;font-size:12px;cursor:pointer}
+.tab.active{background:#fff;color:#0D0D0D;border-color:#fff}
+.mini2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.mini{position:relative;overflow:hidden}
+.mini .bg-wave{position:absolute;inset:0;opacity:.25}
+.pill{font-size:11px;padding:4px 8px;border-radius:999px;background:#232323;border:1px solid #2a2a2a;color:#cbd5e1}
+.donut-wrap{display:flex;gap:12px;align-items:center}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#9CA3AF}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.section{margin-top:18px}
+.status4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.status4{grid-template-columns:repeat(2,1fr)}}
+.status{border-top:3px solid #5D5FEF}
+.status.await{border-color:#fb923c} .status.onway{border-color:#facc15} .status.deliv{border-color:#22c55e}
+.actionbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap}
+.actionbar .left{display:flex;gap:10px;align-items:center}
+.input{padding:10px 12px;border-radius:999px;background:#1A1A1A;border:1px solid #232323;color:#fff;outline:0}
+.btn{padding:10px 14px;border-radius:999px;border:1px solid #222;font-weight:700;cursor:pointer}
+.btn.primary{background:#fff;color:#0D0D0D;border-color:#fff}
+.btn.dark{background:#1A1A1A;color:#fff;border-color:#232323}
+.table-wrap{overflow:auto;border-radius:16px;border:1px solid #222;margin-top:12px}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:12px;border-bottom:1px solid #222;background:#161616}
+td{padding:14px 12px;border-bottom:1px solid #222;font-size:13px}
+.status-badge{padding:5px 8px;border-radius:999px;font-size:11px;border:1px solid #2a2a2a}
+.s-deliv{background:rgba(34,197,94,.14);color:#86efac;border-color:rgba(34,197,94,.3)}
+.s-onway{background:rgba(251,146,60,.14);color:#fdba74;border-color:rgba(251,146,60,.3)}
+.s-await{background:rgba(250,204,21,.14);color:#fde68a;border-color:rgba(250,204,21,.3)}
+.s-new{background:rgba(93,95,239,.14);color:#a5b4fc;border-color:rgba(93,95,239,.3)}
+.switch{display:flex;gap:8px}
+.view{display:none} .view.active{display:block}
+.sub{color:#9CA3AF;font-size:12px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">◇</div>
+    <nav class="nav">
+      <div class="ico active" onclick="showView('dash')" title="Dashboard">◧</div>
+      <div class="ico" onclick="showView('orders')" title="Orders">☰</div>
+      <div class="ico" onclick="showView('chat')" title="AI CEO">●</div>
+      <div class="ico" onclick="showView('finance')" title="Finance">▭</div>
+      <div class="ico" onclick="showView('marketing')" title="Marketing">◉</div>
+    </nav>
+    <div class="bottom">
+      <div class="ico" title="Settings">⚙</div>
+      <div class="ico" title="Logout">⏻</div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="header">
+      <div class="search">⌕ <input placeholder="Search revenue, campaign, order..."><span class="sub">Sep 5, 2026</span></div>
+      <div class="header-right">
+        <div class="icon-btn">⚙</div>
+        <div class="icon-btn" style="position:relative">◐ <span style="position:absolute;top:6px;right:7px;width:8px;height:8px;background:#22c55e;border-radius:50%;border:2px solid #1A1A1A"></span></div>
+        <div class="avatar">B</div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW ala pin top -->
+    <div id="view-dash" class="view active">
+      <div class="greet">Hello Bos Ikun ! 👋 <span class="sub" style="font-weight:500">— AI Business OS Executive</span></div>
+      <div class="cards4">
+        <div class="card">
+          <div class="metric"><div><div class="label">Total revenue</div><div class="val">Rp 250 Jt</div><div class="sub">Finance • MoM +12%</div></div><div><div class="icon-circle">↗</div><div class="badge" style="margin-top:8px">+12%</div></div></div>
+        </div>
+        <div class="card">
+          <div class="metric"><div><div class="label">Total orders</div><div class="val">1,284</div><div class="sub">Marketplace + Web</div></div><div><div class="icon-circle">◧</div><div class="badge" style="margin-top:8px">+8%</div></div></div>
+        </div>
+        <div class="card">
+          <div class="metric"><div><div class="label">Total visitors</div><div class="val">42.7k</div><div class="sub">GA4 • CTR 2.1%</div></div><div><div class="icon-circle">◎</div><div class="badge down" style="margin-top:8px">-2%</div></div></div>
+        </div>
+        <div class="card">
+          <div class="metric"><div><div class="label">Net profit</div><div class="val">Rp 42 Jt</div><div class="sub">Margin 16.8%</div></div><div><div class="icon-circle">◆</div><div class="badge" style="margin-top:8px">+9%</div></div></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card chart-card">
+          <div class="chart-head"><div><div style="font-weight:700">Revenue</div><div class="sub">Bar chart — last 7 days (sample). Connect Sheets/GA4 for live.</div></div><div class="tabs"><div class="tab active">Day</div><div class="tab">Week</div><div class="tab">Month</div></div></div>
+          <canvas id="barChart" height="120"></canvas>
+        </div>
+        <div class="card">
+          <div style="font-weight:700">Sales by Category</div><div class="sub">Donut — kontribusi per produk</div>
+          <div class="donut-wrap" style="margin-top:10px">
+            <canvas id="donutChart" width="160" height="160"></canvas>
+            <div class="legend">
+              <div><span class="dot" style="background:#5D5FEF"></span> Kemeja Linen 44%</div>
+              <div><span class="dot" style="background:#fb923c"></span> Oxford 28%</div>
+              <div><span class="dot" style="background:#facc15"></span> Ads spend 15%</div>
+              <div><span class="dot" style="background:#22c55e"></span> Others 13%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mini2">
+        <div class="card mini">
+          <svg class="bg-wave" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M0 50 C60 10 120 90 180 50 S 240 10 300 50 L300 80 L0 80 Z" fill="#5D5FEF" opacity=".25"/></svg>
+          <div style="position:relative"><div class="label" style="color:#9CA3AF;font-size:12px">Orders</div><div style="font-size:28px;font-weight:800;margin-top:6px">1,284 <span class="pill">↗ +6%</span></div><div class="sub">Conversion 2.1% (was 3.2%)</div></div>
+        </div>
+        <div class="card mini">
+          <svg class="bg-wave" viewBox="0 0 300 80" preserveAspectRatio="none"><path d="M0 60 C70 40 130 70 200 30 S 260 60 300 50 L300 80 L0 80 Z" fill="#22c55e" opacity=".25"/></svg>
+          <div style="position:relative"><div class="label" style="color:#9CA3AF;font-size:12px">Customers</div><div style="font-size:28px;font-weight:800;margin-top:6px">892 <span class="pill">↗ +4%</span></div><div class="sub">CAC Rp 32rb • ROAS 3.2×</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS VIEW ala pin bottom -->
+    <div id="view-orders" class="view">
+      <div class="greet" style="font-size:20px">Orders — AI Business OS <span class="sub">status pipeline</span></div>
+      <div class="status4">
+        <div class="card status"><div class="sub">New</div><div style="font-size:24px;font-weight:800;margin-top:6px">128 <span class="badge">+4%</span></div></div>
+        <div class="card status await"><div class="sub">Awaiting</div><div style="font-size:24px;font-weight:800;margin-top:6px">84 <span class="badge down">-1%</span></div></div>
+        <div class="card status onway"><div class="sub">On way</div><div style="font-size:24px;font-weight:800;margin-top:6px">210 <span class="badge">+6%</span></div></div>
+        <div class="card status deliv"><div class="sub">Delivered</div><div style="font-size:24px;font-weight:800;margin-top:6px">862 <span class="badge">+9%</span></div></div>
+      </div>
+      <div class="actionbar">
+        <div class="left"><input class="input" placeholder="Search order, customer..."><button class="btn dark">Export</button><button class="btn dark">Sort</button></div>
+        <div><button class="btn primary">+ Add order</button></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>☐</th><th>Order</th><th>Customer</th><th>Category</th><th>Price</th><th>Date</th><th>Payment</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td>☐</td><td style="font-weight:700">#38291</td><td>Barbara Moore<br><span class="sub">+62 812 3456 7890</span></td><td>Kemeja Linen</td><td>Rp 170.000</td><td>Sep 5, 08:20</td><td>QRIS</td><td><span class="status-badge s-deliv">delivered</span></td><td>⋯</td></tr>
+            <tr><td>☐</td><td style="font-weight:700">#38290</td><td>Andi Wijaya<br><span class="sub">+62 813 1111 2222</span></td><td>Oxford</td><td>Rp 150.000</td><td>Sep 5, 07:40</td><td>Transfer</td><td><span class="status-badge s-onway">on way</span></td><td>⋯</td></tr>
+            <tr><td>☐</td><td style="font-weight:700">#38289</td><td>Sinta<br><span class="sub">+62 812 9999 0000</span></td><td>Linen Bundle</td><td>Rp 320.000</td><td>Sep 4, 19:10</td><td>COD</td><td><span class="status-badge s-await">awaiting</span></td><td>⋯</td></tr>
+            <tr><td>☐</td><td style="font-weight:700">#38288</td><td>Rina<br><span class="sub">+62 858 7777 8888</span></td><td>Linen</td><td>Rp 170.000</td><td>Sep 4, 15:02</td><td>QRIS</td><td><span class="status-badge s-new">new</span></td><td>⋯</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub" style="margin-top:8px">Data sample — hubungkan Marketplace/Sheets untuk live orders.</div>
+    </div>
+
+    <!-- CHAT VIEW (keep functional) -->
+    <div id="view-chat" class="view">
+      <div class="greet" style="font-size:20px">AI CEO & Agents <span class="sub">live via 8001 LLM</span></div>
+      <div class="card">
+        <div class="switch" style="margin-bottom:10px"><button class="btn dark" onclick="location.href='http://localhost:8001/'">Open Live Chat (8001)</button><span class="sub" style="align-self:center">atau pakai Postman POST /agents/:key/chat</span></div>
+        <div class="sub">Agents: CEO (orchestrator) • Financial Analyst • Marketing Manager • Copywriter • Social Media • SEO — semua GEMINI:gemini-3.6-flash</div>
+      </div>
+    </div>
+    <div id="view-finance" class="view"><div class="greet" style="font-size:20px">Finance</div><div class="card">P&L per produk, BEP Rp 185jt, margin Linen 44.1% (75rb), runway 42 hari. Connect Sheets untuk live.</div></div>
+    <div id="view-marketing" class="view"><div class="greet" style="font-size:20px">Marketing</div><div class="card">Campaign Kit 1-klik: Marketing Manager (alokasi 10jt) → Copywriter (AIDA 3 varian) → Social 7-day calendar. Live di http://localhost:8001/</div></div>
+  </main>
+</div>
+<script>
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelectorAll('.sidebar .ico').forEach((el,i)=>{
+    el.classList.toggle('active', ( ['dash','orders','chat','finance','marketing'][i]===id ));
+  });
+}
+// Charts
+const barCtx = document.getElementById('barChart');
+new Chart(barCtx, {
+  type:'bar',
+  data:{
+    labels:['Sep 1','Sep 2','Sep 3','Sep 4','Sep 5','Sep 6','Sep 7'],
+    datasets:[{label:'Revenue (jt)', data:[38,42,35,48,52,44,50], backgroundColor:'#5D5FEF', borderRadius:8, barThickness:22}]
+  },
+  options:{plugins:{legend:{display:false}}, scales:{y:{grid:{color:'#222'}, ticks:{color:'#9CA3AF'}}, x:{grid:{display:false}, ticks:{color:'#9CA3AF'}}}}
+});
+const donutCtx = document.getElementById('donutChart');
+new Chart(donutCtx, {
+  type:'doughnut',
+  data:{labels:['Linen','Oxford','Ads','Others'], datasets:[{data:[44,28,15,13], backgroundColor:['#5D5FEF','#fb923c','#facc15','#22c55e'], borderWidth:0}]},
+  options:{cutout:'68%', plugins:{legend:{display:false}}}
+});
+</script>
+</body>
+</html>

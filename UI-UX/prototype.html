@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Business OS — UI/UX Prototype (Premium)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B0F1A;--card:#12182A;--line:#1E2742;--text:#E6E9F5;--muted:#9AA4C0;--accent:#6C7BFF;--accent2:#4DF0FF;--ok:#16C98D;--warn:#F5A623;--crit:#FF4D6D}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:var(--text)}
+a{color:#b7bfff}
+.layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.layout{grid-template-columns:1fr} .sidebar{display:none}}
+.sidebar{border-right:1px solid var(--line);background:rgba(18,24,42,.6);backdrop-filter:blur(8px);position:sticky;top:0;height:100vh;padding:16px;display:flex;flex-direction:column;gap:14px}
+.brand{font-weight:700;font-size:16px;display:flex;gap:10px;align-items:center}
+.badge{font-size:11px;padding:4px 8px;border-radius:999px;background:#1a2340;border:1px solid var(--line);color:#c8d0ef}
+.nav{display:flex;flex-direction:column;gap:6px}
+.nav button{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--text);text-align:left;cursor:pointer}
+.nav button.active{background:#0f1426;border-color:var(--line);font-weight:600}
+.nav button:hover{background:#0f1426}
+.view{padding:18px 20px}
+.h1{font-size:22px;font-weight:700;margin:0}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{padding:12px;border-radius:12px;background:#0f1426;border:1px solid var(--line)}
+.kpi .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.kpi .val{font-size:20px;font-weight:700;margin-top:4px}
+.kpi .delta{font-size:12px;margin-top:4px}
+.delta.up{color:var(--ok)} .delta.down{color:var(--crit)}
+.health{height:12px;background:#0f1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.health>div{height:100%;width:72%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.breakdown{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.bar{height:6px;background:#0f1426;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.bar>div{height:100%;background:var(--accent)}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-top:14px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.insight{padding:12px;border-radius:12px;background:#0f1426;border:1px solid var(--line);border-left:4px solid var(--line);margin:8px 0}
+.insight.opportunity{border-left-color:var(--ok)} .insight.warning{border-left-color:var(--warn)} .insight.critical{border-left-color:var(--crit)}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--accent);color:white;font-weight:700;cursor:pointer}
+.btn.secondary{background:#1a2340;color:#c8d0ef}
+.btn.ghost{background:transparent;color:var(--text)}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.table{width:100%;border-collapse:collapse} .table th,.table td{padding:10px;border-bottom:1px solid var(--line);font-size:13px}
+.pill{padding:6px 10px;border-radius:999px;background:#1a2340;border:1px solid var(--line);font-size:12px}
+.agent-row{display:flex;gap:8px;flex-wrap:wrap}
+.agent{padding:6px 10px;border-radius:999px;background:#1a2340;border:1px solid var(--line);font-size:12px}
+.agent.active{background:var(--accent);color:white;border-color:transparent}
+.placeholder{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px;background:#0f1426}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar">
+    <div class="brand">◇ AI Business OS <span class="badge">UI/UX v1</span></div>
+    <div class="sub">Design System — Inter, dark premium, 8pt</div>
+    <div class="nav">
+      <button class="active" onclick="showView('dashboard')">◇ Dashboard</button>
+      <button onclick="showView('ceo')">● AI CEO & Chat</button>
+      <button onclick="showView('workflows')">▸ Workflows (DAG)</button>
+      <button onclick="showView('finance')">▭ Finance</button>
+      <button onclick="showView('marketing')">◉ Marketing</button>
+      <button onclick="showView('strategy')">◆ Strategy</button>
+      <button onclick="showView('tasks')">☰ Tasks</button>
+      <button onclick="showView('reports')">◼ Reports</button>
+      <button onclick="showView('memory')">◐ Memory</button>
+      <button onclick="showView('integrations')">↔ Integrations</button>
+      <button onclick="showView('settings')">⚙ Settings</button>
+    </div>
+    <div class="placeholder" style="margin-top:auto">CEO Orchestrator<br>16 agents • Human Approval</div>
+  </div>
+  <div class="view">
+    <!-- DASHBOARD -->
+    <div id="view-dashboard">
+      <div class="h1">Executive Dashboard</div>
+      <div class="sub">Ringkasan kesehatan bisnis — Health Score, KPI, Insights, Active Tasks. Link live: <a href="http://localhost:8001/" target="_blank">localhost:8001</a> (hub ke 8000 mock + 8001 LLM)</div>
+      <div class="card" style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div><div style="font-weight:700">Business Health Score</div><div class="sub">0-100 — Financial 30 • Marketing 25 • Growth 20 • Ops 15 • Customer 10</div></div>
+          <div><span class="pill" style="font-size:18px;font-weight:700">72 / 100 — Good</span></div>
+        </div>
+        <div class="health" style="margin-top:12px"><div></div></div>
+        <div class="breakdown">
+          <div><div class="sub">Financial 80</div><div class="bar"><div style="width:80%"></div></div></div>
+          <div><div class="sub">Marketing 60</div><div class="bar"><div style="width:60%"></div></div></div>
+          <div><div class="sub">Growth 70</div><div class="bar"><div style="width:70%"></div></div></div>
+          <div><div class="sub">Operational 75</div><div class="bar"><div style="width:75%"></div></div></div>
+          <div><div class="sub">Customer 65</div><div class="bar"><div style="width:65%"></div></div></div>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="label">Revenue (30d)</div><div class="val">Rp 250 Jt</div><div class="delta up">▲ 12% WoW</div></div>
+        <div class="kpi"><div class="label">Expense</div><div class="val">Rp 208 Jt</div><div class="delta down">▼ 5% WoW</div></div>
+        <div class="kpi"><div class="label">Profit</div><div class="val">Rp 42 Jt</div><div class="delta up">▲ 8% · Margin 16.8%</div></div>
+        <div class="kpi"><div class="label">Cashflow</div><div class="val">Rp 180 Jt</div><div class="delta down">Runway 42 hari — warning</div></div>
+        <div class="kpi"><div class="label">CAC</div><div class="val">Rp 32.000</div><div class="sub">Target &lt;35k — safe</div></div>
+        <div class="kpi"><div class="label">ROAS</div><div class="val">3.2×</div><div class="sub">Target 3.5×</div></div>
+        <div class="kpi"><div class="label">Conversion</div><div class="val">2.1%</div><div class="sub">Was 3.2% — drop</div></div>
+        <div class="kpi"><div class="label">Growth</div><div class="val">+12%</div><div class="sub">MoM</div></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div style="font-weight:700">AI Insights</div>
+          <div class="insight opportunity"><b>Opportunity</b> — Produk Kemeja Linen margin 44.1% (Rp 75rb/pcs), growth 18%. Push via bundling. <span class="pill">Confidence 82</span> <span class="sub">Source: Finance Analyst</span></div>
+          <div class="insight warning"><b>Warning</b> — Spend +24% vs Revenue +5%. ROAS 3.8 → 2.9. CAC naik. <span class="pill">Confidence 91</span></div>
+          <div class="insight critical"><b>Critical</b> — Cashflow negatif 21 hari jika burn tetap. Action: cut losers, nego HPP. <span class="pill">Confidence 76</span></div>
+        </div>
+        <div class="card">
+          <div style="font-weight:700">Active Tasks (CEO DAG)</div>
+          <table class="table">
+            <tr><th>Task</th><th>Agent</th><th>Status</th></tr>
+            <tr><td>Analisis margin & BEP</td><td>Financial Analyst</td><td><span class="pill">working</span></td></tr>
+            <tr><td>CAC/ROAS per channel</td><td>Performance Mkt</td><td><span class="pill">assigned</span></td></tr>
+            <tr><td>Simulasi pricing bundling</td><td>Strategist</td><td><span class="pill">awaiting approval</span></td></tr>
+            <tr><td>Dashboard tracking</td><td>Data Analyst</td><td><span class="pill">pending</span></td></tr>
+          </table>
+          <div class="toolbar" style="margin-top:10px"><button class="btn">Approve Workflow</button><button class="btn secondary">View DAG</button></div>
+          <div class="sub" style="margin-top:8px">Flow: Observe → Think → Plan → Delegate → Execute → Measure → Learn → Optimize</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CEO -->
+    <div id="view-ceo" style="display:none">
+      <div class="h1">AI CEO — Chat & Delegation</div>
+      <div class="sub">Hub-and-spoke: CEO delegasi ke Finance/Marketing/Strategy/Data. Human approval untuk budget &gt;15%.</div>
+      <div class="card" style="margin-top:12px">
+        <div class="agent-row"><span class="agent active">CEO Orchestrator</span><span class="agent">→ Finance</span><span class="agent">→ Marketing</span><span class="agent">→ Strategy</span><span class="agent">→ Data</span></div>
+        <div class="placeholder" style="margin-top:12px;text-align:left">
+          User: "Kenapa profit turun?"<br>
+          CEO → delegate Financial Analyst (margin/BEP) + Performance Mkt (ROAS/CAC) → cross-check Data → synthesis → 5 scenario (A naik harga B turun cost C naik volume D optimasi ROAS E kombinasi) → rekomendasi A+D (+21% profit, confidence 72) → minta approval.
+        </div>
+        <div class="toolbar" style="margin-top:10px"><button class="btn" onclick="window.open('http://localhost:8001/','_blank')">Open Live Chat (8001)</button><span class="sub">Postman: POST /agents/ceo/chat (SSE streaming)</span></div>
+      </div>
+    </div>
+
+    <!-- WORKFLOWS -->
+    <div id="view-workflows" style="display:none">
+      <div class="h1">Workflows — Task Decomposition</div>
+      <div class="sub">CEO pecah objective jadi DAG. Contoh "Naikkan profit 20% dalam 3 bulan".</div>
+      <div class="card" style="margin-top:12px">
+        <div class="toolbar"><span class="pill">wf_abc123 • planning • priority high</span><span class="pill">requires approval</span></div>
+        <table class="table" style="margin-top:10px">
+          <tr><th>Agent</th><th>Objective</th><th>Priority</th><th>Approval</th></tr>
+          <tr><td>Financial Analyst</td><td>Analisis margin per produk & BEP</td><td>high</td><td>-</td></tr>
+          <tr><td>Performance Mkt</td><td>CAC/ROAS/CTR per channel</td><td>high</td><td>-</td></tr>
+          <tr><td>Business Strategist</td><td>Simulasi pricing 15→17rb, bundling AOV</td><td>medium</td><td>Level 2</td></tr>
+          <tr><td>Data Analyst</td><td>Projected impact 5 scenario</td><td>high</td><td>-</td></tr>
+        </table>
+        <div class="toolbar" style="margin-top:10px"><button class="btn">Approve & Execute</button><button class="btn secondary">Edit DAG</button></div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div id="view-finance" style="display:none">
+      <div class="h1">Finance Department</div>
+      <div class="sub">P&L per produk, BEP, CAC/LTV, cashflow 13w, forecast best/base/worst.</div>
+      <div class="kpis">
+        <div class="kpi"><div class="label">Margin Linen</div><div class="val">44.1%</div><div class="sub">75rb / 170rb — most profitable</div></div>
+        <div class="kpi"><div class="label">Margin Oxford</div><div class="val">43.3%</div><div class="sub">65rb / 150rb</div></div>
+        <div class="kpi"><div class="label">BEP</div><div class="val">Rp 185 Jt</div></div>
+        <div class="kpi"><div class="label">Runway</div><div class="val">42 hari</div><div class="sub">Burn 42jt</div></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div style="font-weight:700">Finance Q&A</div>
+        <div class="sub">Apakah untung? Produk paling profitable? BEP? Budget aman? Iklan naik 30% dampak? Forecast 3 bulan? Runway?</div>
+        <div class="placeholder" style="margin-top:10px">Connect Google Sheets (revenue/HPP/expense) untuk angka live — tanpa itu label ESTIMATION.</div>
+      </div>
+    </div>
+
+    <!-- MARKETING -->
+    <div id="view-marketing" style="display:none">
+      <div class="h1">Marketing Department</div>
+      <div class="sub">Budget 10jt → Meta 45% TikTok 32% Google 23% (ROAS weighted). Copy AIDA, Social 7-day, SEO cluster.</div>
+      <div class="card" style="margin-top:12px">
+        <div style="font-weight:700">Campaign Kit (1 klik di Live Dashboard)</div>
+        <div class="sub">Marketing Manager (alokasi + KPI) → Copywriter (3 varian AIDA) → Social Media (calendar 7 hari) → Approval → Launch</div>
+        <div class="toolbar" style="margin-top:10px"><button class="btn secondary" onclick="window.open('http://localhost:8001/','_blank')">Generate di Live Dashboard</button><span class="sub">POST /marketing/campaigns, /copy/generate, /content</span></div>
+      </div>
+    </div>
+
+    <!-- OTHER -->
+    <div id="view-strategy" style="display:none"><div class="h1">Strategy</div><div class="sub">Market TAM/SAM/SOM, Competitor SWOT, Growth playbook (upsell/cross-sell/referral).</div><div class="card" style="margin-top:12px"><div class="placeholder">Connect competitor price watch, market research RAG.</div></div></div>
+    <div id="view-tasks" style="display:none"><div class="h1">Tasks</div><div class="sub">Kanban: planning / working / awaiting_approval / completed. Dependencies DAG.</div><div class="card" style="margin-top:12px"><div class="placeholder">State: idle → planning → working → reviewing → awaiting_approval → completed/failed</div></div></div>
+    <div id="view-reports" style="display:none"><div class="h1">Reports</div><div class="sub">Daily (Yesterday/Today/3 Recommendations), Weekly, Monthly, Campaign, Financial, SEO, Social, Executive.</div><div class="card" style="margin-top:12px"><div class="placeholder">Template: Summary → Data → Insight (So what?) → Problem → Opportunity → Recommendation → Action Plan</div></div></div>
+    <div id="view-memory" style="display:none"><div class="h1">Shared Memory & Knowledge Base</div><div class="sub">Business Profile, Financial/Marketing/Strategy, Decision Memory (alasan + tanggal + hasil), Episodic.</div><div class="card" style="margin-top:12px"><div class="placeholder">RAG + Vector DB (pgvector/Qdrant) + Structured Business DB.</div></div></div>
+    <div id="view-integrations" style="display:none"><div class="h1">Integrations</div><div class="sub">GA4, GSC, Meta/Google/TikTok Ads, Sheets, E-commerce, CRM, WA/Slack/Email.</div><div class="card" style="margin-top:12px"><table class="table"><tr><th>Provider</th><th>Status</th><th>Sync</th></tr><tr><td>Google Sheets</td><td>connected</td><td>6h</td></tr><tr><td>Meta Ads</td><td>connected</td><td>1h</td></tr><tr><td>GA4</td><td>todo</td><td>1h</td></tr></table></div></div>
+    <div id="view-settings" style="display:none"><div class="h1">Settings</div><div class="sub">RBAC (Owner/Admin/Finance/Marketing/Strategy/Viewer), Approval Level 1/2/3, Guardrails, Cost routing.</div><div class="card" style="margin-top:12px"><div class="placeholder">Permission per agent: Finance READ financial WRITE forecast REQUIRES_APPROVAL budget.</div></div></div>
+  </div>
+</div>
+<script>
+function showView(id){
+  document.querySelectorAll('[id^="view-"]').forEach(el=>el.style.display='none');
+  document.getElementById('view-'+id).style.display='block';
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+</script>
+</body>
+</html>

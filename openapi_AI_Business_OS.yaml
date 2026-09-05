@@ -1,0 +1,1073 @@
+openapi: 3.1.0
+info:
+  title: Agentic AI Business Operating System - API Spec
+  version: 1.0.0
+  description: |
+    Kontrak API lengkap untuk AI Company OS (16 agents + CEO Orchestrator).
+    Base URL: https://api.aicompanyos.com/api/v1
+    Buku menu untuk Frontend & Backend biar nyambung. Import file ini langsung ke Postman / Swagger UI.
+  contact:
+    name: Product Team
+servers:
+  - url: https://api.aicompanyos.com/api/v1
+    description: Production
+  - url: http://localhost:8000/api/v1
+    description: Local dev
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Businesses
+  - name: Agents
+  - name: Workflows
+  - name: Tasks
+  - name: Finance
+  - name: Marketing
+  - name: Strategy
+  - name: KPI & Metrics
+  - name: Reports
+  - name: Memory
+  - name: Integrations
+  - name: Approvals
+  - name: Dashboard
+
+# ===================== PATHS =====================
+paths:
+  # ---------- AUTH ----------
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login - dapatkan JWT
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email, example: owner@brand.com }
+                password: { type: string, example: "rahasia123" }
+      responses:
+        '200':
+          description: Login sukses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string, example: eyJhbGciOiJIUzI1NiJ9... }
+                  refresh_token: { type: string }
+                  expires_in: { type: integer, example: 3600 }
+                  user: { $ref: '#/components/schemas/User' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+      responses:
+        '200':
+          description: Token baru
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  expires_in: { type: integer, example: 3600 }
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Cek user yang sedang login
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+
+  # ---------- BUSINESSES ----------
+  /businesses:
+    post:
+      tags: [Businesses]
+      summary: Daftarkan / buat bisnis (onboarding)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BusinessCreate' }
+            example:
+              name: Brand Fashion A
+              industry: Fashion Retail
+              products: [{ name: "Kemeja Linen", price: 170000, cogs: 95000 }]
+              target_market: Wanita 25-35 Jabodetabek
+              business_model: D2C via Marketplace + IG
+              goals: ["profit +20% dalam 3 bulan"]
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Business' }
+    get:
+      tags: [Businesses]
+      summary: List bisnis dalam organization
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Business' } }
+
+  /businesses/{id}:
+    get:
+      tags: [Businesses]
+      summary: Detail bisnis
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Business' } } } }
+    patch:
+      tags: [Businesses]
+      summary: Update Business Profile
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BusinessCreate' }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Business' } } } }
+
+  # ---------- AGENTS ----------
+  /agents:
+    get:
+      tags: [Agents]
+      summary: List 16 agents + status
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Agent' }
+
+  /agents/{key}/chat:
+    post:
+      tags: [Agents]
+      summary: Ngobrol dengan agent (SSE streaming seperti ChatGPT)
+      description: |
+        Kirim pesan ke CEO atau agent departemen. Response streaming via Server-Sent Events (SSE).
+        Frontend terima event: agent_thinking -> delegate -> token -> done
+      parameters:
+        - { name: key, in: path, required: true, schema: { type: string, enum: [ceo, finance_manager, financial_analyst, cashflow_analyst, forecasting, marketing_manager, performance_marketing, social_media, copywriter, seo, business_strategist, market_research, competitor_analyst, growth, data_analyst, reporting, insight] }, example: ceo }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string, example: "Kenapa profit turun bulan ini?" }
+                business_id: { type: string, example: biz_123 }
+                conversation_id: { type: string, nullable: true, description: "kosongkan untuk chat baru" }
+                stream: { type: boolean, default: true }
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                example: |
+                  event: agent_thinking
+                  data: {"agent":"ceo","status":"Memecah objective..."}
+
+                  event: delegate
+                  data: {"from":"ceo","to":"financial_analyst","task_id":"tsk_1"}
+
+                  event: token
+                  data: {"text":"Profit turun 12% karena..."}
+
+                  event: done
+                  data: {"conversation_id":"conv_abc","confidence":78}
+
+  # ---------- WORKFLOWS (CEO Orchestrator) ----------
+  /workflows:
+    post:
+      tags: [Workflows]
+      summary: Buat workflow - suruh CEO pecah objective jadi task
+      description: Endpoint paling penting. Kirim 1 kalimat objective, CEO akan buat DAG task.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id, objective]
+              properties:
+                business_id: { type: string, example: biz_123 }
+                objective: { type: string, example: "Naikkan profit 20% dalam 3 bulan" }
+                priority: { type: string, enum: [low, medium, high], default: medium }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Workflow' }
+              example:
+                workflow_id: wf_abc123
+                objective: Naikkan profit 20% dalam 3 bulan
+                status: planning
+                tasks:
+                  - id: tsk_1
+                    agent: financial_analyst
+                    objective: Analisis margin per produk Q1
+                    priority: high
+                    status: assigned
+                  - id: tsk_2
+                    agent: performance_marketing
+                    objective: Analisis CAC & ROAS per channel
+                    priority: high
+                    status: assigned
+                  - id: tsk_3
+                    agent: business_strategist
+                    objective: Simulasi pricing 15rb->17rb
+                    priority: medium
+                    status: pending
+                requires_approval: true
+    get:
+      tags: [Workflows]
+      summary: List workflows
+      parameters:
+        - { name: business_id, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { type: string, enum: [planning, working, awaiting_approval, completed, failed] } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Workflow' } }
+
+  /workflows/{id}:
+    get:
+      tags: [Workflows]
+      summary: Detail workflow + progress task
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Workflow' } } } }
+
+  /workflows/{id}/approve:
+    post:
+      tags: [Workflows]
+      summary: Approve workflow yang butuh Human-in-the-Loop
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approved, rejected] }
+                reason: { type: string, example: "Setuju scenario E (A+D)" }
+      responses:
+        '200': { description: Workflow lanjut ke execution }
+
+  # ---------- TASKS ----------
+  /tasks:
+    post:
+      tags: [Tasks]
+      summary: Buat task manual untuk agent
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskCreate' }
+      responses:
+        '201': { content: { application/json: { schema: { $ref: '#/components/schemas/Task' } } } }
+    get:
+      tags: [Tasks]
+      summary: List tasks (filter by workflow/agent/status)
+      parameters:
+        - { name: workflow_id, in: query, schema: { type: string } }
+        - { name: agent, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { type: string } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Task' } }
+
+  /tasks/{id}:
+    get:
+      tags: [Tasks]
+      summary: Detail task
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Task' } } } }
+    patch:
+      tags: [Tasks]
+      summary: Update status / output task
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string, enum: [working, reviewing, completed, failed] }
+                output: { type: object }
+                confidence: { type: integer, minimum: 0, maximum: 100 }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Task' } } } }
+
+  # ---------- FINANCE ----------
+  /finance/transactions:
+    get:
+      tags: [Finance]
+      summary: List transaksi keuangan
+      parameters:
+        - { name: business_id, in: query, required: true, schema: { type: string } }
+        - { name: period, in: query, schema: { type: string, example: "2026-01" } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Transaction' } }
+    post:
+      tags: [Finance]
+      summary: Import transaksi (dari Sheets / manual)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                business_id: { type: string }
+                transactions: { type: array, items: { $ref: '#/components/schemas/Transaction' } }
+      responses:
+        '201': { description: Import sukses }
+
+  /finance/analysis:
+    post:
+      tags: [Finance]
+      summary: Minta Financial Analyst analisis (margin, BEP, CAC/LTV)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id, period]
+              properties:
+                business_id: { type: string }
+                period: { type: string, example: "2026-Q1" }
+                questions: { type: array, items: { type: string }, example: ["Apakah bisnis untung?", "Produk paling profitable?"] }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  revenue: { type: number, example: 250000000 }
+                  cogs: { type: number, example: 140000000 }
+                  gross_profit: { type: number }
+                  gross_margin: { type: number, example: 0.44 }
+                  bep: { type: number, example: 185000000 }
+                  per_product: { type: array, items: { type: object } }
+                  confidence: { type: integer, example: 82 }
+                  sources: { type: array, items: { type: string } }
+
+  /finance/forecast:
+    post:
+      tags: [Finance]
+      summary: Forecast 3 bulan (best/base/worst) - Financial Forecasting Agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id]
+              properties:
+                business_id: { type: string }
+                months: { type: integer, default: 3, example: 3 }
+                scenario: { type: string, enum: [base, best, worst, all], default: all }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  base: { type: array, items: { type: object } }
+                  best: { type: array, items: { type: object } }
+                  worst: { type: array, items: { type: object } }
+                  assumptions: { type: array, items: { type: string } }
+                  confidence: { type: integer }
+
+  /finance/cashflow:
+    get:
+      tags: [Finance]
+      summary: Cashflow + runway 13 minggu - Cashflow Analyst
+      parameters:
+        - { name: business_id, in: query, required: true, schema: { type: string } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cash_balance: { type: number }
+                  burn_rate: { type: number }
+                  runway_days: { type: integer, example: 42 }
+                  forecast_13w: { type: array, items: { type: object } }
+                  alert: { type: string, enum: [ok, warning, critical], example: warning }
+
+  # ---------- MARKETING ----------
+  /marketing/campaigns:
+    post:
+      tags: [Marketing]
+      summary: Buat campaign (Performance Marketing Agent)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id, objective, budget]
+              properties:
+                business_id: { type: string }
+                objective: { type: string, example: "Naikkan revenue 30%" }
+                budget: { type: number, example: 10000000 }
+                channels: { type: array, items: { type: string, enum: [meta, google, tiktok] } }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  campaign_id: { type: string }
+                  structure: { type: object }
+                  allocation: { type: object, example: { meta: 5000000, google: 3000000, tiktok: 2000000 } }
+                  kpi: { type: object, example: { CAC_target: 35000, ROAS_target: 3.5 } }
+                  requires_approval: { type: boolean }
+    get:
+      tags: [Marketing]
+      summary: List campaigns
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { type: object } }
+
+  /marketing/campaigns/{id}:
+    get:
+      tags: [Marketing]
+      summary: Detail campaign
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { content: { application/json: { schema: { type: object } } } }
+
+  /marketing/content:
+    post:
+      tags: [Marketing]
+      summary: Generate content calendar - Social Media Agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id]
+              properties:
+                business_id: { type: string }
+                period: { type: string, example: "2026-10" }
+                platforms: { type: array, items: { type: string }, example: [instagram, tiktok] }
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  calendar: { type: array, items: { type: object } }
+
+  /marketing/copy/generate:
+    post:
+      tags: [Marketing]
+      summary: Generate copy - Copywriter Agent (AIDA/PAS dll)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [objective]
+              properties:
+                objective: { type: string, example: "Ads copy untuk kemeja linen, Meta Ads" }
+                framework: { type: string, enum: [AIDA, PAS, BAB, FAB, storytelling], default: AIDA }
+                platform: { type: string, example: meta }
+                brand_voice: { type: string, example: casual_premium }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  variants:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        headline: { type: string }
+                        body: { type: string }
+                        cta: { type: string }
+
+  /marketing/seo/keywords:
+    post:
+      tags: [Marketing]
+      summary: Keyword cluster - SEO Agent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id, seed_keyword]
+              properties:
+                business_id: { type: string }
+                seed_keyword: { type: string, example: kemeja linen pria }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  clusters: { type: array, items: { type: object } }
+                  roadmap: { type: array, items: { type: object } }
+
+  # ---------- STRATEGY ----------
+  /strategy/competitors:
+    get:
+      tags: [Strategy]
+      summary: Competitor analysis
+      parameters:
+        - { name: business_id, in: query, required: true, schema: { type: string } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  competitors: { type: array, items: { type: object } }
+                  swot: { type: object }
+    post:
+      tags: [Strategy]
+      summary: Request competitor deep dive
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                business_id: { type: string }
+                competitor_name: { type: string }
+      responses:
+        '201': { description: Task dibuat untuk Competitor Analyst }
+
+  /strategy/market-research:
+    post:
+      tags: [Strategy]
+      summary: Market research (TAM/SAM/SOM)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id]
+              properties:
+                business_id: { type: string }
+                topic: { type: string, example: "Market kemeja linen di Jawa" }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tam: { type: number }
+                  sam: { type: number }
+                  som: { type: number }
+                  label: { type: string, example: ESTIMATION }
+                  confidence: { type: integer }
+
+  # ---------- KPI & METRICS ----------
+  /kpis:
+    get:
+      tags: [KPI & Metrics]
+      summary: List KPI definitions
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/KPI' } }
+    post:
+      tags: [KPI & Metrics]
+      summary: Buat KPI custom
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/KPI' }
+      responses:
+        '201': { content: { application/json: { schema: { $ref: '#/components/schemas/KPI' } } } }
+
+  /metrics:
+    get:
+      tags: [KPI & Metrics]
+      summary: Ambil metrics (untuk chart dashboard)
+      parameters:
+        - { name: business_id, in: query, required: true, schema: { type: string } }
+        - { name: kpi, in: query, schema: { type: string, example: revenue } }
+        - { name: period, in: query, schema: { type: string, example: "2026-09" } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Metric' } }
+
+  /metrics/import:
+    post:
+      tags: [KPI & Metrics]
+      summary: Import metrics bulk (dari Sheets/GA4/Meta)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                business_id: { type: string }
+                metrics: { type: array, items: { $ref: '#/components/schemas/Metric' } }
+      responses:
+        '201': { description: Import sukses }
+
+  # ---------- REPORTS ----------
+  /reports/generate:
+    post:
+      tags: [Reports]
+      summary: Generate report (daily/weekly/monthly/campaign/financial/seo/social/executive)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [business_id, type]
+              properties:
+                business_id: { type: string }
+                type: { type: string, enum: [daily, weekly, monthly, campaign, financial, seo, social, executive] }
+                period: { type: string, example: "2026-09-05" }
+      responses:
+        '201': { content: { application/json: { schema: { $ref: '#/components/schemas/Report' } } } }
+
+  /reports/{id}:
+    get:
+      tags: [Reports]
+      summary: Detail report
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Report' } } } }
+
+  /reports:
+    get:
+      tags: [Reports]
+      summary: List reports
+      parameters:
+        - { name: business_id, in: query, schema: { type: string } }
+        - { name: type, in: query, schema: { type: string } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Report' } }
+
+  # ---------- MEMORY ----------
+  /memories:
+    get:
+      tags: [Memory]
+      summary: Baca shared memory (business/financial/marketing/strategy/decision/episodic)
+      parameters:
+        - { name: business_id, in: query, required: true, schema: { type: string } }
+        - { name: type, in: query, schema: { type: string, enum: [business, financial, marketing, strategy, decision, episodic, working, short] } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Memory' } }
+    post:
+      tags: [Memory]
+      summary: Tulis memory
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Memory' }
+      responses:
+        '201': { content: { application/json: { schema: { $ref: '#/components/schemas/Memory' } } } }
+
+  /memories/{id}:
+    get:
+      tags: [Memory]
+      summary: Detail memory
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Memory' } } } }
+
+  # ---------- INTEGRATIONS ----------
+  /integrations:
+    get:
+      tags: [Integrations]
+      summary: List integrations terhubung
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Integration' } }
+
+  /integrations/{provider}/connect:
+    post:
+      tags: [Integrations]
+      summary: Connect provider via OAuth
+      parameters:
+        - { name: provider, in: path, required: true, schema: { type: string, enum: [ga4, gsc, google_ads, meta_ads, tiktok_ads, sheets, whatsapp, slack, email] } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                business_id: { type: string }
+                oauth_code: { type: string, description: "code dari OAuth callback" }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Integration' } } } }
+
+  /integrations/{provider}/sync:
+    post:
+      tags: [Integrations]
+      summary: Trigger sync manual
+      parameters:
+        - { name: provider, in: path, required: true, schema: { type: string } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                business_id: { type: string }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  synced_records: { type: integer }
+                  last_sync_at: { type: string, format: date-time }
+
+  # ---------- APPROVALS ----------
+  /approvals:
+    get:
+      tags: [Approvals]
+      summary: List approvals pending
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, approved, rejected] } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: array, items: { $ref: '#/components/schemas/Approval' } }
+
+  /approvals/{id}/decide:
+    post:
+      tags: [Approvals]
+      summary: Approve / Reject (Human-in-the-Loop)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approved, rejected] }
+                reason: { type: string, example: "Budget disetujui, max 12jt" }
+      responses:
+        '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Approval' } } } }
+
+  # ---------- DASHBOARD ----------
+  /dashboard/overview:
+    get:
+      tags: [Dashboard]
+      summary: Data untuk Executive Dashboard
+      parameters:
+        - { name: business_id, in: query, required: true, schema: { type: string } }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  health_score: { type: integer, example: 72 }
+                  health_breakdown: { type: object, example: { financial: 80, marketing: 60, growth: 70, operational: 75, customer: 65 } }
+                  kpis: { type: object, example: { revenue: 250000000, profit: 42000000, cashflow: 180000000, cac: 32000, roas: 3.2 } }
+                  insights:
+                    type: array
+                    items: { type: object }
+                    example:
+                      - type: opportunity
+                        text: Produk A margin 42% growth 18%
+                      - type: warning
+                        text: Spend +24% revenue +5%
+                      - type: critical
+                        text: Cashflow negatif 21 hari
+                  active_tasks: { type: array, items: { type: object } }
+                  alerts: { type: array, items: { type: object } }
+
+# ===================== COMPONENTS =====================
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Unauthorized:
+      description: Token tidak valid / expired
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, example: unauthorized }
+              message: { type: string, example: "Token expired" }
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: string, example: usr_123 }
+        email: { type: string, example: owner@brand.com }
+        name: { type: string, example: Budi }
+        role: { type: string, enum: [owner, admin, finance, marketing, strategy, viewer] }
+
+    Business:
+      type: object
+      properties:
+        id: { type: string, example: biz_123 }
+        org_id: { type: string }
+        name: { type: string, example: Brand Fashion A }
+        industry: { type: string, example: Fashion Retail }
+        products: { type: array, items: { type: object } }
+        target_market: { type: string }
+        business_model: { type: string }
+        created_at: { type: string, format: date-time }
+
+    BusinessCreate:
+      type: object
+      required: [name, industry]
+      properties:
+        name: { type: string }
+        industry: { type: string }
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              price: { type: number }
+              cogs: { type: number }
+        target_market: { type: string }
+        business_model: { type: string }
+        goals: { type: array, items: { type: string } }
+
+    Agent:
+      type: object
+      properties:
+        key: { type: string, example: ceo }
+        name: { type: string, example: CEO Agent }
+        team: { type: string, example: executive }
+        status: { type: string, enum: [idle, planning, working, waiting, reviewing, awaiting_approval, completed, failed] }
+        model_tier: { type: string, enum: [haiku, mini, pro] }
+
+    Workflow:
+      type: object
+      properties:
+        workflow_id: { type: string, example: wf_abc123 }
+        business_id: { type: string }
+        objective: { type: string }
+        status: { type: string, enum: [planning, working, awaiting_approval, completed, failed] }
+        tasks: { type: array, items: { $ref: '#/components/schemas/Task' } }
+        requires_approval: { type: boolean }
+        created_at: { type: string, format: date-time }
+
+    Task:
+      type: object
+      properties:
+        id: { type: string, example: tsk_1 }
+        workflow_id: { type: string }
+        agent: { type: string, example: financial_analyst }
+        objective: { type: string, example: Analisis margin per produk }
+        priority: { type: string, enum: [low, medium, high] }
+        status: { type: string, enum: [pending, assigned, working, reviewing, awaiting_approval, completed, failed] }
+        dependencies: { type: array, items: { type: string } }
+        input: { type: object }
+        output: { type: object }
+        confidence: { type: integer, minimum: 0, maximum: 100, nullable: true }
+        approval_required: { type: string, enum: [level1, level2, level3], nullable: true }
+        deadline: { type: string, format: date-time, nullable: true }
+
+    TaskCreate:
+      type: object
+      required: [workflow_id, agent, objective]
+      properties:
+        workflow_id: { type: string }
+        agent: { type: string }
+        objective: { type: string }
+        priority: { type: string, enum: [low, medium, high], default: medium }
+        deadline: { type: string, format: date-time }
+        input: { type: object }
+
+    Transaction:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [revenue, expense, cogs] }
+        amount: { type: number, example: 15000000 }
+        category: { type: string, example: ads }
+        product_id: { type: string, nullable: true }
+        occurred_at: { type: string, format: date-time }
+        source: { type: string, example: sheets }
+
+    KPI:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string, example: ROAS }
+        category: { type: string, enum: [business, marketing, social, seo, finance] }
+        target: { type: number, example: 3.5 }
+        unit: { type: string, example: ratio }
+
+    Metric:
+      type: object
+      properties:
+        id: { type: string }
+        kpi: { type: string, example: revenue }
+        value: { type: number, example: 250000000 }
+        period_start: { type: string, format: date-time }
+        period_end: { type: string, format: date-time }
+        source: { type: string, example: sheets }
+
+    Report:
+      type: object
+      properties:
+        id: { type: string, example: rpt_123 }
+        business_id: { type: string }
+        type: { type: string, enum: [daily, weekly, monthly, campaign, financial, seo, social, executive] }
+        period: { type: string }
+        payload:
+          type: object
+          properties:
+            summary: { type: string }
+            data: { type: object }
+            insight: { type: string }
+            problems: { type: array, items: { type: string } }
+            opportunities: { type: array, items: { type: string } }
+            recommendations: { type: array, items: { type: object } }
+            action_plan: { type: array, items: { type: object } }
+        generated_by: { type: string, example: reporting_agent }
+        created_at: { type: string, format: date-time }
+
+    Memory:
+      type: object
+      properties:
+        id: { type: string }
+        business_id: { type: string }
+        type: { type: string, enum: [business, financial, marketing, strategy, decision, episodic, working, short] }
+        key: { type: string, example: pricing_kemeja_linen }
+        value: { type: object }
+        version: { type: integer }
+        created_at: { type: string, format: date-time }
+
+    Integration:
+      type: object
+      properties:
+        id: { type: string }
+        provider: { type: string, example: meta_ads }
+        status: { type: string, enum: [connected, disconnected, error] }
+        last_sync_at: { type: string, format: date-time, nullable: true }
+        sync_freq: { type: string, example: 1h }
+
+    Approval:
+      type: object
+      properties:
+        id: { type: string, example: apr_123 }
+        task_id: { type: string }
+        level: { type: string, enum: [level1, level2, level3] }
+        status: { type: string, enum: [pending, approved, rejected] }
+        requested_by: { type: string, example: ceo_agent }
+        decided_by: { type: string, nullable: true }
+        reason: { type: string, nullable: true }
+        requested_at: { type: string, format: date-time }

@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: poody-business-os
+    env: node
+    plan: free
+    region: singapore
+    branch: main
+    rootDir: ./
+    buildCommand: npm --prefix agentic-prototype install && npm --prefix mock-server install
+    startCommand: node agentic-prototype/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+      - key: JWT_SECRET
+        generateValue: true
+    healthCheckPath: /health

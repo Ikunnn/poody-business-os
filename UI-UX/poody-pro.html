@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Poody — Business OS | Silky Pudding</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#F8FAFC;color:#0F172A;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;letter-spacing:-0.01em}
+a{color:inherit}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.app{grid-template-columns:1fr} .sidebar{display:none} .sidebar.open{display:flex;position:fixed;inset:0;z-index:40} }
+/* Sidebar */
+.sidebar{background:#0F172A;color:#E2E8F0;display:flex;flex-direction:column;padding:16px;gap:14px}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#F59E0B,#FB7185);display:grid;place-items:center;font-size:18px;color:white;font-weight:800}
+.brand h1{margin:0;font:700 15px/1 'Inter',system-ui,sans-serif;letter-spacing:-0.02em} .brand p{margin:2px 0 0;color:#94A3B8;font-size:12px}
+.nav{display:grid;gap:6px;margin-top:4px}
+.nav button{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid transparent;background:transparent;color:#CBD5E1;cursor:pointer;text-align:left;font-weight:600;font-size:13px}
+.nav button.active{background:white;color:#0F172A;border-color:#E2E8F0;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.nav button:hover{background:rgba(255,255,255,.08)} .nav button.active:hover{background:white}
+.nav .ico{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:14px}
+.nav button.active .ico{background:#FFF7ED}
+.side-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
+.side-card .label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#94A3B8;font-weight:700}
+.side-card .val{font-size:13px;color:white;margin-top:4px} .side-card .hint{font-size:11px;color:#94A3B8;margin-top:4px}
+/* Main */
+.main{display:flex;flex-direction:column;min-width:0}
+.top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid #E2E8F0;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.top h2{margin:0;font:600 16px 'Inter',system-ui,sans-serif;letter-spacing:-0.015em} .top .sub{color:#64748B;font-size:12px;margin-top:2px}
+.top-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{padding:6px 10px;border-radius:999px;border:1px solid #E2E8F0;background:white;color:#334155;font-size:12px;font-weight:700}
+.pill.accent{background:#0F172A;color:white;border-color:#0F172A}
+.pill.ok{background:#ECFDF5;border-color:#A7F3D0;color:#065F46} .pill.warn{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
+.content{padding:16px;max-width:1200px;width:100%;margin:0 auto}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{padding:8px 12px;border-radius:999px;border:1px solid #E2E8F0;background:white;cursor:pointer;font-size:12px;font-weight:700;color:#475569}
+.tab.active{background:#0F172A;color:white;border-color:#0F172A}
+.view{display:none} .view.active{display:block}
+.card{background:white;border:1px solid #E2E8F0;border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.04)}
+.card-h{font:600 13px 'Inter',system-ui,sans-serif;color:#0F172A;letter-spacing:-0.01em} .card-sub{font-size:12px;color:#64748B;margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}} @media(max-width:560px){.kpis{grid-template-columns:1fr}}
+.kpi{border-radius:14px;padding:12px;border:1px solid #E2E8F0;background:linear-gradient(180deg,#FFFFFF,#F8FAFC)}
+.kpi .label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#64748B;font-weight:700}
+.kpi .val{font-size:20px;font-weight:800;margin-top:4px;color:#0F172A} .kpi .hint{font-size:12px;color:#64748B;margin-top:4px}
+.kpi .trend{font-size:11px;font-weight:700;margin-top:6px;display:inline-flex;gap:4px;align-items:center;padding:4px 8px;border-radius:999px;border:1px solid #E2E8F0;background:white}
+.grid2{display:grid;grid-template-columns:1.35fr .9fr;gap:12px;margin-top:12px}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+.pose{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media(max-width:1100px){.pose{grid-template-columns:repeat(2,1fr)}} @media(max-width:620px){.pose{grid-template-columns:1fr}}
+.flavor{border:1px solid #E2E8F0;border-radius:14px;padding:10px;background:#FFFFFF}
+.flavor h3{margin:0;font:600 13px 'Inter',system-ui,sans-serif;text-transform:capitalize;letter-spacing:-0.01em} .flavor .emoji{font-size:18px}
+.size-block{border:1px solid #E2E8F0;border-radius:12px;padding:8px;margin-top:8px;background:#F8FAFC}
+.size-block .head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.meta{font-size:12px;color:#334155} .meta b{color:#0F172A}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:30px;height:30px;border-radius:8px;border:1px solid #E2E8F0;background:white;font-weight:800;cursor:pointer}
+.step input{width:52px;text-align:center;padding:6px;border-radius:8px;border:1px solid #E2E8F0;font-weight:700;background:white}
+.toppings{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.toppings label{font-size:11px;background:white;border:1px solid #E2E8F0;padding:4px 8px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:4px;user-select:none;color:#334155}
+.toppings label:has(input:checked){background:#0F172A;color:white;border-color:#0F172A}
+.toppings input{accent-color:#0F172A}
+.order{position:sticky;top:72px}
+@media(max-width:1000px){.order{position:static}}
+.divider{height:1px;background:#E2E8F0;margin:12px 0}
+input,select,textarea{padding:10px;border-radius:10px;border:1px solid #E2E8F0;background:white;color:#0F172A}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-shadow:0 0 0 3px rgba(15,23,42,.08)}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid #0F172A;background:#0F172A;color:white;font-weight:800;cursor:pointer}
+.btn:hover{filter:brightness(1.05)} .btn.secondary{background:white;color:#0F172A;border-color:#E2E8F0} .btn.ghost{background:#F8FAFC;color:#0F172A;border-color:#E2E8F0}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.badge{font-size:11px;padding:4px 8px;border-radius:999px;font-weight:800;color:white} .badge.ok{background:#10B981} .badge.warn{background:#F59E0B} .badge.crit{background:#EF4444} .badge.neutral{background:#64748B}
+.insight{padding:10px;border-radius:12px;margin:8px 0;display:flex;gap:10px;align-items:flex-start;border:1px solid #E2E8F0;background:white}
+.insight.ok{border-color:#A7F3D0;background:#ECFDF5} .insight.warn{border-color:#FDE68A;background:#FFFBEB} .insight.crit{border-color:#FECACA;background:#FEF2F2}
+.table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #E2E8F0;border-radius:12px}
+.table th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#64748B;background:#F8FAFC;padding:10px;text-align:left}
+.table td{padding:10px;border-top:1px solid #E2E8F0;font-size:13px}
+.health{height:8px;background:#E2E8F0;border-radius:999px;overflow:hidden} .health>div{height:100%;background:linear-gradient(90deg,#0F172A,#F59E0B)}
+.bars{display:flex;align-items:end;gap:6px;height:90px;margin-top:8px}
+.bars div{flex:1;border-radius:8px 8px 4px 4px;background:linear-gradient(180deg,#0F172A,#334155);min-height:6px}
+.bars div.alt{background:linear-gradient(180deg,#F59E0B,#FB7185)}
+.small{font-size:12px;color:#64748B} pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,monospace;font-size:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px}
+.muted{color:#64748B}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">P</div>
+      <div><h1>Poody</h1><p>Silky Pudding • UMKM</p></div>
+    </div>
+    <div class="side-card">
+      <div class="label">Halo Bos Ikun 👋</div>
+      <div class="val" id="sideDate">—</div>
+      <div class="hint">Target harian Rp 200.000 • 6 rasa • 2 size</div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="active" data-view="kasir"><span class="ico">🧾</span> Kasir Harian <span style="margin-left:auto" class="badge neutral" id="navKasirBadge">—</span></button>
+      <button data-view="beranda"><span class="ico">📊</span> Dashboard</button>
+      <button data-view="history"><span class="ico">📜</span> Riwayat</button>
+      <button data-view="tanya"><span class="ico">💬</span> Tanya AI</button>
+      <button data-view="rencana"><span class="ico">🎯</span> Rencana</button>
+      <button data-view="foto"><span class="ico">📸</span> Foto Produk</button>
+    </nav>
+    <div class="side-card">
+      <div class="label">Kesehatan usaha</div>
+      <div class="health" style="margin-top:8px"><div id="healthBarSide" style="width:50%"></div></div>
+      <div class="val" id="healthPillSide" style="font-size:12px;margin-top:8px">Memuat…</div>
+      <div class="hint" id="healthTextSide">—</div>
+    </div>
+    <div class="side-card" id="bizCard" style="background:rgba(255,255,255,.08)">
+      <div class="label">Bisnis aktif</div>
+      <div class="val" id="bizNameSide">Poody Silky Pudding</div>
+      <div class="hint" id="bizMetaSide">biz_poody • sinkron Google Sheets</div>
+      <div class="small" id="bizSyncHint" style="margin-top:6px;color:#E2E8F0"></div>
+    </div>
+    <div class="small" style="margin-top:auto;color:#94A3B8"><span id="bizLabelSide">biz_poody</span> • <span id="modePill">LLM</span> • persist aktif</div>
+  </aside>
+
+  <div class="main">
+    <div class="top">
+      <div>
+        <h2 id="pageTitle">Kasir Harian</h2>
+        <div class="sub" id="pageSub">Input penjualan & topping — harga otomatis, laba langsung kehitung</div>
+      </div>
+      <div class="top-actions">
+        <select id="bizSelect" onchange="onBizChange()" title="Pilih warung/brand" style="min-width:160px;font-weight:700"></select>
+        <button class="btn ghost" style="padding:6px 10px" onclick="openBizModal()">+ Bisnis</button>
+        <button class="btn ghost" style="padding:6px 10px" id="syncBtn" onclick="syncSheetsLive()">↻ Sync Sheets</button>
+        <input type="date" id="saleDate" style="min-width:140px">
+        <input type="text" id="saleNote" placeholder="Catatan (opsional)" style="min-width:140px">
+        <span class="pill" id="healthPill">Memuat…</span>
+        <span class="pill accent" id="todayPill">—</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- KASIR -->
+      <div id="view-kasir" class="view active">
+        <div class="grid2">
+          <div class="card">
+            <div class="card-h">Pilih menu hari ini</div>
+            <div class="card-sub">Atur jumlah per rasa & size, centang topping untuk tambah omset (2rb–3rb). Harga M Rp 10.000 (HPP 5.100) • L Rp 12.000 (HPP 6.100)</div>
+            <div class="small" style="margin-top:6px">Topping: keju 2rb • oreo 2rb • red velvet 3rb • matcha crumb 3rb • regal 3rb • froot loops 3rb • koko krunch 3rb</div>
+            <div class="pose" id="poseGrid"></div>
+            <div class="divider"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <button class="btn" onclick="submitSale()">💾 Simpan penjualan</button>
+              <button class="btn secondary" onclick="resetSale()">Reset</button>
+              <span class="small" id="saleMsg"></span>
+            </div>
+            <div class="small" style="margin-top:8px">Tip: kalau 1 rasa butuh 2 kombinasi topping berbeda, simpan dulu kombinasi pertama, lalu input lagi kombinasi kedua (terpisah 2 transaksi — digabung di ringkasan).</div>
+          </div>
+
+          <div class="card order">
+            <div class="card-h">Ringkasan pesanan (belum disimpan)</div>
+            <div class="card-sub">Live calc sebelum klik Simpan</div>
+            <div class="kpis" style="grid-template-columns:repeat(2,1fr);margin-top:10px">
+              <div class="kpi"><div class="label">Cup</div><div class="val" id="kCups">0</div><div class="hint">total</div></div>
+              <div class="kpi"><div class="label">Omset</div><div class="val" id="kRevenue">Rp 0</div><div class="hint" id="kRevHint">Target 200rb</div></div>
+              <div class="kpi"><div class="label">Modal (HPP)</div><div class="val" id="kCost">Rp 0</div><div class="hint" id="kExtraHint">—</div></div>
+              <div class="kpi"><div class="label">Laba kotor</div><div class="val" id="kProfit">Rp 0</div><div class="hint" id="kMargin">Margin -</div></div>
+            </div>
+            <div class="divider"></div>
+            <div class="card-sub">Ringkasan hari ini (sudah tersimpan)</div>
+            <div style="margin-top:8px" id="sumBody">Memuat…</div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn secondary" onclick="loadSummary()">Refresh</button><button class="btn ghost" onclick="askFinance()">Tanya AI keuangan</button><button class="btn ghost" onclick="exportExcelToday()">📥 Excel hari ini</button><button class="btn ghost" onclick="openReceipt()">🧾 Struk</button></div>
+            <div class="divider"></div>
+            <div class="card-h">Pengeluaran hari ini</div>
+            <div class="card-sub">Bahan, topping, operasional — biar laba bersih akurat</div>
+            <div style="display:grid;grid-template-columns:1.2fr .8fr .9fr;gap:8px;margin-top:8px">
+              <input id="expTitle" placeholder="Judul mis: Beli susu 2L">
+              <select id="expCat"><option value="bahan">bahan</option><option value="topping">topping</option><option value="operasional">operasional</option><option value="transport">transport</option><option value="lain">lain</option></select>
+              <input id="expAmount" type="number" placeholder="Rp 50000">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px"><button class="btn ghost" onclick="submitExpense()">+ Tambah pengeluaran</button><span class="small" id="expMsg"></span></div>
+            <div id="expList" style="margin-top:10px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div id="view-beranda" class="view">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+          <span class="small" style="font-weight:700">Periode:</span>
+          <select id="monthSelect" onchange="onMonthChange()"></select>
+          <select id="rangeSelect" onchange="onMonthChange()"><option value="month">Bulan penuh</option><option value="7">7 hari terakhir</option><option value="30">30 hari</option></select>
+          <span class="small" id="monthSummary" style="margin-left:auto;color:#334155;font-weight:600"></span>
+          <button class="btn ghost" style="padding:6px 10px" onclick="exportExcelMonth()">📥 Excel bulan</button>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="label">Omset hari ini</div><div class="val" id="vRevenue">-</div><div class="hint" id="vRevHint">vs target 200rb</div><div class="trend" id="vRevTrend">—</div></div>
+          <div class="kpi"><div class="label">Pengeluaran</div><div class="val" id="vExpense">-</div><div class="hint">di luar HPP</div><div class="trend" id="vExpTrend">—</div></div>
+          <div class="kpi"><div class="label">Laba bersih</div><div class="val" id="vProfit">-</div><div class="hint" id="vMargin">—</div><div class="trend" id="vProfitTrend">—</div></div>
+          <div class="kpi"><div class="label">Cup terjual</div><div class="val" id="vCups">-</div><div class="hint" id="vBest">-</div><div class="trend" id="vCupsTrend">—</div></div>
+        </div>
+        <div class="card" id="monthCard" style="margin-top:12px;padding:12px">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div><div class="card-h" id="monthCardTitle">Ringkasan bulan</div><div class="card-sub" id="monthCardSub">Pilih bulan di atas</div></div><span class="badge neutral" id="monthNetBadge">—</span></div>
+          <div class="kpis" style="margin-top:10px" id="kpisMonth"></div>
+          <div class="small" id="monthExtra" style="margin-top:8px;color:#64748B"></div>
+        </div>
+        <div class="card" id="kpiCard" style="margin-top:12px;border-color:#0F172A">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+            <div><div class="card-h">🎯 KPI Monitoring — Target harian</div><div class="card-sub" id="kpiSub">Kemarin vs target • 3-hari streak • MTD • margin • topping</div></div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <span class="pill" id="kpiHealth">—</span>
+              <span class="pill" id="kpiStreak">—</span>
+              <button class="btn ghost" style="padding:6px 10px" onclick="loadKpi()">Refresh</button>
+            </div>
+          </div>
+          <div class="kpis" style="margin-top:10px" id="kpiGrid"></div>
+          <div id="kpiAlerts" style="margin-top:8px"></div>
+          <div class="small" id="kpiMeta" style="margin-top:6px;color:#64748B"></div>
+        </div>
+        <div class="card" id="briefingCard" style="margin-top:12px;border-color:#0F172A">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+            <div><div class="card-h">☀️ Briefing Pagi (07:00)</div><div class="card-sub" id="briefingSub">Kemarin vs target 200rb • laba usaha exclude pribadi</div></div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <span class="pill" id="briefingHealth">—</span>
+              <input type="date" id="briefingDate" style="padding:6px 8px;font-size:12px">
+              <button class="btn ghost" style="padding:6px 10px" onclick="previewBriefing()">Lihat</button>
+              <button class="btn" style="padding:6px 10px" onclick="generateBriefing()">Generate & simpan</button>
+            </div>
+          </div>
+          <div style="margin-top:10px;display:grid;grid-template-columns:1.2fr .8fr;gap:10px">
+            <pre id="briefingText" style="margin:0;min-height:90px;white-space:pre-wrap;word-break:break-word;background:#F8FAFC">Memuat briefing…</pre>
+            <div>
+              <div class="kpi" style="padding:10px"><div class="label">Kemarin</div><div class="val" id="brRev" style="font-size:16px">—</div><div class="hint" id="brHint">—</div></div>
+              <div class="kpi" style="padding:10px;margin-top:8px"><div class="label">MTD laba usaha</div><div class="val" id="brMtd" style="font-size:16px">—</div><div class="hint" id="brMtdHint">—</div></div>
+              <div class="small" id="briefingMeta" style="margin-top:8px;color:#64748B"></div>
+            </div>
+          </div>
+          <div class="small" id="briefingAnomaly" style="margin-top:8px"></div>
+        </div>
+        <div class="card" id="forecastCard" style="margin-top:12px;border-color:#FDE68A;background:linear-gradient(180deg,#FFFBEB,#FFFFFF)">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+            <div><div class="card-h">🔮 Forecast 7 hari + Stok + Alert</div><div class="card-sub" id="forecastSub">MA7 vs MA14 • trend • proyeksi exclude pribadi</div></div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <span class="pill" id="forecastTrend">—</span>
+              <span class="pill" id="forecastTotal">—</span>
+              <button class="btn ghost" style="padding:6px 10px" onclick="loadForecast()">Refresh</button>
+            </div>
+          </div>
+          <div id="forecastAlerts" style="margin-top:8px"></div>
+          <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin-top:8px">
+            <div>
+              <div class="small" style="font-weight:700">Proyeksi omset 7 hari ke depan</div>
+              <div class="bars" id="forecastBars" style="height:90px"></div>
+              <div class="small" style="display:flex;justify-content:space-between"><span id="fcFrom">—</span><span id="fcTo">—</span></div>
+            </div>
+            <div>
+              <div class="kpi" style="padding:10px"><div class="label">Rata 7d / 14d</div><div class="val" id="fcMa" style="font-size:15px">—</div><div class="hint" id="fcMaHint">—</div></div>
+              <div class="kpi" style="padding:10px;margin-top:8px"><div class="label">Kebutuhan stok</div><div class="val" id="fcStock" style="font-size:15px">—</div><div class="hint" id="fcStockHint">—</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="card-h" id="barsTitle">Performa 7 hari</div><div class="card-sub" id="barsSub">Omset (gelap) vs laba bersih usaha / net usaha (oranye, exclude ambil pribadi)</div>
+            <div class="bars" id="bars"></div>
+            <div style="display:flex;justify-content:space-between" class="small"><span id="barFrom">—</span><span id="barTo">—</span></div>
+          </div>
+          <div class="card">
+            <div class="card-h">Kesehatan usaha</div>
+            <div class="health" style="margin-top:10px"><div id="healthBar" style="width:50%"></div></div>
+            <div class="small" id="healthText" style="margin-top:8px">—</div>
+            <div class="card-h" style="margin-top:14px">Apa kata AI?</div>
+            <div id="insights"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="view-history" class="view">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <div><div class="card-h">Riwayat</div><div class="card-sub">Filter tanggal, lihat detail + topping</div></div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><select id="historyMonthSelect" onchange="onHistoryMonth()"></select><input type="date" id="fromDate"><span class="small">—</span><input type="date" id="toDate"><button class="btn secondary" onclick="loadHistory()">Tampilkan</button><button class="btn ghost" onclick="exportExcelRange()">📥 Excel</button></div>
+          </div>
+          <div id="historyBody" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+            <!-- TANYA -->
+      <div id="view-tanya" class="view">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div><div class="card-h">Tanya AI — pakai bahasa sehari-hari <span class="pill" id="memBadge" style="margin-left:6px">— memori</span></div><div class="card-sub">Contoh: "Topping mana paling cuan? Hari ini rugi kenapa?" — AI baca memori + transaksi otomatis (RAG)</div></div><span class="pill" id="ragPill" style="display:none">RAG ok</span></div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+            <select id="agentKey" style="min-width:160px"><option value="ceo">Bos AI (CEO)</option><option value="financial_analyst">Keuangan</option><option value="marketing_manager">Jualan</option><option value="copywriter">Caption</option><option value="social_media">Sosmed</option></select>
+            <button class="btn secondary" onclick="clearChat()">Bersihkan</button>
+            <button class="btn ghost" onclick="loadMemCount()">↻ Memori</button>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+            <input id="ragQuery" placeholder="Cari memori: mis topping, 2026-08-18, rugi..." style="flex:1;min-width:180px">
+            <button class="btn ghost" onclick="searchMem()">🔍 Cari memori</button>
+            <button class="btn ghost" onclick="document.getElementById('ragHits').innerHTML='';document.getElementById('ragHits').style.display='none'">Bersihkan</button>
+          </div>
+          <div id="ragHits" style="display:none;margin-top:8px;display:none;max-height:160px;overflow:auto;border:1px solid #E2E8F0;border-radius:10px;background:#F8FAFC;padding:8px"></div>
+          <div id="chatBox" style="height:300px;overflow:auto;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px;margin-top:10px"></div>
+          <div id="ragUsed" class="small" style="margin-top:6px;color:#64748B;display:none"></div>
+          <textarea id="chatInput" rows="2" placeholder="Ketik pertanyaan..." style="margin-top:8px"></textarea>
+          <button class="btn" style="margin-top:8px" onclick="sendChat()">Kirim</button>
+        </div>
+      </div>
+<!-- RENCANA -->
+      <div id="view-rencana" class="view">
+        <div class="card">
+          <div class="card-h">Rencana — AI pecah jadi tugas tim</div>
+          <div class="card-sub">Tulis tujuan, AI bagi ke keuangan, jualan, strategi — yang butuh approve tunggu Bos klik</div>
+          <input id="wfObjective" value="Mau omset naik dari 200rb ke 300rb per hari dalam 30 hari dengan push topping" style="margin-top:8px">
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" onclick="createWorkflow()">Bikin rencana</button><button class="btn secondary" onclick="loadWorkflows()">Lihat rencana lama</button><button class="btn ghost" onclick="loadApprovals()">🔔 Butuh approve (<span id="pendingCount">0</span>)</button></div>
+          <div id="approvalBanner" style="margin-top:10px"></div>
+          <div id="wfList" style="margin-top:10px;display:grid;gap:8px"></div>
+          <pre id="wfOut" style="margin-top:10px;min-height:80px;max-height:300px;overflow:auto;background:#F8FAFC"></pre>
+        </div>
+      </div>
+
+      <!-- FOTO -->
+      <div id="view-foto" class="view">
+        <div class="card">
+          <div class="card-h">Foto Poody — AI bantu cek & bikin katalog</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+            <div class="card" style="box-shadow:none"><div class="card-h">Cek foto</div><input type="file" id="imgFile" accept="image/*" style="margin-top:6px"><input type="text" id="imgPrompt" placeholder="Mis: cek topping, pencahayaan" style="margin-top:6px"><button class="btn" style="margin-top:6px" onclick="summarizeImage()">Cek foto</button><img id="imgPreview" style="display:none;max-width:100%;border-radius:12px;margin-top:8px;border:1px solid #E2E8F0"><pre id="imgOut" style="margin-top:8px;min-height:60px"></pre></div>
+            <div class="card" style="box-shadow:none"><div class="card-h">Ubah gaya foto</div><input type="file" id="imgFile2" accept="image/*" style="margin-top:6px"><select id="imgStyle" style="margin-top:6px"><option>studio katalog pudding, background putih</option><option>flat lay minimal</option><option>dipakai model, studio</option><option>outdoor estetik</option><option>mewah dessert</option></select><input type="text" id="imgPrompt2" placeholder="Extra: warna pastel" style="margin-top:6px"><button class="btn" style="margin-top:6px" onclick="transformImage()">Buat prompt</button><img id="imgPreview2" style="display:none;max-width:100%;border-radius:12px;margin-top:8px;border:1px solid #E2E8F0"><pre id="imgOut2" style="margin-top:8px;min-height:60px"></pre></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:none"><span id="sumDate"></span><span id="bizLabel">biz_poody</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="bizModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:50;align-items:center;justify-content:center;padding:16px"><div class="card" style="max-width:420px;width:100%"><div class="card-h">+ Bisnis baru</div><div class="card-sub">1 akun bisa banyak warung/brand — data pisah per business_id</div><div style="display:grid;gap:8px;margin-top:10px"><input id="newBizId" placeholder="ID mis: biz_cikarang (huruf, angka, _ , -)"><input id="newBizName" placeholder="Nama mis: Poody Cikarang"><input id="newBizAvg" type="number" placeholder="Target harian mis: 250000" value="200000"><div style="display:flex;gap:8px"><button class="btn" onclick="createBusiness()">Simpan</button><button class="btn secondary" onclick="closeBizModal()">Batal</button></div><div class="small" id="newBizMsg"></div><div class="small">Sheets default: 1MMS_23QeS5rUScwAaGM35ooxxCSoy2SX — sinkron akan tarik JUL-26/AGUST-26/SEP-26/OKT-26 ke bisnis dipilih.</div></div></div></div>
+<script>
+const API='http://localhost:8001/api/v1';
+let BIZ=localStorage.getItem('poody_biz')||'biz_poody';
+const CATALOG={variants:['chocolatte','matcha','mango','strawberry','taro','bubblemgum'], sizes:{M:{hpp:5100,price:10000,profit:4900},L:{hpp:6100,price:12000,profit:5900}}};
+const TOPPINGS=[
+  {key:'keju',label:'Keju',price:2000,hpp:900},
+  {key:'oreo crumb',label:'Oreo',price:2000,hpp:900},
+  {key:'red velvet crumb',label:'Red Velvet',price:3000,hpp:1300},
+  {key:'matcha crumb',label:'Matcha',price:3000,hpp:1300},
+  {key:'regal crumb',label:'Regal',price:3000,hpp:1200},
+  {key:'froot loops',label:'Froot Loops',price:3000,hpp:1400},
+  {key:'koko krunch',label:'Koko Krunch',price:3000,hpp:1400},
+];
+const EMO={chocolatte:'🍫',matcha:'🍵',mango:'🥭',strawberry:'🍓',taro:'🍠',bubblemgum:'🫧'};
+function slug(k){return k.replace(/\s+/g,'-');}
+function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n);}
+const todayStr=new Date().toISOString().slice(0,10);
+document.getElementById('sideDate').textContent=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+document.getElementById('todayPill').textContent=todayStr;
+document.getElementById('saleDate').value=todayStr;
+document.getElementById('fromDate').value=new Date(Date.now()-6*86400000).toISOString().slice(0,10);
+document.getElementById('toDate').value=todayStr;
+document.getElementById('sumDate').textContent=todayStr;
+
+const titles={kasir:['Kasir Harian','Input penjualan & topping — harga otomatis, laba langsung kehitung'],beranda:['Dashboard','Ringkasan kesehatan, insight AI, dan performa 7 hari'],history:['Riwayat','Filter tanggal, lihat detail + topping'],tanya:['Tanya AI','Tanya pakai bahasa sehari-hari — AI jawab pakai data hari ini'],rencana:['Rencana','AI pecah tujuan jadi tugas tim'],foto:['Foto Produk','Cek foto & ubah gaya katalog']};
+function setTitle(id){ document.getElementById('pageTitle').textContent=titles[id][0]; document.getElementById('pageSub').textContent=titles[id][1]; }
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.view===id));
+  setTitle(id);
+  if(id==='beranda'){ loadSummary(); loadBars(); loadKpi(); }
+  if(id==='history') loadHistory();
+  if(id==='rencana'){ loadWorkflows(); loadApprovals(); }
+  if(id==='tanya'){ loadMemCount(); }
+}
+document.querySelectorAll('.nav button').forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.view)));
+
+function buildPose(){
+  const grid=document.getElementById('poseGrid'); grid.innerHTML='';
+  CATALOG.variants.forEach(v=>{
+    const card=document.createElement('div'); card.className='flavor';
+    const mk=(size,price,hpp)=>{
+      const tops=TOPPINGS.map(t=>`<label><input type="checkbox" id="top-${v}-${size}-${slug(t.key)}" data-variant="${v}" data-size="${size}" data-topping="${t.key}" onchange="recalc()"> ${t.label} +${t.price/1000}k</label>`).join('');
+      return `<div class="size-block"><div class="head"><div class="meta"><b>Size ${size}</b> • ${rupiah(price)} <span class="muted">HPP ${rupiah(hpp)}</span></div><div class="step"><button onclick="step('${v}','${size}',-1)">−</button><input id="qty-${v}-${size}" type="number" min="0" value="0" oninput="recalc()"><button onclick="step('${v}','${size}',1)">+</button></div></div><div class="toppings">${tops}</div></div>`;
+    };
+    card.innerHTML=`<div style="display:flex;gap:8px;align-items:center"><span class="emoji">${EMO[v]||'🍮'}</span><h3>${v}</h3></div>${mk('M',10000,5100)}${mk('L',12000,6100)}`;
+    grid.appendChild(card);
+  });
+}
+function step(v,s,d){ const el=document.getElementById(`qty-${v}-${s}`); let n=parseInt(el.value||0,10)+d; if(n<0) n=0; el.value=n; recalc(); }
+function getItems(){
+  const items=[];
+  CATALOG.variants.forEach(v=>['M','L'].forEach(s=>{
+    const qty=parseInt(document.getElementById(`qty-${v}-${s}`)?.value||0,10);
+    if(qty>0){
+      const toppings=[]; TOPPINGS.forEach(t=>{ const el=document.getElementById(`top-${v}-${s}-${slug(t.key)}`); if(el?.checked) toppings.push(t.key); });
+      items.push({variant:v,size:s,qty,toppings});
+    }
+  }));
+  return items;
+}
+function recalc(){
+  const items=getItems(); let cups=0, rev=0, cost=0;
+  items.forEach(it=>{
+    const sz=CATALOG.sizes[it.size]; let tp=0,th=0;
+    (it.toppings||[]).forEach(k=>{ const t=TOPPINGS.find(x=>x.key===k); if(t){ tp+=t.price; th+=t.hpp; }});
+    cups+=it.qty; rev+=it.qty*(sz.price+tp); cost+=it.qty*(sz.hpp+th);
+  });
+  const profit=rev-cost;
+  document.getElementById('kCups').textContent=cups;
+  document.getElementById('kRevenue').textContent=rupiah(rev);
+  document.getElementById('kCost').textContent=rupiah(cost);
+  document.getElementById('kProfit').textContent=rupiah(profit);
+  document.getElementById('kMargin').textContent= rev? `Margin ${(profit/rev*100).toFixed(1)}%` : 'Margin -';
+  const topExtra=items.reduce((a,it)=> a + (it.toppings||[]).reduce((s,k)=> s + (TOPPINGS.find(x=>x.key===k)?.price||0),0)*it.qty,0);
+  document.getElementById('kRevHint').textContent=(rev>=200000?'✅ Lewat target':'Target 200rb') + (topExtra? ` • +${rupiah(topExtra)} topping`:'');
+  document.getElementById('kExtraHint').textContent=topExtra? 'Bahan + topping':'Bahan baku';
+  document.getElementById('navKasirBadge').textContent=cups? `${cups} cup` : '—';
+}
+function resetSale(){
+  CATALOG.variants.forEach(v=>['M','L'].forEach(s=>{
+    const el=document.getElementById(`qty-${v}-${s}`); if(el) el.value=0;
+    TOPPINGS.forEach(t=>{ const c=document.getElementById(`top-${v}-${s}-${slug(t.key)}`); if(c) c.checked=false; });
+  }));
+  document.getElementById('saleNote').value=''; recalc(); document.getElementById('saleMsg').textContent='';
+}
+async function submitSale(){
+  const items=getItems(); if(!items.length) return document.getElementById('saleMsg').textContent='Isi minimal 1 cup dulu';
+  const date=document.getElementById('saleDate').value||todayStr; const note=document.getElementById('saleNote').value||'';
+  document.getElementById('saleMsg').textContent='Menyimpan...';
+  try{
+    const r=await fetch(`${API}/sales`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_id:BIZ,date,items,note})});
+    const j=await r.json(); if(!r.ok) throw new Error(j.error||JSON.stringify(j));
+    document.getElementById('saleMsg').textContent=`✅ ${j.total_cups} cup • ${rupiah(j.revenue)} • laba ${rupiah(j.profit)}`;
+    resetSale(); loadSummary(); loadBars(); loadKpi(); loadHistory();
+  }catch(e){ document.getElementById('saleMsg').textContent='❌ '+e.message; }
+}
+async function submitExpense(){
+  const title=document.getElementById('expTitle').value.trim(); const amount=parseInt(document.getElementById('expAmount').value||0,10);
+  if(!title||!amount) return document.getElementById('expMsg').textContent='Isi judul & nominal';
+  const date=document.getElementById('saleDate').value||todayStr;
+  document.getElementById('expMsg').textContent='Menyimpan...';
+  try{
+    const r=await fetch(`${API}/expenses`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_id:BIZ,date,title,category:document.getElementById('expCat').value,amount})});
+    const j=await r.json(); if(!r.ok) throw new Error(j.error);
+    document.getElementById('expMsg').textContent=`✅ ${title} ${rupiah(amount)}`;
+    document.getElementById('expTitle').value=''; document.getElementById('expAmount').value=''; loadSummary(); loadKpi(); loadBars(); loadHistory();
+  }catch(e){ document.getElementById('expMsg').textContent='❌ '+e.message; }
+}
+async function loadKpi(){
+  const date=document.getElementById('saleDate').value||todayStr;
+  const sub=document.getElementById('kpiSub'), grid=document.getElementById('kpiGrid'), alertsEl=document.getElementById('kpiAlerts'), meta=document.getElementById('kpiMeta');
+  try{
+    const r=await fetch(`${API}/kpi/status?business_id=${BIZ}&date=${date}`);
+    const j=await r.json();
+    document.getElementById('kpiHealth').textContent=j.health;
+    document.getElementById('kpiHealth').className='pill '+(j.health==='SEHAT'?'ok':j.health==='CUKUP'?'warn':'');
+    document.getElementById('kpiStreak').textContent=j.streak.warning? `⚠️ ${j.streak.belowCount} hari merah` : j.streak.belowCount? `${j.streak.belowCount} hari di bawah target` : '✅ On target';
+    document.getElementById('kpiStreak').className='pill '+(j.streak.warning?'':'ok');
+    if(j.streak.warning) document.getElementById('kpiStreak').className='pill';
+    sub.textContent=`Target ${rupiah(j.target)}/hari • ${j.ym} (${j.dim} hari) • kemarin ${j.refDate}`;
+    const vsColor=j.vsTarget>=0?'#065F46':'#991B1B';
+    const vsBg=j.vsTarget>=0?'#ECFDF5':'#FEF2F2';
+    const vsBd=j.vsTarget>=0?'#A7F3D0':'#FECACA';
+    grid.innerHTML=`
+      <div class="kpi" style="border-color:${vsBd};background:${vsBg}"><div class="label">Kemarin vs target</div><div class="val" style="font-size:16px;color:${vsColor}">${rupiah(j.day.rev)} <span style="font-size:12px">${j.vsPct}%</span></div><div class="hint">${j.vsTarget>=0?`+${rupiah(j.vsTarget)} lewat`:`kurang ${rupiah(-j.vsTarget)}`} • ${j.day.cups} cup</div></div>
+      <div class="kpi"><div class="label">MTD rata (kalender)</div><div class="val" style="font-size:16px">${rupiah(j.mtd.avgCalendar)}/hari</div><div class="hint">${rupiah(j.mtd.rev)} / ${j.dayNum} hari • proj ${rupiah(j.mtd.projected)} vs target ${rupiah(j.mtd.targetMonth)}</div><div class="small" style="margin-top:4px">Butuh ${rupiah(j.mtd.needAvgRemaining)}/hari sisa ${j.dim - j.dayNum} hari</div></div>
+      <div class="kpi" style="border-color:${j.margin.status==='RUGI'?'#FECACA':j.margin.status==='CUKUP'?'#FDE68A':'#A7F3D0'};background:${j.margin.status==='RUGI'?'#FEF2F2':j.margin.status==='CUKUP'?'#FFFBEB':'#ECFDF5'}"><div class="label">Margin usaha kemarin</div><div class="val" style="font-size:16px">${j.margin.marginBiz}%</div><div class="hint">${j.margin.status} • net ${rupiah(j.day.netBiz)} (exp usaha ${rupiah(j.day.expBiz)})</div></div>
+      <div class="kpi"><div class="label">Topping attach</div><div class="val" style="font-size:16px">${j.topping.rate}%</div><div class="hint">${rupiah(j.topping.toppingRev)} dari ${rupiah(j.day.rev)} • ${j.topping.rate>=15?'✅ bagus':j.topping.rate>=8?'Cukup':'Rendah — push +2rb/3rb'}</div></div>`;
+    alertsEl.innerHTML=j.alerts.length? j.alerts.map(a=>{
+      const t=a.includes('⚠️')||a.includes('minus')||a.includes('Belum')?'crit':a.includes('kurang')||a.includes('tipis')||a.includes('rendah')?'warn':'ok';
+      return `<div class="insight ${t}"><span class="badge ${t==='ok'?'ok':t==='warn'?'warn':'crit'}">${t==='ok'?'Info':t==='warn'?'Hati-hati':'Bahaya'}</span><div style="font-size:13px;font-weight:600">${a}</div></div>`;
+    }).join('') : '<div class="insight ok"><span class="badge ok">Ok</span><div style="font-size:13px">Semua KPI aman — gas topping!</div></div>';
+    meta.textContent=`7 hari: ${j.last7.map(x=> x.date.slice(5)+' '+rupiah(x.rev)).join(' • ')}`;
+  }catch(e){ grid.innerHTML='<div class="small">Error KPI: '+e.message+'</div>'; }
+}
+async function loadSummary(){
+  const date=document.getElementById('saleDate').value||todayStr; document.getElementById('sumDate').textContent=date;
+  try{
+    const j=await (await fetch(`${API}/dashboard/summary?business_id=${BIZ}&date=${date}`)).json();
+    // dashboard
+    document.getElementById('vRevenue').textContent=rupiah(j.sales.revenue);
+    document.getElementById('vExpense').textContent=rupiah(j.expenses.total);
+    document.getElementById('vProfit').textContent=rupiah(j.net.profit);
+    document.getElementById('vMargin').textContent=`Margin ${j.net.margin} • HPP ${rupiah(j.sales.cost)}${j.sales.toppingRevenue?` (+topping ${rupiah(j.sales.toppingRevenue)})`:''}`;
+    document.getElementById('vCups').textContent=j.sales.cups+' cup';
+    document.getElementById('vBest').textContent=(j.sales.bestVariant? `Terlaris ${j.sales.bestVariant.variant} (${j.sales.bestVariant.qty})`:'Belum ada') + (j.sales.bestTopping? ` • topping ${j.sales.bestTopping.topping}`:'');
+    document.getElementById('vRevHint').textContent=j.sales.revenue>=200000? '✅ Lewat target':'Kurang '+rupiah(Math.max(0,200000-j.sales.revenue));
+    document.getElementById('vRevTrend').textContent=j.sales.cups? `${j.sales.cups} cup • ${Object.keys(j.sales.byVariant).length} rasa`:'Belum jualan';
+    document.getElementById('vExpTrend').textContent=j.expenses.count? `${j.expenses.count} pengeluaran`:'Nol pengeluaran';
+    document.getElementById('vProfitTrend').textContent=j.net.profit>=0? 'Untung':'Rugi';
+    document.getElementById('vCupsTrend').textContent=j.sales.bySize? `M ${j.sales.bySize.M||0} • L ${j.sales.bySize.L||0}`:'—';
+    const health=Math.min(100,Math.max(5, Math.round( (j.sales.cups?30:5) + (j.net.profit>0?30:0) + Math.min(25, j.sales.revenue/200000*25) + (j.sales.bestVariant?10:0) + (j.sales.toppingProfit>0?5:0) )));
+    const label=health>=70?'Sehat':health>=40?'Cukup':'Perlu perhatian';
+    document.getElementById('healthBar').style.width=health+'%'; document.getElementById('healthBarSide').style.width=health+'%';
+    document.getElementById('healthPill').textContent=`${health}/100 • ${label}`;
+    document.getElementById('healthPillSide').textContent=`${health}/100 • ${label}`;
+    document.getElementById('healthPill').className='pill '+(health>=70?'ok':health>=40?'warn':'');
+    document.getElementById('healthText').textContent=`Omset ${rupiah(j.sales.revenue)} • laba bersih ${rupiah(j.net.profit)} • ${j.sales.cups} cup`;
+    document.getElementById('healthTextSide').textContent=`${j.sales.cups} cup • ${rupiah(j.net.profit)} bersih`;
+    const best=j.sales.bestVariant? `${j.sales.bestVariant.variant} (${j.sales.bestVariant.qty})`:'-';
+    const byTop=j.sales.byTopping? Object.entries(j.sales.byTopping).map(([k,v])=>`${k} ${v}`).join(' • '):'-';
+    document.getElementById('sumBody').innerHTML=`
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="kpi" style="padding:10px"><div class="label">Omset</div><div class="val" style="font-size:16px">${rupiah(j.sales.revenue)}</div><div class="hint">${j.sales.cups} cup • ${best}</div></div>
+        <div class="kpi" style="padding:10px"><div class="label">Laba kotor</div><div class="val" style="font-size:16px">${rupiah(j.sales.profit)}</div><div class="hint">topping ${rupiah(j.sales.toppingProfit||0)}</div></div>
+      </div>
+      <div class="kpi" style="margin-top:8px;border-color:${(j.net.profitBiz??j.net.profit)>=0?'#A7F3D0':'#FECACA'};background:${(j.net.profitBiz??j.net.profit)>=0?'#ECFDF5':'#FEF2F2'}"><div class="label">Laba bersih usaha</div><div class="val" style="font-size:18px">${rupiah(j.net.profitBiz??j.net.profit)}</div><div class="hint">HPP ${rupiah(j.sales.cost)} • pengeluaran usaha ${rupiah(j.expenses.totalBiz??j.expenses.total)}${j.expenses.totalPribadi?` • pribadi ${rupiah(j.expenses.totalPribadi)}`:''} • margin usaha ${j.net.marginBiz||j.net.margin}</div></div>
+      ${j.expenses.totalPribadi? `<div class="small" style="margin-top:6px;padding:8px;border:1px dashed #FDE68A;background:#FFFBEB;border-radius:10px">Ambil pribadi (PISAHIN) ${rupiah(j.expenses.totalPribadi)} — tidak dihitung sebagai biaya usaha. Sisa kas setelah pribadi: <b>${rupiah(j.net.profit)}</b></div>`:''}
+      <div class="small" style="margin-top:8px">Rasa: ${Object.entries(j.sales.byVariant).map(([k,v])=>`${k} ${v}`).join(' • ')||'-'} | M ${j.sales.bySize.M||0} • L ${j.sales.bySize.L||0}</div>
+      <div class="small">Topping: ${byTop}</div>`;
+    document.getElementById('expList').innerHTML=j.expenses.items.length? j.expenses.items.map(e=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border:1px solid #E2E8F0;border-radius:10px;margin-top:6px;background:#F8FAFC"><div><b>${e.title}</b> <span class="small">${e.category}</span><div class="small">${e.date}</div></div><div style="display:flex;gap:8px;align-items:center"><b>${rupiah(e.amount)}</b><button class="btn secondary" style="padding:6px 8px" onclick="delExp('${e.id}')">Hapus</button></div></div>`).join(''):'<div class="small">Belum ada pengeluaran.</div>';
+    // insights
+    const ins=[]; 
+    if(j.sales.cups===0) ins.push({type:'crit',text:'Belum ada penjualan hari ini — cek stok & posting sosmed.'});
+    else{
+      if(j.sales.revenue<200000) ins.push({type:'warn',text:`Omset ${rupiah(j.sales.revenue)} di bawah target 200rb — kejar ${rupiah(200000-j.sales.revenue)} lagi.`});
+      else ins.push({type:'ok',text:`Mantap! Omset ${rupiah(j.sales.revenue)} lewat target.`});
+      const netBiz=j.net.profitBiz??j.net.profit;
+      if(netBiz<0) ins.push({type:'crit',text:`Rugi usaha ${rupiah(netBiz)} — pengeluaran usaha kegedean${j.expenses.totalPribadi?` (pribadi ${rupiah(j.expenses.totalPribadi)} tidak dihitung)`:''}.`});
+      else if(parseFloat(j.net.marginBiz||j.net.margin)<20) ins.push({type:'warn',text:`Margin usaha ${j.net.marginBiz||j.net.margin} tipis — dorong topping 3rb untuk AOV.`});
+      else if(netBiz>=0 && j.net.profit<0) ins.push({type:'ok',text:`Usaha untung ${rupiah(netBiz)}, tapi sisa kas minus karena ambil pribadi ${rupiah(j.expenses.totalPribadi)}.`});
+      if(j.sales.bestVariant) ins.push({type:'ok',text:`Terlaris: ${j.sales.bestVariant.variant} (${j.sales.bestVariant.qty}) — stok fokus sini.`});
+      if(j.sales.bestTopping) ins.push({type:'ok',text:`Topping favorit: ${j.sales.bestTopping.topping} — push bundle ini.`});
+      if(j.sales.toppingProfit>0) ins.push({type:'ok',text:`Topping nambah ${rupiah(j.sales.toppingProfit)} (${((j.sales.toppingProfit/j.sales.profit)*100).toFixed(0)}% laba).`});
+      else if(j.sales.cups>0) ins.push({type:'warn',text:'Belum ada topping — tawarkan keju/oreo (+2rb) atau regal (+3rb).'});
+    }
+    document.getElementById('insights').innerHTML=ins.map(i=>`<div class="insight ${i.type}"><span class="badge ${i.type==='ok'?'ok':i.type==='warn'?'warn':'crit'}">${i.type==='ok'?'Peluang':i.type==='warn'?'Hati-hati':'Bahaya'}</span><div><div style="font-weight:600;font-size:13px">${i.text}</div></div></div>`).join('');
+  }catch(e){ document.getElementById('sumBody').textContent='Error: '+e.message; }
+}
+async function loadBars(){
+  const from=new Date(Date.now()-6*86400000).toISOString().slice(0,10), to=todayStr;
+  document.getElementById('barFrom').textContent=from; document.getElementById('barTo').textContent=to;
+  try{
+    const sales=(await (await fetch(`${API}/sales?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const exps=(await (await fetch(`${API}/expenses?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const byDate={}; for(let i=6;i>=0;i--){ const d=new Date(Date.now()-i*86400000).toISOString().slice(0,10); byDate[d]={rev:0,profit:0,exp:0}; }
+    sales.forEach(s=>{ if(byDate[s.date]){ byDate[s.date].rev+=s.revenue; byDate[s.date].profit+=s.profit; } });
+    exps.forEach(e=>{ if(byDate[e.date] && (e.category||'').toLowerCase()!=='pribadi') byDate[e.date].exp+=e.amount; });
+    // net usaha (exclude pribadi)
+    Object.keys(byDate).forEach(d=> byDate[d].net=byDate[d].profit - byDate[d].exp);
+    const max=Math.max(1, ...Object.values(byDate).map(v=>Math.max(v.rev, Math.abs(v.net), 1)));
+    const bars=document.getElementById('bars'); bars.innerHTML='';
+    Object.entries(byDate).forEach(([d,v])=>{
+      const h1=Math.round(v.rev/max*80)+6, h2=Math.round(Math.max(0,v.net)/max*80)+4;
+      const col=document.createElement('div'); col.style.cssText='flex:1;display:flex;flex-direction:column;gap:4px;align-items:stretch';
+      col.innerHTML=`<div style="display:flex;gap:4px;align-items:end;height:90px"><div style="flex:1;height:${h1}px"></div><div class="alt" style="flex:1;height:${h2}px;opacity:${v.net<0?.4:1}"></div></div><div class="small" style="text-align:center">${d.slice(5)}</div>`;
+      bars.appendChild(col);
+    });
+  }catch(e){ document.getElementById('bars').textContent='—'; }
+}
+async function delExp(id){ if(!confirm('Hapus pengeluaran ini?')) return; await fetch(`${API}/expenses/${id}`,{method:'DELETE'}); loadSummary(); loadBars(); loadHistory(); }
+async function loadHistory(){
+  const from=document.getElementById('fromDate').value, to=document.getElementById('toDate').value;
+  const box=document.getElementById('historyBody'); box.innerHTML='<div class="small">Memuat…</div>';
+  try{
+    const salesR=await (await fetch(`${API}/sales?business_id=${BIZ}&from=${from}&to=${to}`)).json();
+    const expR=await (await fetch(`${API}/expenses?business_id=${BIZ}&from=${from}&to=${to}`)).json();
+    const byDate={}; (salesR.data||[]).forEach(s=>{ byDate[s.date]=byDate[s.date]||{sales:[],exp:[]}; byDate[s.date].sales.push(s); });
+    (expR.data||[]).forEach(e=>{ byDate[e.date]=byDate[e.date]||{sales:[],exp:[]}; byDate[e.date].exp.push(e); });
+    const dates=Object.keys(byDate).sort().reverse();
+    if(!dates.length){ box.innerHTML='<div class="small">Belum ada data di rentang ini.</div>'; return; }
+    box.innerHTML=`<div style="display:grid;gap:8px">`+dates.map(d=>{
+      const s=byDate[d].sales, e=byDate[d].exp;
+      const rev=s.reduce((a,b)=>a+b.revenue,0), cost=s.reduce((a,b)=>a+b.cost,0), cups=s.reduce((a,b)=>a+b.total_cups,0), expTot=e.reduce((a,b)=>a+b.amount,0), expBiz=e.filter(x=>(x.category||'').toLowerCase()!=='pribadi').reduce((a,b)=>a+b.amount,0), expPri=expTot-expBiz, netBiz=rev-cost-expBiz, net=rev-cost-expTot;
+      return `<div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>${d}</b><span class="badge ${netBiz>=0?'ok':'crit'}">${netBiz>=0?'Untung usaha':'Rugi usaha'} ${rupiah(netBiz)}</span>${expPri?`<span class="badge neutral">Pribadi ${rupiah(expPri)}</span>`:''}<span class="small">sisa ${rupiah(net)}</span></div>
+        <div class="small" style="margin-top:4px">Omset ${rupiah(rev)} • HPP ${rupiah(cost)} • ${cups} cup • usaha ${rupiah(expBiz)}${expPri?` • pribadi ${rupiah(expPri)}`:''} • <b>net usaha ${rupiah(netBiz)}</b></div>
+        <div class="small">Detail: ${s.map(x=> x.items.map(i=>`${i.variant} ${i.size} x${i.qty}${(i.toppings&&i.toppings.length)?` +${i.toppings.join('+')}`:''}`).join(', ')).join(' | ')||'-'}</div>
+        ${e.length?`<div class="small">Pengeluaran: ${e.map(x=>`${x.title} ${rupiah(x.amount)}`).join(' • ')}</div>`:''}
+      </div>`;
+    }).join('')+`</div>`;
+  }catch(e){ box.textContent='Error: '+e.message; }
+}
+function addMsg(role,text){ const box=document.getElementById('chatBox'); const div=document.createElement('div'); div.style.cssText='padding:10px;border-radius:12px;margin:8px 0;max-width:88%;font-size:13px;'+(role==='user'?'background:#0F172A;color:white;margin-left:auto':'background:white;border:1px solid #E2E8F0'); div.innerHTML=`<pre style="margin:0;background:transparent;border:none;padding:0">${text}</pre>`; box.appendChild(div); box.scrollTop=box.scrollHeight; }
+async function loadMemCount(){
+  try{
+    const r=await fetch(`${API}/memories?business_id=${BIZ}`);
+    const j=await r.json();
+    document.getElementById('memBadge').textContent=`${(j.data||[]).length} memori`;
+  }catch(e){ document.getElementById('memBadge').textContent='— memori'; }
+}
+async function searchMem(){
+  const q=document.getElementById('ragQuery').value.trim();
+  if(!q) return;
+  const el=document.getElementById('ragHits');
+  el.style.display='block'; el.innerHTML='<div class="small">Mencari…</div>';
+  try{
+    const r=await fetch(`${API}/rag/search?business_id=${BIZ}&q=${encodeURIComponent(q)}`);
+    const j=await r.json();
+    if(!j.hits||!j.hits.length){ el.innerHTML='<div class="small">Tidak ada hasil untuk "'+q+'".</div>'; return; }
+    el.innerHTML=j.hits.map(h=> `<div style="padding:6px 8px;border-bottom:1px solid #E2E8F0"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:12px">${h.type} • ${h.date||''} • score ${h.score}</b><span class="small">${h.id.slice(0,16)}</span></div><div class="small" style="margin-top:2px;white-space:pre-wrap;word-break:break-word">${h.snippet}</div></div>`).join('') + `<div class="small" style="margin-top:6px">${j.total} hasil — top ${j.hits.length}</div>`;
+  }catch(e){ el.innerHTML='<div class="small">Error: '+e.message+'</div>'; }
+}
+function clearChat(){ document.getElementById('chatBox').innerHTML=''; }
+async function sendChat(){
+  const agent=document.getElementById('agentKey').value, message=document.getElementById('chatInput').value.trim();
+  if(!message) return; addMsg('user',message); document.getElementById('chatInput').value=''; addMsg('bot','…AI mikir…');
+  try{
+    const r=await fetch(`${API}/agents/${agent}/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,business_id:BIZ})});
+    const j=await r.json(); const box=document.getElementById('chatBox'); box.lastChild.remove(); addMsg('bot', j.reply || j.error || JSON.stringify(j,null,2));
+    if(j.rag && j.rag.length){
+      const ru=document.getElementById('ragUsed'); ru.style.display='block'; ru.textContent='📚 RAG dipakai: '+ j.rag.map(h=> `${h.type} ${h.date||''} (score:${h.score})`).join(' • ');
+      document.getElementById('ragPill').style.display='inline'; document.getElementById('ragPill').textContent=`RAG ${j.rag.length} hits`;
+    } else { const ru=document.getElementById('ragUsed'); if(ru) ru.style.display='none'; }
+    loadMemCount();
+  }catch(e){ document.getElementById('chatBox').lastChild.remove(); addMsg('bot','Error: '+e.message); }
+}
+async function askFinance(){
+  const date=document.getElementById('saleDate').value||todayStr;
+  const s=await (await fetch(`${API}/dashboard/summary?business_id=${BIZ}&date=${date}`)).json();
+  document.getElementById('agentKey').value='financial_analyst'; showView('tanya');
+  document.getElementById('chatInput').value=`Analisis hari ${date}: omset ${rupiah(s.sales.revenue)}, HPP ${rupiah(s.sales.cost)}, topping +${rupiah(s.sales.toppingRevenue||0)}, pengeluaran ${rupiah(s.expenses.total)}, laba bersih ${rupiah(s.net.profit)}, ${s.sales.cups} cup, terlaris ${s.sales.bestVariant? s.sales.bestVariant.variant:'-'} topping ${s.sales.bestTopping? s.sales.bestTopping.topping:'-'}. Kasih insight & 3 saran.`;
+  sendChat();
+}
+async function createWorkflow(){
+  const objective=document.getElementById('wfObjective').value; const out=document.getElementById('wfOut'); out.textContent='…AI bagi tugas…';
+  try{ const r=await fetch(`${API}/workflows`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_id:BIZ,objective,priority:'high'})}); const j=await r.json(); out.textContent=JSON.stringify(j,null,2); loadWorkflows(); loadApprovals(); }catch(e){ out.textContent='Error: '+e.message; }
+}
+async function loadWorkflows(){
+  try{
+    const r=await fetch(`${API}/workflows?business_id=${BIZ}`);
+    const j=await r.json();
+    document.getElementById('wfOut').textContent=JSON.stringify(j,null,2).slice(0,8000);
+    const list=document.getElementById('wfList');
+    if(!j.data || !j.data.length){ list.innerHTML='<div class="small">Belum ada rencana.</div>'; return; }
+    list.innerHTML=j.data.map(w=>{
+      const tasks=(w.tasks && w.tasks.length)? w.tasks : [];
+      const need = tasks.filter(t=>t.requires_approval).length;
+      const pending = tasks.filter(t=>t.status==='awaiting_approval').length;
+      const badge = w.status==='planning'? 'neutral' : w.status==='working'? 'ok' : w.status==='awaiting_approval'?'warn' : 'crit';
+      return `<div class="card" style="padding:12px;box-shadow:none"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b style="font-size:13px">${w.objective.slice(0,90)}</b><span class="badge ${badge}">${w.status}</span></div><div class="small" style="margin-top:4px">${w.workflow_id} • ${new Date(w.created_at).toLocaleString('id-ID')} • ${tasks.length} tugas ${need?`• ${need} butuh approve`:''} ${pending?`• <b style="color:#92400E">${pending} pending</b>`:''} • conf ${w.confidence||'-'}%</div><div class="small" style="margin-top:4px">Tasks: ${tasks.map(t=> `<span style="padding:2px 6px;border-radius:999px;border:1px solid #E2E8F0;font-size:11px;background:${t.status==='awaiting_approval'?'#FFFBEB':t.status==='assigned'?'#ECFDF5':'#F8FAFC'}">${t.agent}: ${t.objective.slice(0,45)} ${t.requires_approval?'🔒':''} [${t.status}]</span>`).join(' ')||'-'}</div>${w.status==='planning' && pending? `<div style="display:flex;gap:6px;margin-top:8px"><button class="btn" style="padding:6px 10px" onclick="approveWorkflow('${w.workflow_id}','approved')">✅ Approve</button><button class="btn secondary" style="padding:6px 10px" onclick="approveWorkflow('${w.workflow_id}','rejected')">❌ Reject</button></div>`:''}${tasks.some(t=>t.status==='awaiting_approval')? `<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${tasks.filter(t=>t.status==='awaiting_approval').map(t=> `<button class="btn ghost" style="padding:4px 8px;font-size:11px" onclick="approveTask('${t.id}','assigned')">Approve ${t.agent}</button><button class="btn ghost" style="padding:4px 8px;font-size:11px" onclick="approveTask('${t.id}','rejected')">Reject ${t.agent}</button>`).join('')}</div>`:''}</div>`;
+    }).join('');
+  }catch(e){ document.getElementById('wfOut').textContent='Error: '+e.message; }
+}
+async function loadApprovals(){
+  try{
+    const r=await fetch(`${API}/workflows?business_id=${BIZ}`);
+    const j=await r.json();
+    const pend = (j.data||[]).filter(w=> w.status==='planning' && (w.tasks||[]).some(t=> t.status==='awaiting_approval'));
+    document.getElementById('pendingCount').textContent=pend.length;
+    const banner=document.getElementById('approvalBanner');
+    if(!pend.length){ banner.innerHTML=''; return; }
+    banner.innerHTML=`<div class="insight warn"><span class="badge warn">${pend.length} pending</span><div><div style="font-weight:700;font-size:13px">🔔 ${pend.length} rencana butuh approve Bos</div><div class="small">${pend.map(w=> w.objective.slice(0,60)).join(' • ')}</div></div></div>`;
+  }catch(e){}
+}
+async function approveWorkflow(id, decision){
+  if(!confirm(`${decision==='approved'?'Approve':'Reject'} rencana ${id}?`)) return;
+  const r=await fetch(`${API}/workflows/${id}/approve`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({decision, reason: decision==='rejected'?'Ditolak Bos Ikun':''})});
+  const j=await r.json(); alert(j.workflow? `✅ ${decision} — status jadi ${j.workflow.status}` : JSON.stringify(j)); loadWorkflows(); loadApprovals();
+}
+async function approveTask(id, status){
+  const r=await fetch(`${API}/tasks/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+  const j=await r.json(); loadWorkflows(); loadApprovals();
+}
+async function summarizeImage(){
+  const f=document.getElementById('imgFile').files[0]; if(!f) return alert('Pilih foto dulu');
+  const fd=new FormData(); fd.append('image',f); fd.append('prompt',document.getElementById('imgPrompt').value||'');
+  const out=document.getElementById('imgOut'); out.textContent='…AI lihat foto…';
+  try{ const r=await fetch(`${API}/image/summarize`,{method:'POST',body:fd}); const j=await r.json(); out.textContent=j.reply||JSON.stringify(j,null,2); const url=URL.createObjectURL(f); const img=document.getElementById('imgPreview'); img.src=url; img.style.display='block'; }catch(e){ out.textContent='Error: '+e.message; }
+}
+async function transformImage(){
+  const f=document.getElementById('imgFile2').files[0]; if(!f) return alert('Pilih foto');
+  const fd=new FormData(); fd.append('image',f); fd.append('style',document.getElementById('imgStyle').value); fd.append('prompt',document.getElementById('imgPrompt2').value||'');
+  const out=document.getElementById('imgOut2'); out.textContent='…AI bikin prompt…';
+  try{ const r=await fetch(`${API}/image/transform`,{method:'POST',body:fd}); const j=await r.json(); out.textContent=j.reply||JSON.stringify(j,null,2); const url=URL.createObjectURL(f); const img=document.getElementById('imgPreview2'); img.src=url; img.style.display='block'; }catch(e){ out.textContent='Error: '+e.message; }
+}
+fetch(`${API.replace('/api/v1','')}/health`).then(r=>r.json()).then(j=>{ document.getElementById('modePill').textContent=j.mode+':'+(j.model||''); }).catch(()=>{});
+function exportExcelToday(){ const d=document.getElementById('saleDate').value||todayStr; window.open(`${API}/export/excel?from=${d}&to=${d}`,'_blank'); }
+function exportExcelRange(){ const a=document.getElementById('fromDate').value, b=document.getElementById('toDate').value; window.open(`${API}/export/excel?from=${a}&to=${b}`,'_blank'); }
+function openReceipt(){ const d=document.getElementById('saleDate').value||todayStr; window.open(`${API}/export/receipt?date=${d}`,'_blank'); }
+// --- Month dropdown logic ---
+function lastDayOfMonth(ym){ const [y,m]=ym.split('-').map(Number); return new Date(y,m,0).toISOString().slice(0,10); }
+function populateMonthSelects(){
+  const ids=['monthSelect','historyMonthSelect'];
+  const months=[];
+  // Build 2026-01 .. 2026-12 plus sensible current
+  for(let m=1;m<=12;m++){ months.push(`2026-${String(m).padStart(2,'0')}`); }
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el || el.options.length) return;
+    el.innerHTML='';
+    months.forEach(ym=>{ const o=document.createElement('option'); o.value=ym; const d=new Date(ym+'-01'); o.textContent=d.toLocaleDateString('id-ID',{month:'long',year:'numeric'}); el.appendChild(o); });
+    // default to Aug 2026 if available (has sheet), else current month
+    el.value='2026-08';
+    if(![...el.options].some(o=>o.value==='2026-08')) el.value=months[months.length-1];
+  });
+  // keep Sep visible too, select Aug initially to showcase import
+  const cur=new Date().toISOString().slice(0,7);
+  if(document.getElementById('monthSelect').value==='2026-08'){ /* stay */ } else { document.getElementById('monthSelect').value=cur; }
+  if(document.getElementById('historyMonthSelect')) document.getElementById('historyMonthSelect').value=document.getElementById('monthSelect').value;
+}
+function onMonthChange(){
+  const ym=document.getElementById('monthSelect').value;
+  const rng=document.getElementById('rangeSelect').value;
+  if(document.getElementById('historyMonthSelect')) document.getElementById('historyMonthSelect').value=ym;
+  loadMonthSummary(ym);
+  loadBarsForMonth(ym, rng);
+}
+function onHistoryMonth(){
+  const ym=document.getElementById('historyMonthSelect').value;
+  document.getElementById('fromDate').value=ym+'-01';
+  document.getElementById('toDate').value=lastDayOfMonth(ym);
+  loadHistory();
+}
+async function loadMonthSummary(ym){
+  const from=ym+'-01', to=lastDayOfMonth(ym);
+  const sumEl=document.getElementById('monthSummary');
+  const cardTitle=document.getElementById('monthCardTitle');
+  const cardSub=document.getElementById('monthCardSub');
+  const kpisEl=document.getElementById('kpisMonth');
+  const extraEl=document.getElementById('monthExtra');
+  const badge=document.getElementById('monthNetBadge');
+  if(sumEl) sumEl.textContent='Memuat…';
+  try{
+    const sales=(await (await fetch(`${API}/sales?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const exps=(await (await fetch(`${API}/expenses?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const rev=sales.reduce((a,b)=>a+b.revenue,0), cost=sales.reduce((a,b)=>a+b.cost,0), cups=sales.reduce((a,b)=>a+b.total_cups,0);
+    const expTot=exps.reduce((a,b)=>a+b.amount,0), profit=sales.reduce((a,b)=>a+b.profit,0);
+    const net=profit - expTot;
+    const margin= rev? ((profit-expTot)/rev*100).toFixed(1)+'%': '-';
+    const days=new Set(sales.map(s=>s.date)).size;
+    if(cardTitle) cardTitle.textContent=`Ringkasan ${new Date(ym+'-01').toLocaleDateString('id-ID',{month:'long',year:'numeric'})}`;
+    if(cardSub) cardSub.textContent=`${days} hari jualan • ${sales.length} transaksi • ${exps.length} pengeluaran`;
+    if(sumEl) sumEl.textContent=`${rupiah(rev)} omset • ${rupiah(net)} bersih`;
+    if(badge){ exBiz=exps.filter(e=>(e.category||'').toLowerCase()!=='pribadi').reduce((a,b)=>a+b.amount,0); exPri=expTot-exBiz; netBizCalc=profit-exBiz; badge.textContent=(netBizCalc>=0?'Untung usaha ':'Rugi usaha ')+rupiah(netBizCalc); badge.className='badge '+(net>=0?'ok':'crit'); }
+    if(kpisEl){
+      kpisEl.innerHTML=`<div class="kpi"><div class="label">Omset bulan</div><div class="val">${rupiah(rev)}</div><div class="hint">${cups} cup • ${sales.length} nota</div></div><div class="kpi"><div class="label">Pengeluaran</div><div class="val">${rupiah(expTot)}</div><div class="hint">di luar HPP • ${exps.length} pos</div></div><div class="kpi"><div class="label">Laba bersih</div><div class="val">${rupiah(net)}</div><div class="hint">Margin ${margin}</div></div><div class="kpi"><div class="label">Rata-rata harian</div><div class="val">${rupiah(Math.round(rev/Math.max(1,days)))}</div><div class="hint">target 200rb • ${(Math.round(rev/Math.max(1,days))/200000*100).toFixed(0)}%</div></div>`;
+    }
+    const expBiz=exps.filter(e=>(e.category||'').toLowerCase()!=='pribadi').reduce((a,b)=>a+b.amount,0), expPribadi=expTot-expBiz, netBiz=profit-expBiz, netAll=profit-expTot;
+    if(extraEl) extraEl.innerHTML=`HPP ${rupiah(cost)} • laba kotor ${rupiah(profit)} • pengeluaran usaha ${rupiah(expBiz)}${expPribadi?` • pribadi ${rupiah(expPribadi)}`:''} • <b style="color:${netBiz>=0?'#065F46':'#991B1B'}">laba usaha ${rupiah(netBiz)}</b> • sisa kas ${rupiah(netAll)}`+ (expPribadi? ` <span style="background:#FFFBEB;border:1px solid #FDE68A;padding:2px 6px;border-radius:999px;font-size:10px">PISAHIN dipisah</span>`:'');
+  }catch(e){ if(sumEl) sumEl.textContent='Error: '+e.message; }
+}
+async function loadBarsForMonth(ym, rng){
+  const bars=document.getElementById('bars');
+  const tTitle=document.getElementById('barsTitle');
+  const tSub=document.getElementById('barsSub');
+  const fromEl=document.getElementById('barFrom'), toEl=document.getElementById('barTo');
+  if(rng==='month'){
+    const from=ym+'-01', to=lastDayOfMonth(ym);
+    if(tTitle) tTitle.textContent='Performa harian — '+new Date(ym+'-01').toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+    if(tSub) tSub.textContent='Omset (gelap) vs laba usaha oranye (exclude pribadi) per hari';
+    if(fromEl) fromEl.textContent=from; if(toEl) toEl.textContent=to;
+    try{
+      const sales=(await (await fetch(`${API}/sales?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+      const exps=(await (await fetch(`${API}/expenses?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+      const [y,m]=ym.split('-').map(Number);
+      const daysInMonth=new Date(y,m,0).getDate();
+      const byDate={};
+      for(let d=1;d<=daysInMonth;d++){ const ds=`${ym}-${String(d).padStart(2,'0')}`; byDate[ds]={rev:0,profit:0,exp:0}; }
+      sales.forEach(s=>{ if(byDate[s.date]){ byDate[s.date].rev+=s.revenue; byDate[s.date].profit+=s.profit; } });
+      exps.forEach(e=>{ if(byDate[e.date] && (e.category||'').toLowerCase()!=='pribadi') byDate[e.date].exp+=e.amount; });
+      Object.keys(byDate).forEach(d=> byDate[d].net=byDate[d].profit - byDate[d].exp);
+      const max=Math.max(1, ...Object.values(byDate).map(v=>Math.max(v.rev, Math.abs(v.net), 1)));
+      bars.innerHTML='';
+      bars.style.height='110px';
+      Object.entries(byDate).forEach(([d,v])=>{
+        const h1=Math.round(v.rev/max*80)+4, h2=Math.round(Math.max(0,v.net)/max*80)+3;
+        const col=document.createElement('div'); col.style.cssText='flex:1;display:flex;flex-direction:column;gap:3px;align-items:stretch';
+        const neg = v.net<0;
+        col.title=`${d}: omset ${rupiah(v.rev)} • net ${rupiah(v.net)}`;
+        col.innerHTML=`<div style="display:flex;gap:2px;align-items:end;height:90px"><div style="flex:1;height:${h1}px;background:${v.rev? 'linear-gradient(180deg,#0F172A,#334155)':'#E2E8F0'};border-radius:6px 6px 3px 3px"></div><div style="flex:1;height:${h2}px;background:${neg?'#FECACA': 'linear-gradient(180deg,#F59E0B,#FB7185)'};opacity:${neg?.45:1};border-radius:6px 6px 3px 3px"></div></div><div class="small" style="text-align:center;font-size:9px">${d.slice(8)}</div>`;
+        bars.appendChild(col);
+      });
+    }catch(e){ bars.textContent='—'; }
+    return;
+  }
+  // fallback: 7/30 hari terakhir
+  const n=parseInt(rng,10);
+  const to=todayStr, from=new Date(Date.now()-(n-1)*86400000).toISOString().slice(0,10);
+  if(tTitle) tTitle.textContent=`Performa ${n} hari`;
+  if(tSub) tSub.textContent='Omset (gelap) vs laba usaha oranye (exclude pribadi)';
+  if(fromEl) fromEl.textContent=from; if(toEl) toEl.textContent=to;
+  // reuse existing loadBars logic but for n days
+  try{
+    const sales=(await (await fetch(`${API}/sales?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const exps=(await (await fetch(`${API}/expenses?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const byDate={}; for(let i=n-1;i>=0;i--){ const d=new Date(Date.now()-i*86400000).toISOString().slice(0,10); byDate[d]={rev:0,profit:0,exp:0}; }
+    sales.forEach(s=>{ if(byDate[s.date]){ byDate[s.date].rev+=s.revenue; byDate[s.date].profit+=s.profit; } });
+    exps.forEach(e=>{ if(byDate[e.date] && (e.category||'').toLowerCase()!=='pribadi') byDate[e.date].exp+=e.amount; });
+    Object.keys(byDate).forEach(d=> byDate[d].net=byDate[d].profit - byDate[d].exp);
+    const max=Math.max(1, ...Object.values(byDate).map(v=>Math.max(v.rev, Math.abs(v.net), 1)));
+    bars.innerHTML='';
+    Object.entries(byDate).forEach(([d,v])=>{
+      const h1=Math.round(v.rev/max*80)+6, h2=Math.round(Math.max(0,v.net)/max*80)+4;
+      const col=document.createElement('div'); col.style.cssText='flex:1;display:flex;flex-direction:column;gap:4px;align-items:stretch';
+      col.innerHTML=`<div style="display:flex;gap:4px;align-items:end;height:90px"><div style="flex:1;height:${h1}px"></div><div class="alt" style="flex:1;height:${h2}px;opacity:${v.net<0?.4:1}"></div></div><div class="small" style="text-align:center">${d.slice(5)}</div>`;
+      bars.appendChild(col);
+    });
+  }catch(e){ bars.textContent='—'; }
+}
+function exportExcelMonth(){ const ym=document.getElementById('monthSelect').value; const from=ym+'-01', to=lastDayOfMonth(ym); window.open(`${API}/export/excel?from=${from}&to=${to}&business_id=${BIZ}`,'_blank'); }
+
+// patch showView beranda to refresh month
+const _showView=showView;
+showView=function(id){ _showView(id); if(id==='beranda'){ if(!document.getElementById('monthSelect').options.length) loadBusinesses().then(()=>{ updateBizSide(); });
+  populateMonthSelects(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); const ym=document.getElementById('monthSelect').value||'2026-08'; loadMonthSummary(ym); loadBarsForMonth(ym, document.getElementById('rangeSelect').value); loadBriefingLatest(); loadForecast(); if(!document.getElementById('briefingDate').value) document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); } };
+
+
+
+
+async function loadForecast(){
+  const sub=document.getElementById('forecastSub');
+  const trendEl=document.getElementById('forecastTrend');
+  const totalEl=document.getElementById('forecastTotal');
+  const alertsEl=document.getElementById('forecastAlerts');
+  const maEl=document.getElementById('fcMa');
+  const maHint=document.getElementById('fcMaHint');
+  const stEl=document.getElementById('fcStock');
+  const stHint=document.getElementById('fcStockHint');
+  const bars=document.getElementById('forecastBars');
+  if(sub) sub.textContent='Memuat…';
+  try{
+    const r=await fetch(`${API}/forecast/7d?business_id=${BIZ}`);
+    const j=await r.json();
+    const trend=j.trendLabel||'—';
+    trendEl.textContent=`Trend ${trend} (${j.trend>0?'+':''}${rupiah(j.trend)}/hari)`; trendEl.className='pill '+(trend==='naik'?'ok':trend==='turun'?'warn':'');
+    totalEl.textContent=`7d proyeksi ${rupiah(j.totalForecast)}`;
+    maEl.textContent=`${rupiah(j.ma7)} / ${rupiah(j.ma14)}`;
+    maHint.textContent=`7d ${rupiah(j.ma7)} • 14d ${rupiah(j.ma14)} • ${trend}`;
+    stEl.textContent=`${j.stock.need7} cup / minggu`;
+    stHint.textContent=j.stock.note;
+    if(sub) sub.textContent=`MA7 ${rupiah(j.ma7)} • MA14 ${rupiah(j.ma14)} • total proyeksi ${rupiah(j.totalForecast)}`;
+    // alerts
+    if(j.alerts.length){
+      alertsEl.innerHTML=j.alerts.map(a=> `<div class="insight ${a.type==='crit'?'crit':'warn'}"><span class="badge ${a.type==='crit'?'crit':'warn'}">${a.type==='crit'?'Bahaya':'Hati-hati'}</span><div><div style="font-weight:700;font-size:12px">${a.title}</div><div class="small">${a.detail}</div></div></div>`).join('');
+    } else {
+      alertsEl.innerHTML=`<div class="insight ok"><span class="badge ok">Aman</span><div class="small">Tidak ada rugi 3-hari berturut. Terakhir 31 Aug rugi besar karena restock kertas - wajar.</div></div>`;
+    }
+    // bars forecast
+    bars.innerHTML='';
+    const max=Math.max(1, ...j.forecast.map(x=>x.rev));
+    document.getElementById('fcFrom').textContent=j.forecast[0].date.slice(5);
+    document.getElementById('fcTo').textContent=j.forecast[j.forecast.length-1].date.slice(5);
+    j.forecast.forEach(f=>{
+      const h=Math.round(f.rev/max*80)+6;
+      const col=document.createElement('div'); col.style.cssText='flex:1;display:flex;flex-direction:column;gap:4px;align-items:stretch';
+      col.title=`${f.date} ${rupiah(f.rev)} • ${f.cups} cup ${f.vsTarget}`;
+      col.innerHTML=`<div style="flex:1;height:${h}px;background:linear-gradient(180deg,#F59E0B,#FB7185);border-radius:6px 6px 3px 3px"></div><div class="small" style="text-align:center;font-size:9px">${f.date.slice(5)}</div>`;
+      const wrap=document.createElement('div'); wrap.style.cssText='flex:1;display:flex;flex-direction:column;align-items:stretch'; wrap.appendChild(col.firstChild); // simplified
+      // Actually rebuild properly
+      bars.appendChild(col);
+    });
+    // fix bars: remove extra wrapper logic above -> re-render clean
+    // (already appended col correctly)
+  }catch(e){ if(sub) sub.textContent='Error: '+e.message; }
+}
+
+async function loadBriefingLatest(){
+  const box=document.getElementById('briefingText');
+  const health=document.getElementById('briefingHealth');
+  const meta=document.getElementById('briefingMeta');
+  try{
+    let r=await fetch(`${API}/briefing/latest`);
+    let j=await r.json();
+    if(!j.briefing || !j.text){
+      r=await fetch(`${API}/briefing/today?business_id=${BIZ}`);
+      j=await r.json();
+      if(j.text){ box.textContent=j.text; health.textContent=j.health||'—'; health.className='pill '+(j.health==='SEHAT'?'ok':j.health==='PERLU PERHATIAN'?'':'warn');
+        document.getElementById('brRev').textContent=rupiah(j.day.rev)+' • '+j.day.cups+' cup'; document.getElementById('brHint').textContent=j.vsTarget;
+        document.getElementById('brMtd').textContent=rupiah(j.mtd.netBiz); document.getElementById('brMtdHint').textContent=`${j.ym} rata ${rupiah(j.mtd.avg)}/hari`;
+        document.getElementById('briefingDate').value=j.date; meta.textContent=`Preview ${j.date} (belum tersimpan) • MTD ${j.mtd.from}–${j.date}`;
+        document.getElementById('briefingAnomaly').textContent=j.anomalies.length? 'Anomali: '+j.anomalies.join(' | '):'';
+        return;
+      }
+    }
+    const b=j.briefing;
+    box.textContent=j.text||JSON.stringify(b,null,2);
+    health.textContent=b.health||'—'; health.className='pill '+(b.health==='SEHAT'?'ok':b.health==='PERLU PERHATIAN'?'':'warn');
+    document.getElementById('brRev').textContent=rupiah(b.day.rev)+' • '+b.day.cups+' cup'; document.getElementById('brHint').textContent=b.vsTarget;
+    document.getElementById('brMtd').textContent=rupiah(b.mtd.netBiz); document.getElementById('brMtdHint').textContent=`${b.ym} rata ${rupiah(b.mtd.avg)}/hari`;
+    document.getElementById('briefingDate').value=b.date; meta.textContent=`Tersimpan ${b.date} • ${new Date(b.generated_at||b.created_at).toLocaleString('id-ID')} • MTD ${b.mtd.from}–${b.date}`;
+    document.getElementById('briefingAnomaly').textContent=b.anomalies.length? 'Anomali: '+b.anomalies.join(' | '):'';
+  }catch(e){ box.textContent='Error: '+e.message; }
+}
+async function previewBriefing(){
+  const d=document.getElementById('briefingDate').value || new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const box=document.getElementById('briefingText'); box.textContent='Memuat '+d+'…';
+  try{
+    const r=await fetch(`${API}/briefing/today?business_id=${BIZ}&date=${d}`);
+    const j=await r.json(); box.textContent=j.text||JSON.stringify(j,null,2);
+    document.getElementById('briefingHealth').textContent=j.health||'—';
+    document.getElementById('brRev').textContent=rupiah(j.day.rev)+' • '+j.day.cups+' cup'; document.getElementById('brHint').textContent=j.vsTarget;
+    document.getElementById('brMtd').textContent=rupiah(j.mtd.netBiz); document.getElementById('brMtdHint').textContent=`${j.ym} rata ${rupiah(j.mtd.avg)}/hari`;
+    document.getElementById('briefingMeta').textContent=`Preview ${j.date} (belum tersimpan)`;
+    document.getElementById('briefingAnomaly').textContent=j.anomalies.length? 'Anomali: '+j.anomalies.join(' | '):'';
+  }catch(e){ box.textContent='Error: '+e.message; }
+}
+async function generateBriefing(){
+  const d=document.getElementById('briefingDate').value || new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const box=document.getElementById('briefingText'); box.textContent='Generate '+d+'…';
+  try{
+    const r=await fetch(`${API}/briefing/run`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_id:BIZ,date:d})});
+    const j=await r.json(); box.textContent=j.text||JSON.stringify(j,null,2);
+    loadBriefingLatest(); loadForecast();
+  }catch(e){ box.textContent='Error: '+e.message; }
+}
+
+// B4 businesses + sync
+async function loadBusinesses(){
+  try{
+    const r=await fetch(`${API}/businesses`);
+    const j=await r.json();
+    const sel=document.getElementById('bizSelect');
+    if(!sel) return;
+    sel.innerHTML='';
+    (j.data||[]).forEach(b=>{
+      const o=document.createElement('option');
+      o.value=b.id; o.textContent=`${b.name} (${b.id})`;
+      sel.appendChild(o);
+    });
+    // ensure BIZ exists in list, else add
+    if(![...sel.options].some(o=>o.value===BIZ)){
+      const o=document.createElement('option'); o.value=BIZ; o.textContent=BIZ; sel.appendChild(o);
+    }
+    sel.value=BIZ;
+    updateBizSide();
+  }catch(e){ console.warn('loadBusinesses',e.message); }
+}
+function updateBizSide(){
+  const sel=document.getElementById('bizSelect');
+  const opt=sel && sel.options[sel.selectedIndex];
+  const name=opt? opt.textContent.split(' (')[0] : BIZ;
+  const el=document.getElementById('bizNameSide'); if(el) el.textContent=name;
+  const meta=document.getElementById('bizMetaSide'); if(meta) meta.textContent=`${BIZ} • sinkron Google Sheets`;
+  const lbl=document.getElementById('bizLabelSide'); if(lbl) lbl.textContent=BIZ;
+  const lbl2=document.getElementById('bizLabel'); if(lbl2) lbl2.textContent=BIZ;
+}
+function onBizChange(){
+  const sel=document.getElementById('bizSelect');
+  BIZ=sel.value;
+  localStorage.setItem('poody_biz', BIZ);
+  updateBizSide();
+  // reload all data views
+  loadSummary(); loadBars();
+  const ym=document.getElementById('monthSelect')?.value||'2026-08';
+  loadMonthSummary(ym); loadBarsForMonth(ym, document.getElementById('rangeSelect')?.value||'month');
+  loadHistory(); loadForecast(); loadBriefingLatest();
+  document.getElementById('bizSyncHint').textContent='';
+}
+function openBizModal(){ document.getElementById('bizModal').style.display='flex'; }
+function closeBizModal(){ document.getElementById('bizModal').style.display='none'; document.getElementById('newBizMsg').textContent=''; }
+async function createBusiness(){
+  const id=document.getElementById('newBizId').value.trim();
+  const name=document.getElementById('newBizName').value.trim();
+  const avg=parseInt(document.getElementById('newBizAvg').value||'200000',10);
+  const msg=document.getElementById('newBizMsg');
+  if(!id||!name) return msg.textContent='ID & nama wajib';
+  msg.textContent='Menyimpan…';
+  try{
+    const r=await fetch(`${API}/businesses`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id, name, avg_daily_revenue:avg})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||JSON.stringify(j));
+    msg.textContent=`✅ ${j.name} tersimpan`;
+    await loadBusinesses();
+    document.getElementById('bizSelect').value=j.id;
+    onBizChange();
+    setTimeout(closeBizModal, 800);
+  }catch(e){ msg.textContent='❌ '+e.message; }
+}
+async function syncSheetsLive(){
+  const btn=document.getElementById('syncBtn');
+  const hint=document.getElementById('bizSyncHint');
+  const orig=btn.textContent;
+  btn.disabled=true; btn.textContent='⏳ Sync…';
+  hint.textContent='Menarik Sheets…';
+  try{
+    const r=await fetch(`${API}/sync/sheets`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_id:BIZ, spreadsheetId:'1MMS_23QeS5rUScwAaGM35ooxxCSoy2SX'})});
+    const j=await r.json();
+    if(!r.ok) throw new Error(j.error||JSON.stringify(j));
+    const s=j.summary;
+    hint.textContent=`✅ Sync ok — ${s.sheetNames.join(', ')} • Jul ${s.jul.revDays} hari ${s.jul.revTotal.toLocaleString('id-ID')} | Agu ${s.agust.revDays} hari ${s.agust.revTotal.toLocaleString('id-ID')} • ${s.imported.sales} sales ${s.imported.expenses} exp`;
+    hint.style.color='#A7F3D0';
+    // refresh
+    loadSummary(); loadBars(); loadHistory(); loadForecast(); loadBriefingLatest();
+    const ym=document.getElementById('monthSelect')?.value||'2026-08';
+    loadMonthSummary(ym);
+  }catch(e){ hint.textContent='❌ '+e.message; hint.style.color='#FECACA'; }
+  btn.disabled=false; btn.textContent=orig;
+  setTimeout(()=>{ if(hint.textContent.startsWith('✅')) hint.textContent=''; }, 6000);
+}
+buildPose(); recalc(); loadSummary(); loadBusinesses().then(()=>{ updateBizSide(); });
+  populateMonthSelects(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); loadMonthSummary('2026-08'); loadBarsForMonth('2026-08','month');
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Business OS — Versi Mudah (Bos Ikun)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui;background:#F8F9FC;color:#111827}
+.top{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border-bottom:1px solid #E5E7EB;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.top h1{margin:0;font-size:18px} .sub{color:#6B7280;font-size:12px}
+.pill{padding:6px 10px;border-radius:999px;background:#EEF2FF;border:1px solid #E0E7FF;color:#4338CA;font-size:12px;font-weight:600}
+.layout{max-width:1100px;margin:0 auto;padding:16px 20px}
+.hero{background:white;border:1px solid #E5E7EB;border-radius:16px;padding:16px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.hero-left{flex:1;min-width:260px} .hero h2{margin:0;font-size:22px} .hero p{margin:6px 0 0;color:#6B7280}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+@media(max-width:800px){.actions{grid-template-columns:1fr}}
+.action{background:white;border:1px solid #E5E7EB;border-radius:16px;padding:14px;cursor:pointer}
+.action:hover{border-color:#C7D2FE;box-shadow:0 4px 16px rgba(79,70,229,.08)}
+.action .icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:18px}
+.action h3{margin:10px 0 4px;font-size:15px} .action p{margin:0;color:#6B7280;font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.kpis{grid-template-columns:1fr}}
+.kpi{background:white;border:1px solid #E5E7EB;border-radius:16px;padding:14px}
+.kpi .label{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:.05em}
+.kpi .val{font-size:22px;font-weight:800;margin-top:4px}
+.kpi .hint{font-size:12px;color:#6B7280;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{background:white;border:1px solid #E5E7EB;border-radius:16px;padding:14px}
+.insight{padding:10px;border-radius:12px;margin:8px 0;display:flex;gap:10px;align-items:flex-start}
+.insight.ok{background:#ECFDF5;border:1px solid #A7F3D0}
+.insight.warn{background:#FFFBEB;border:1px solid #FDE68A}
+.insight.crit{background:#FEF2F2;border:1px solid #FECACA}
+.badge{font-size:11px;padding:4px 8px;border-radius:999px;font-weight:700}
+.badge.ok{background:#10B981;color:white} .badge.warn{background:#F59E0B;color:white} .badge.crit{background:#EF4444;color:white}
+.task{padding:10px;border:1px solid #E5E7EB;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0;background:#F9FAFB}
+.task .who{font-weight:700;font-size:13px} .task .what{font-size:13px;color:#374151}
+.tabs{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tab{padding:8px 12px;border-radius:999px;border:1px solid #E5E7EB;background:white;cursor:pointer;font-size:13px}
+.tab.active{background:#4F46E5;color:white;border-color:#4F46E5}
+.view{display:none} .view.active{display:block}
+input,textarea,select{width:100%;padding:10px;border-radius:10px;border:1px solid #E5E7EB;background:white}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid #E5E7EB;background:#4F46E5;color:white;font-weight:700;cursor:pointer}
+.btn.secondary{background:white;color:#374151}
+.chat{height:360px;overflow:auto;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:12px;padding:12px}
+.msg{padding:10px;border-radius:12px;margin:8px 0;max-width:88%;font-size:13px} .msg.user{background:#4F46E5;color:white;margin-left:auto} .msg.bot{background:white;border:1px solid #E5E7EB}
+pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,monospace;font-size:12px}
+.health{height:10px;background:#E5E7EB;border-radius:999px;overflow:hidden} .health>div{height:100%;background:linear-gradient(90deg,#4F46E5,#06B6D4)}
+</style>
+</head>
+<body>
+<div class="top">
+  <div>
+    <h1>Halo Bos Ikun! 👋</h1>
+    <div class="sub">Asisten bisnis AI — cek untung, atur iklan, bikin konten. <span id="dateStr"></span></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="pill" id="healthPill">Kesehatan Bisnis: 72/100 — Lumayan</span>
+    <button class="btn secondary" onclick="showView('beranda')">Beranda</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- HERO + 3 AKSI UTAMA -->
+  <div class="hero">
+    <div class="hero-left">
+      <h2>Mau ngapain hari ini?</h2>
+      <p>Pilih 1 dari 3 — AI akan jelaskan pakai bahasa sederhana, tanpa istilah ribet.</p>
+      <div class="health" style="margin-top:10px"><div id="healthBar" style="width:72%"></div></div>
+      <div class="sub" id="healthText" style="margin-top:6px">Keuangan 80 | Jualan 60 | Pelanggan 65 — detail di bawah</div>
+    </div>
+    <div class="sub" style="max-width:280px">Tips: Kalau baru mulai, klik <b>Cek Kondisi Hari Ini</b> dulu. Semua angka bisa kamu ubah sendiri.</div>
+  </div>
+
+  <div class="actions">
+    <div class="action" onclick="showView('beranda'); document.getElementById('kpiCard').scrollIntoView({behavior:'smooth'})">
+      <div class="icon" style="background:#EEF2FF">📊</div>
+      <h3>1. Cek Kondisi Hari Ini</h3>
+      <p>Lihat pemasukan, pengeluaran, untung, pesanan — 1 layar langsung paham.</p>
+    </div>
+    <div class="action" onclick="showView('tanya')">
+      <div class="icon" style="background:#ECFDF5">💬</div>
+      <h3>2. Tanya AI</h3>
+      <p>Tanya pakai bahasa biasa: "Kenapa untung turun?" — AI jawab + minta data yang kurang.</p>
+    </div>
+    <div class="action" onclick="showView('rencana')">
+      <div class="icon" style="background:#FFF7ED">🎯</div>
+      <h3>3. Bikin Rencana</h3>
+      <p>Bilang tujuan: "Mau untung naik 20%" — AI pecah jadi tugas untuk tim.</p>
+    </div>
+  </div>
+
+  <!-- TABS NAVIGASI SEDERHANA -->
+  <div class="tabs">
+    <div class="tab active" onclick="showView('beranda')">Beranda</div>
+    <div class="tab" onclick="showView('keuangan')">Keuangan</div>
+    <div class="tab" onclick="showView('jualan')">Jualan & Iklan</div>
+    <div class="tab" onclick="showView('tanya')">Tanya AI</div>
+    <div class="tab" onclick="showView('rencana')">Rencana</div>
+    <div class="tab" onclick="showView('gambar')">Foto Produk</div>
+  </div>
+
+  <!-- VIEW: BERANDA -->
+  <div id="view-beranda" class="view active">
+    <div class="kpis" id="kpiCard">
+      <div class="kpi"><div class="label">Pemasukan</div><div class="val" id="vRevenue">Rp 250 jt</div><div class="hint">Bulan ini • Naik 12% dari bulan lalu</div></div>
+      <div class="kpi"><div class="label">Pengeluaran</div><div class="val" id="vExpense">Rp 208 jt</div><div class="hint">Termasuk iklan + bahan</div></div>
+      <div class="kpi"><div class="label">Untung Bersih</div><div class="val" id="vProfit">Rp 42 jt</div><div class="hint" id="profitHint">Margin 16,8% — lumayan</div></div>
+      <div class="kpi"><div class="label">Sisa Uang</div><div class="val" id="vCash">Rp 180 jt</div><div class="hint" id="cashHint">Cukup untuk 42 hari</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div style="font-weight:700">Apa kata AI hari ini?</div>
+        <div class="sub">3 hal penting — pakai bahasa sederhana</div>
+        <div id="insights"></div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700">Tim AI sedang mengerjakan</div>
+        <div class="sub">Kamu bisa approve sebelum dijalankan</div>
+        <div id="activeTasks"></div>
+        <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" onclick="showView('rencana')">Lihat Rencana</button><button class="btn secondary" onclick="loadOverview()">Refresh</button></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div style="font-weight:700">Ubah angka manual (kalau belum hubungkan toko)</div>
+      <div class="sub">Ketik pemasukan/pengeluaran kamu, klik Terapkan — dashboard langsung update.</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px">
+        <div><div class="sub">Pemasukan</div><input id="inpRev" type="number" value="250000000"></div>
+        <div><div class="sub">Pengeluaran</div><input id="inpExp" type="number" value="208000000"></div>
+        <div><div class="sub">Untung</div><input id="inpProfit" type="number" value="42000000"></div>
+        <div><div class="sub">Sisa Uang</div><input id="inpCash" type="number" value="180000000"></div>
+      </div>
+      <button class="btn" style="margin-top:8px" onclick="applyLocal()">Terapkan</button>
+    </div>
+  </div>
+
+  <!-- VIEW: KEUANGAN -->
+  <div id="view-keuangan" class="view">
+    <div class="card">
+      <div style="font-weight:700">Keuangan — dijelaskan simpel</div>
+      <div class="sub">Produk mana paling untung? Butuh jual berapa biar balik modal?</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:10px">
+        <div class="kpi"><div class="label">Kemeja Linen (170rb - 95rb)</div><div class="val">Untung 75rb (44%)</div><div class="hint">Paling untung — fokus jualan ini</div></div>
+        <div class="kpi"><div class="label">Balik Modal</div><div class="val">Rp 185 jt</div><div class="hint">Harus jualan segini biar tidak rugi</div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn secondary" onclick="quickAsk('financial_analyst','Produk mana paling untung dan berapa balik modalnya?')">Tanya Keuangan</button><button class="btn secondary" onclick="loadFinance()">Muat dari Server</button></div>
+      <pre id="financeOut" style="margin-top:10px;background:#F9FAFB;padding:12px;border-radius:12px;border:1px solid #E5E7EB;min-height:80px"></pre>
+    </div>
+  </div>
+
+  <!-- VIEW: JUALAN -->
+  <div id="view-jualan" class="view">
+    <div class="card">
+      <div style="font-weight:700">Jualan & Iklan — 1 klik jadi paket</div>
+      <div class="sub">AI bagi budget iklan, bikin caption, dan jadwal posting.</div>
+      <div style="display:flex;gap:8px;margin-top:10px"><input id="campBudget" type="number" value="10000000"><input id="campTarget" value="Wanita 25-35 Jabodetabek"></div>
+      <button class="btn" style="margin-top:8px" onclick="campaignKit()">Bikin Paket Jualan</button>
+      <pre id="campOut" style="margin-top:10px;background:#F9FAFB;padding:12px;border-radius:12px;border:1px solid #E5E7EB;min-height:100px"></pre>
+    </div>
+  </div>
+
+  <!-- VIEW: TANYA -->
+  <div id="view-tanya" class="view">
+    <div class="card">
+      <div style="font-weight:700">Tanya AI — pakai bahasa sehari-hari</div>
+      <div class="sub">Contoh: "Kenapa untung turun?" "Budget 10jt gimana bagi iklannya?"</div>
+      <div style="display:flex;gap:8px;margin-top:10px"><select id="agentKey"><option value="ceo">Tanya Bos AI (CEO)</option><option value="financial_analyst">Bagian Keuangan</option><option value="marketing_manager">Bagian Jualan</option><option value="copywriter">Tukang Caption</option><option value="social_media">Admin Sosmed</option></select><button class="btn secondary" onclick="clearChat()">Bersihkan</button></div>
+      <div class="chat" id="chatBox" style="margin-top:10px"></div>
+      <textarea id="chatInput" rows="2" placeholder="Ketik pertanyaan kamu di sini..."></textarea>
+      <button class="btn" style="margin-top:8px" onclick="sendChat()">Kirim</button>
+    </div>
+  </div>
+
+  <!-- VIEW: RENCANA -->
+  <div id="view-rencana" class="view">
+    <div class="card">
+      <div style="font-weight:700">Bikin Rencana — AI pecah jadi tugas</div>
+      <div class="sub">Ketik tujuan, AI bagi ke tim: keuangan, jualan, strategi.</div>
+      <input id="wfObjective" value="Mau untung naik 20% dalam 3 bulan" style="margin-top:8px">
+      <div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="createWorkflow()">Bikin Rencana</button><button class="btn secondary" onclick="loadWorkflows()">Lihat Rencana Lama</button></div>
+      <pre id="wfOut" style="margin-top:10px;background:#F9FAFB;padding:12px;border-radius:12px;border:1px solid #E5E7EB;min-height:100px"></pre>
+    </div>
+  </div>
+
+  <!-- VIEW: GAMBAR -->
+  <div id="view-gambar" class="view">
+    <div class="card">
+      <div style="font-weight:700">Foto Produk — AI bantu cek & ubah gaya</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <div class="sub">1. Cek Foto (deskripsi + saran)</div>
+          <input type="file" id="imgFile" accept="image/*" style="margin-top:6px">
+          <input type="text" id="imgPrompt" placeholder="Mis: cek jahitan, warna pudar?" style="margin-top:6px">
+          <button class="btn" style="margin-top:6px" onclick="summarizeImage()">Cek Foto</button>
+          <img id="imgPreview" style="display:none;max-width:100%;border-radius:12px;margin-top:8px;border:1px solid #E5E7EB">
+          <pre id="imgOut" style="margin-top:8px;background:#F9FAFB;padding:10px;border-radius:10px;border:1px solid #E5E7EB;min-height:60px"></pre>
+        </div>
+        <div>
+          <div class="sub">2. Ubah Gaya Foto (jadi katalog)</div>
+          <input type="file" id="imgFile2" accept="image/*" style="margin-top:6px">
+          <select id="imgStyle" style="margin-top:6px"><option>studio katalog, background putih</option><option>dipakai model, studio</option><option>flat lay minimal</option><option>outdoor streetwear</option><option>mewah, background gelap</option></select>
+          <input type="text" id="imgPrompt2" placeholder="Extra: warna sage, background beige" style="margin-top:6px">
+          <button class="btn" style="margin-top:6px" onclick="transformImage()">Buat Prompt Baru</button>
+          <img id="imgPreview2" style="display:none;max-width:100%;border-radius:12px;margin-top:8px;border:1px solid #E5E7EB">
+          <pre id="imgOut2" style="margin-top:8px;background:#F9FAFB;padding:10px;border-radius:10px;border:1px solid #E5E7EB;min-height:60px"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_MOCK='http://localhost:8000/api/v1';
+const API_LLM='http://localhost:8001/api/v1';
+let TOKEN=''; // isi setelah login; kalau kosong, mock tetap jalan
+function rupiah(n){ return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n); }
+document.getElementById('dateStr').textContent=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>{ t.classList.toggle('active', t.textContent.trim().toLowerCase().startsWith(id.slice(0,3))); });
+  // mapping simple
+  const map={beranda:'Beranda',keuangan:'Keuangan',jualan:'Jualan',tanya:'Tanya',rencana:'Rencana',gambar:'Foto'};
+  document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('active', map[id] && t.textContent.includes(map[id])));
+}
+async function loadOverview(){
+  try{
+    const r=await fetch(`${API_MOCK}/dashboard/overview?business_id=biz_123`);
+    const j=await r.json();
+    document.getElementById('healthBar').style.width=j.health_score+'%';
+    document.getElementById('healthPill').textContent=`Kesehatan Bisnis: ${j.health_score}/100 — ${j.health_score>=70?'Lumayan':'Perlu Perhatian'}`;
+    document.getElementById('healthText').textContent=Object.entries(j.health_breakdown||{}).map(([k,v])=>`${k} ${v}`).join(' | ');
+    document.getElementById('vRevenue').textContent=rupiah(j.kpis.revenue);
+    document.getElementById('vExpense').textContent=rupiah(j.kpis.expense);
+    document.getElementById('vProfit').textContent=rupiah(j.kpis.profit);
+    document.getElementById('vCash').textContent=rupiah(j.kpis.cashflow);
+    document.getElementById('profitHint').textContent=`Margin ${(j.kpis.profit/j.kpis.revenue*100).toFixed(1)}%`;
+    document.getElementById('cashHint').textContent=`Cukup untuk ${Math.round(j.kpis.cashflow/42000000*30)} hari`;
+    const ins=document.getElementById('insights'); ins.innerHTML='';
+    (j.insights||[]).forEach(i=>{
+      const cls=i.type==='opportunity'?'ok':i.type==='warning'?'warn':'crit';
+      const title=i.type==='opportunity'?'Peluang':i.type==='warning'?'Hati-hati':'Bahaya';
+      const d=document.createElement('div'); d.className='insight '+cls; d.innerHTML=`<span class="badge ${cls}">${title}</span><div><div style="font-weight:600">${i.text}</div><div class="sub">Keyakinan ${i.confidence||'-'}%</div></div>`; ins.appendChild(d);
+    });
+    document.getElementById('activeTasks').innerHTML=(j.active_tasks||[]).length? j.active_tasks.map(t=>`<div class="task"><div><div class="who">${t.agent||'Tim AI'}</div><div class="what">${t.objective||t.title||'Tugas'}</div></div><span class="pill">${t.status||'baru'}</span></div>`).join('') : '<div class="sub">Belum ada tugas — bikin rencana di tab Rencana.</div>';
+  }catch(e){ document.getElementById('insights').innerHTML='<div class="sub">Gagal load 8000, pastikan mock jalan di :8000</div>'; }
+}
+function applyLocal(){
+  const rev=+document.getElementById('inpRev').value, exp=+document.getElementById('inpExp').value, prof=+document.getElementById('inpProfit').value, cash=+document.getElementById('inpCash').value;
+  document.getElementById('vRevenue').textContent=rupiah(rev);
+  document.getElementById('vExpense').textContent=rupiah(exp);
+  document.getElementById('vProfit').textContent=rupiah(prof);
+  document.getElementById('vCash').textContent=rupiah(cash);
+  const health=Math.min(100,Math.max(10,Math.round((prof/rev*100/45)*30 + 35 + 10))); document.getElementById('healthBar').style.width=health+'%'; document.getElementById('healthPill').textContent=`Kesehatan Bisnis: ${health}/100 — Lokal`;
+}
+function addMsg(role,text){ const box=document.getElementById('chatBox'); const div=document.createElement('div'); div.className='msg '+(role==='user'?'user':'bot'); div.innerHTML=`<pre>${text}</pre>`; box.appendChild(div); box.scrollTop=box.scrollHeight; }
+function clearChat(){ document.getElementById('chatBox').innerHTML=''; }
+async function sendChat(){
+  const agent=document.getElementById('agentKey').value, message=document.getElementById('chatInput').value.trim();
+  if(!message) return; addMsg('user', message); document.getElementById('chatInput').value=''; addMsg('bot','...AI mikir...');
+  try{
+    const headers={'Content-Type':'application/json'}; if(TOKEN) headers['Authorization']='Bearer '+TOKEN;
+    const r=await fetch(`${API_LLM}/agents/${agent}/chat`, {method:'POST', headers, body:JSON.stringify({message, business_id:'biz_123'})});
+    const j=await r.json(); const box=document.getElementById('chatBox'); box.lastChild.remove(); addMsg('bot', j.reply || j.error || JSON.stringify(j,null,2));
+  }catch(e){ document.getElementById('chatBox').lastChild.remove(); addMsg('bot','Error: '+e.message); }
+}
+async function quickAsk(agent, msg){ showView('tanya'); document.getElementById('agentKey').value=agent; document.getElementById('chatInput').value=msg; sendChat(); }
+async function createWorkflow(){
+  const objective=document.getElementById('wfObjective').value; const out=document.getElementById('wfOut'); out.textContent='...AI bagi tugas...';
+  try{ const h={'Content-Type':'application/json'}; if(TOKEN) h['Authorization']='Bearer '+TOKEN; const r=await fetch(`${API_LLM}/workflows`, {method:'POST', headers:h, body:JSON.stringify({business_id:'biz_123', objective, priority:'high'})}); const j=await r.json(); out.textContent=JSON.stringify(j,null,2); loadOverview(); }catch(e){ out.textContent='Error: '+e.message; }
+}
+async function loadWorkflows(){
+  const h={}; if(TOKEN) h['Authorization']='Bearer '+TOKEN;
+  const r=await fetch(`${API_LLM}/workflows`, {headers:h}); const j=await r.json(); document.getElementById('wfOut').textContent=JSON.stringify(j,null,2);
+}
+async function loadFinance(){
+  const r=await fetch(`${API_MOCK}/finance/analysis`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({business_id:'biz_123',period:'2026-Q1'})});
+  const j=await r.json(); document.getElementById('financeOut').textContent=JSON.stringify(j,null,2);
+}
+async function campaignKit(){
+  const budget=+document.getElementById('campBudget').value, target=document.getElementById('campTarget').value; const out=document.getElementById('campOut'); out.textContent='...AI bikin paket...';
+  try{
+    const h={'Content-Type':'application/json'}; if(TOKEN) h['Authorization']='Bearer '+TOKEN;
+    const m=await (await fetch(`${API_LLM}/agents/marketing_manager/chat`, {method:'POST', headers:h, body:JSON.stringify({message:`Budget ${budget}/bulan, target ${target}, ROAS Meta 3.5 TikTok 2.8 Google 2.1. Beri alokasi + KPI.`, business_id:'biz_123'})})).json();
+    out.textContent='=== BAGIAN JUALAN ===\n'+(m.reply||JSON.stringify(m)).slice(0,1200)+'\n\n';
+    const c=await (await fetch(`${API_LLM}/agents/copywriter/chat`, {method:'POST', headers:h, body:JSON.stringify({message:`Buat 3 varian caption Meta Ads untuk Kemeja Linen 170rb target ${target}, funnel tengah, gaya santai premium, framework AIDA.`, business_id:'biz_123'})})).json();
+    out.textContent+='=== TUKANG CAPTION ===\n'+(c.reply||JSON.stringify(c)).slice(0,1200)+'\n\n';
+    const s=await (await fetch(`${API_LLM}/agents/social_media/chat`, {method:'POST', headers:h, body:JSON.stringify({message:`Buat kalender posting 7 hari IG+TikTok untuk Kemeja Linen target ${target}.`, business_id:'biz_123'})})).json();
+    out.textContent+='=== ADMIN SOSMED ===\n'+(s.reply||JSON.stringify(s)).slice(0,1500);
+  }catch(e){ out.textContent+='Error: '+e.message; }
+}
+async function summarizeImage(){
+  const f=document.getElementById('imgFile').files[0]; if(!f) return alert('Pilih foto dulu');
+  const fd=new FormData(); fd.append('image', f); fd.append('prompt', document.getElementById('imgPrompt').value || '');
+  const out=document.getElementById('imgOut'); out.textContent='...AI lihat foto...';
+  try{ const r=await fetch(`${API_LLM}/image/summarize`, {method:'POST', body:fd}); const j=await r.json(); out.textContent=j.reply||JSON.stringify(j,null,2); const url=URL.createObjectURL(f); const img=document.getElementById('imgPreview'); img.src=url; img.style.display='block'; }catch(e){ out.textContent='Error: '+e.message; }
+}
+async function transformImage(){
+  const f=document.getElementById('imgFile2').files[0]; if(!f) return alert('Pilih foto untuk ubah gaya');
+  const fd=new FormData(); fd.append('image', f); fd.append('style', document.getElementById('imgStyle').value); fd.append('prompt', document.getElementById('imgPrompt2').value || '');
+  const out=document.getElementById('imgOut2'); out.textContent='...AI bikin prompt baru...';
+  try{ const r=await fetch(`${API_LLM}/image/transform`, {method:'POST', body:fd}); const j=await r.json(); out.textContent=j.reply||JSON.stringify(j,null,2); const url=URL.createObjectURL(f); const img=document.getElementById('imgPreview2'); img.src=url; img.style.display='block'; }catch(e){ out.textContent='Error: '+e.message; }
+}
+loadOverview();
+// auto-login jika pernah register Bos Ikun (coba login silent)
+fetch(`${API_LLM}/auth/login`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:'bos@ikun.test',password:'Ikun123!'})}).then(r=>r.json()).then(j=>{ if(j.token) TOKEN=j.token; }).catch(()=>{});
+</script>
+</body>
+</html>

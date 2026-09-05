@@ -1,0 +1,21 @@
+{
+  "name": "agentic-prototype-ceo",
+  "version": "1.0.0",
+  "description": "Kerangka prototype Agentic AI Business OS - CEO + Finance + Marketing (LLM real jika .env ada, fallback mock jika tidak)",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.3.0",
+    "openai": "^4.40.1",
+    "xlsx": "^0.18.5"
+  }
+}

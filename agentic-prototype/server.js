@@ -291,6 +291,36 @@ app.get('/api/v1/rag/search', (req,res)=>{
   const r=searchRag({ business_id: biz, query: q, limit });
   res.json(r);
 });
+
+// DEBUG blob
+app.get('/api/v1/debug/blob', async (req,res)=>{
+  const hasBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
+  const hasVercel = !!process.env.VERCEL;
+  let listOk=null, blobDb=null, err=null;
+  try{
+    if(hasBlob){
+      const { list } = require('@vercel/blob');
+      const l = await list({ prefix: 'poody/db.json' });
+      listOk = l.blobs.map(b=>({pathname:b.pathname,size:b.size,uploadedAt:b.uploadedAt}));
+      // fetch content size
+      const { blobGet } = require('./agents/storage');
+      // try direct fetch via blobGet private logic manual
+    }
+  }catch(e){ err=e.message; }
+  res.json({ hasBlob, hasVercel, vercel: process.env.VERCEL, listOk, err, BLOB_prefix: process.env.BLOB_READ_WRITE_TOKEN ? process.env.BLOB_READ_WRITE_TOKEN.slice(0,12)+'...' : null });
+});
+app.post('/api/v1/debug/blob/put', async (req,res)=>{
+  try{
+    const { saveDB, loadDB } = require('./agents/storage');
+    const db=loadDB();
+    const id=`dbg_${Date.now()}`;
+    db.sales=db.sales||[];
+    db.sales.push({id, business_id:'biz_poody', date:'2026-09-05', items:[{variant:'chocolatte',size:'M',qty:1}], revenue:10000,cost:5100,profit:4900,total_cups:1, note:'debug-blob'});
+    await saveDB(db);
+    res.json({ok:true, id, sales:db.sales.length});
+  }catch(e){ res.status(500).json({error:e.message, stack:e.stack?.slice(0,800)}); }
+});
+
 app.get('/api/v1/dashboard/overview', (req,res)=>{
   const db=loadDB();
   res.json({ ok:true, persist:{workflows:db.workflows.length, tasks:db.tasks.length, memories:db.memories.length, sales:(db.sales||[]).length, expenses:(db.expenses||[]).length }, catalog: POODY_CATALOG });

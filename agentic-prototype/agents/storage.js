@@ -1,5 +1,5 @@
 // Persist A+ - JSON file DB dengan katalog Poody + sales/expenses
-// Lokal: file ./data/db.json | Vercel: Vercel Blob private (poody/db.json + poody/users.json) + /tmp cache
+// Lokal: file ./data/db.json | Vercel: Vercel Blob private (poody/db.json + poody/users.json) + /tmp cache (blocking hydrate)
 const fs = require('fs');
 const path = require('path');
 const isVercel = !!process.env.VERCEL;
@@ -29,9 +29,9 @@ const POODY_CATALOG = {
   }
 };
 
-// ---- Blob helpers (lazy require, non-blocking) ----
-let blobHydrating = false;
+// ---- Blob helpers ----
 let blobReady = false;
+let blobHydratePromise = null;
 
 async function blobGet(pathname) {
   try {
@@ -41,7 +41,6 @@ async function blobGet(pathname) {
     const res = await list({ prefix: pathname });
     const blob = (res.blobs || []).find(b => b.pathname === pathname);
     if (!blob) return null;
-    // private blob needs Bearer
     const r = await fetch(blob.url, { headers: { Authorization: `Bearer ${token}` } });
     if (!r.ok) return null;
     return await r.text();
@@ -69,21 +68,31 @@ async function blobPut(pathname, text) {
 }
 
 async function hydrateFromBlob() {
-  if (!isVercel || !hasBlob || blobHydrating) return;
-  blobHydrating = true;
-  try {
-    if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-    const dbText = await blobGet(BLOB_DB);
-    if (dbText) {
-      try { JSON.parse(dbText); fs.writeFileSync(dbPath, dbText); console.log('[blob] hydrated db.json', dbText.length); } catch {}
-    }
-    const usersText = await blobGet(BLOB_USERS);
-    if (usersText) {
-      try { JSON.parse(usersText); fs.writeFileSync(usersPath, usersText); console.log('[blob] hydrated users.json'); } catch {}
-    }
-    blobReady = true;
-  } catch (e) { console.warn('[blob] hydrate err', e.message); }
-  blobHydrating = false;
+  if (!isVercel || !hasBlob) return;
+  if (blobReady) return;
+  if (blobHydratePromise) return blobHydratePromise;
+  blobHydratePromise = (async () => {
+    try {
+      if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+      const dbText = await blobGet(BLOB_DB);
+      if (dbText) {
+        try { JSON.parse(dbText); fs.writeFileSync(dbPath, dbText); console.log('[blob] hydrated db.json', dbText.length); } catch {}
+      }
+      const usersText = await blobGet(BLOB_USERS);
+      if (usersText) {
+        try { JSON.parse(usersText); fs.writeFileSync(usersPath, usersText); console.log('[blob] hydrated users.json'); } catch {}
+      }
+      blobReady = true;
+    } catch (e) { console.warn('[blob] hydrate err', e.message); }
+    finally { blobHydratePromise = null; }
+  })();
+  return blobHydratePromise;
+}
+
+async function ensureHydrated() {
+  if (!isVercel || !hasBlob) return;
+  if (blobReady) return;
+  return hydrateFromBlob();
 }
 
 function ensure() {
@@ -127,7 +136,6 @@ function ensure() {
     } catch {}
   }
   if (!fs.existsSync(usersPath)) fs.writeFileSync(usersPath, JSON.stringify([], null, 2));
-  // trigger async hydrate di Vercel (non-blocking, jangan tahan startup)
   if (isVercel && hasBlob) { hydrateFromBlob().catch(()=>{}); }
 }
 ensure();
@@ -156,4 +164,4 @@ async function saveUsers(u) {
   }
 }
 
-module.exports = { loadDB, saveDB, saveDBSync, loadUsers, saveUsers, dbPath, usersPath, POODY_CATALOG, hydrateFromBlob, blobGet, blobPut };
+module.exports = { loadDB, saveDB, saveDBSync, loadUsers, saveUsers, dbPath, usersPath, POODY_CATALOG, hydrateFromBlob, ensureHydrated, blobGet, blobPut };

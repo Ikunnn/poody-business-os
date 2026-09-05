@@ -5,7 +5,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const { callLLM, isMock, model } = require('./agents/llm');
-const { loadDB, saveDB, POODY_CATALOG } = require('./agents/storage');
+const { loadDB, saveDB, POODY_CATALOG, ensureHydrated } = require('./agents/storage');
 const { registerUser, loginUser, authMiddleware } = require('./agents/auth');
 const { buildBriefing, formatBriefingText } = require('./agents/briefing');
 const { buildForecast } = require('./agents/forecast');
@@ -23,6 +23,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 const DEFAULT_BIZ = 'biz_poody';
+
+// Vercel Blob: pastikan /tmp sudah hydrate dari Blob sebelum baca db (blocking first request)
+app.use(async (req, res, next) => {
+  if (process.env.VERCEL && process.env.BLOB_READ_WRITE_TOKEN) {
+    try { await ensureHydrated(); } catch(e){ console.warn('[blob] ensureHydrated', e.message); }
+  }
+  next();
+});
 
 app.get('/api', (req,res)=>res.json({ ok:true, service:'Agentic Prototype - Poody', mode: isMock() ? 'MOCK' : `LLM ${model()}`, port: PORT, catalog: POODY_CATALOG }));
 app.get('/health', (req,res)=>res.json({ ok:true, mode: isMock()?'MOCK':'LLM', model: model(), now:new Date().toISOString() }));

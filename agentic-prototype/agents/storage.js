@@ -6,7 +6,7 @@ const dbPath = path.join(dataDir, 'db.json');
 const usersPath = path.join(dataDir, 'users.json');
 
 const POODY_CATALOG = {
-  business: { id: 'biz_poody', name: 'Poody Silky Pudding', type: 'F&B Dessert', avg_daily_revenue: 200000 },
+  business: { id: 'biz_poody', name: 'Poody', type: 'F&B Dessert', avg_daily_revenue: 200000 },
   variants: ['chocolatte','matcha','mango','strawberry','taro','bubblemgum'],
   sizes: {
     M: { label: 'Size M', hpp: 5100, price: 10000, profit: 4900 },

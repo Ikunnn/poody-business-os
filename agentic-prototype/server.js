@@ -338,7 +338,7 @@ app.post('/api/v1/agents/:key/chat', async (req,res)=>{
   let chatMessage=message;
   if(key==='ceo'){
     const _ragBlock=_rag?`\nMemori relevan (RAG top 5, pakai jika nyambung):\n - ${_rag}`:"";
-    chatMessage=`Konteks: Kamu CEO Agent Poody Silky Pudding (UMKM dessert). Katalog: 6 rasa chocolatte/matcha/mango/strawberry/taro/bubblemgum, M HPP5100/10000 L HPP6100/12000, target 200rb/hari (~20 cup). DATA REAL: ${_monthCtx}. Kemarin ${_yest}: omset ${_y.rev} exp usaha ${_y.exp} net ${_y.net} ${_y.cups} cup.\nUser: "${message}"\nInstruksi: Gunakan DATA REAL di atas, jangan minta data lagi.${_ragBlock} Jawab natural ID ringkas. Jika analisis -> pakai angka real + 2-3 saran. Jangan JSON DAG kecuali diminta workflow. Jika estimasi, label ESTIMATION.`;
+    chatMessage=`Konteks: Kamu CEO Agent Poody (UMKM dessert). Katalog: 6 rasa chocolatte/matcha/mango/strawberry/taro/bubblemgum, M HPP5100/10000 L HPP6100/12000, target 200rb/hari (~20 cup). DATA REAL: ${_monthCtx}. Kemarin ${_yest}: omset ${_y.rev} exp usaha ${_y.exp} net ${_y.net} ${_y.cups} cup.\nUser: "${message}"\nInstruksi: Gunakan DATA REAL di atas, jangan minta data lagi.${_ragBlock} Jawab natural ID ringkas. Jika analisis -> pakai angka real + 2-3 saran. Jangan JSON DAG kecuali diminta workflow. Jika estimasi, label ESTIMATION.`;
   } else if(key==='financial_analyst'){
     const _ragBlock=_rag?` RAG: ${_rag}`:"";
     chatMessage=`Kamu Financial Analyst Poody. DATA REAL: ${_monthCtx}. Kemarin ${_yest}: omset ${_y.rev} cups ${_y.cups} net usaha ${_y.net}.${_ragBlock} User: "${message}" Jawab analisis keuangan pakai angka real, pisah laba usaha vs sisa kas (exclude pribadi), beri 3 insight + saran. ID ringkas.`;
@@ -358,7 +358,7 @@ app.post('/api/v1/agents/:key/chat', async (req,res)=>{
 app.post('/api/v1/workflows', async (req,res)=>{
   const {business_id,objective,priority}=req.body;
   if(!objective) return res.status(400).json({error:'objective required'});
-  const prompt=`Business_id: ${business_id||DEFAULT_BIZ}\nObjective: "${objective}"\nPriority: ${priority||'medium'}\nKonteks: Poody Silky Pudding UMKM dessert 6 rasa, Size M HPP5100/10000 Size L HPP6100/12000, omset 200rb/hari.\nTugas CEO: 1. pemahaman singkat 2. pecah 3-5 tasks (pilih agent: financial_analyst,cashflow_analyst,forecasting,marketing_manager,performance_marketing,social_media,copywriter,seo,business_strategist,market_research,competitor_analyst,growth,data_analyst) 3. tiap task: objective,priority,requires_approval 4. data needed 5. confidence 0-100\nOutput JSON: {"understanding":"...","tasks":[{"agent":"...","objective":"...","priority":"...","requires_approval":false}],"next_data_needed":["..."],"confidence":0-100,"risk_note":"..."}\n`;
+  const prompt=`Business_id: ${business_id||DEFAULT_BIZ}\nObjective: "${objective}"\nPriority: ${priority||'medium'}\nKonteks: Poody UMKM dessert 6 rasa, Size M HPP5100/10000 Size L HPP6100/12000, omset 200rb/hari.\nTugas CEO: 1. pemahaman singkat 2. pecah 3-5 tasks (pilih agent: financial_analyst,cashflow_analyst,forecasting,marketing_manager,performance_marketing,social_media,copywriter,seo,business_strategist,market_research,competitor_analyst,growth,data_analyst) 3. tiap task: objective,priority,requires_approval 4. data needed 5. confidence 0-100\nOutput JSON: {"understanding":"...","tasks":[{"agent":"...","objective":"...","priority":"...","requires_approval":false}],"next_data_needed":["..."],"confidence":0-100,"risk_note":"..."}\n`;
   try{
     const raw=await callLLM('ceo', prompt, {json:!isMock(), maxTokens:1400});
     const cleaned=raw.replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/i,'').trim();
@@ -382,7 +382,7 @@ app.post('/api/v1/memories', (req,res)=>{ const db=loadDB(); const m={ id:`mem_$
 app.post('/api/v1/image/summarize', upload.single('image'), async (req,res)=>{
   try{
     if(!req.file) return res.status(400).json({error:'image file required (field: image)'});
-    const prompt=req.body.prompt||'Deskripsikan foto Poody Silky Pudding ini (rasa, size, topping, kemasan, pencahayaan) lalu beri 3 saran agar foto lebih laku dijual.';
+    const prompt=req.body.prompt||'Deskripsikan foto Poody ini (rasa, size, topping, kemasan, pencahayaan) lalu beri 3 saran agar foto lebih laku dijual.';
     const base64=req.file.buffer.toString('base64'); const mime=req.file.mimetype||'image/jpeg';
     const reply=await callLLM('data_analyst', prompt, {imageBase64:base64,imageMime:mime,maxTokens:900});
     const db=loadDB(); db.memories.push({id:`mem_${Date.now().toString(36)}`,business_id:DEFAULT_BIZ,type:'episodic',key:'image_summarize',value:{prompt,mime,size:req.file.size,reply},created_at:new Date().toISOString()}); saveDB(db);
@@ -493,7 +493,7 @@ app.get('/api/v1/export/receipt', (req,res)=>{
   .row b{font-size:13px} .small{font-size:11px;color:#64748b} .total{font-weight:800;font-size:14px}
   @media print{ body{background:white} .paper{border:none;margin:0;max-width:none} .no-print{display:none} }
   </style></head><body><div class="paper">
-  <h1>🍮 POODY Silky Pudding</h1><div class="sub">UMKM Dessert • ${date} • ${business_id}</div>
+  <h1>🍮 POODY Poody</h1><div class="sub">UMKM Dessert • ${date} • ${business_id}</div>
   <div class="line"></div>
   ${sales.map(s=> s.items.map(it=> `<div class="row"><span>${it.variant} ${it.size} x${it.qty} ${(it.toppings&&it.toppings.length)?`<span class="small">+${it.toppings.join('+')}</span>`:''}</span><span>${new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(it.revenue)}</span></div>`).join('')).join('') || '<div class="small">Tidak ada penjualan</div>'}
   <div class="line"></div>

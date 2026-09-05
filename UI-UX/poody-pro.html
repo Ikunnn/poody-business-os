@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Poody — Business OS | Silky Pudding</title>
+<title>Poody — Business OS</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}html,body{height:100%}
@@ -88,7 +88,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="logo">P</div>
-      <div><h1>Poody</h1><p>Silky Pudding • UMKM</p></div>
+      <div><h1>Poody</h1><p>Poody • UMKM</p></div>
     </div>
     <div class="side-card">
       <div class="label">Halo Bos Ikun 👋</div>
@@ -111,7 +111,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
     </div>
     <div class="side-card" id="bizCard" style="background:rgba(255,255,255,.08)">
       <div class="label">Bisnis aktif</div>
-      <div class="val" id="bizNameSide">Poody Silky Pudding</div>
+      <div class="val" id="bizNameSide">Poody</div>
       <div class="hint" id="bizMetaSide">biz_poody • sinkron Google Sheets</div>
       <div class="small" id="bizSyncHint" style="margin-top:6px;color:#E2E8F0"></div>
     </div>
@@ -334,7 +334,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
 
 <div id="bizModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:50;align-items:center;justify-content:center;padding:16px"><div class="card" style="max-width:420px;width:100%"><div class="card-h">+ Bisnis baru</div><div class="card-sub">1 akun bisa banyak warung/brand — data pisah per business_id</div><div style="display:grid;gap:8px;margin-top:10px"><input id="newBizId" placeholder="ID mis: biz_cikarang (huruf, angka, _ , -)"><input id="newBizName" placeholder="Nama mis: Poody Cikarang"><input id="newBizAvg" type="number" placeholder="Target harian mis: 250000" value="200000"><div style="display:flex;gap:8px"><button class="btn" onclick="createBusiness()">Simpan</button><button class="btn secondary" onclick="closeBizModal()">Batal</button></div><div class="small" id="newBizMsg"></div><div class="small">Sheets default: 1MMS_23QeS5rUScwAaGM35ooxxCSoy2SX — sinkron akan tarik JUL-26/AGUST-26/SEP-26/OKT-26 ke bisnis dipilih.</div></div></div></div>
 <script>
-const API='http://localhost:8001/api/v1';
+const API=(location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:8001/api/v1' : location.origin+'/api/v1';
 let BIZ=localStorage.getItem('poody_biz')||'biz_poody';
 const CATALOG={variants:['chocolatte','matcha','mango','strawberry','taro','bubblemgum'], sizes:{M:{hpp:5100,price:10000,profit:4900},L:{hpp:6100,price:12000,profit:5900}}};
 const TOPPINGS=[

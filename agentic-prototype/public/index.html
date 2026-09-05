@@ -96,9 +96,29 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
 .bars div.alt{background:linear-gradient(180deg,#F59E0B,#FB7185)}
 .small{font-size:12px;color:#64748B} pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,monospace;font-size:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px}
 .muted{color:#64748B}
+
+/* MOBILE BOTTOM NAV & HAMBURGER */
+.hamburger{display:none;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid #E2E8F0;background:white;font-size:16px;cursor:pointer}
+.backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:39}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #F1E9DA;z-index:30;padding:6px 8px 10px;justify-content:space-around;gap:4px;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+.bottom-nav button{flex:1;background:transparent;border:none;padding:6px 2px;font-size:10px;font-weight:700;color:#64748B;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.bottom-nav button.active{color:#0F172A}
+.bottom-nav button .ico{font-size:16px;line-height:1;padding:4px 8px;border-radius:10px}
+.bottom-nav button.active .ico{background:#0F172A;color:white}
+@media(max-width:640px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .sidebar.open{display:flex;position:fixed;inset:0;z-index:40;width:80%;max-width:300px;box-shadow:8px 0 24px rgba(0,0,0,.25);overflow:auto}
+  .backdrop.show{display:block}
+  .content{padding:12px 12px 80px}
+  .bottom-nav{display:flex !important}
+  .hamburger{display:grid !important}
+}
+
 </style>
 </head>
 <body>
+<div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
     <div class="brand">
@@ -135,6 +155,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
 
   <div class="main">
     <div class="top">
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
       <div>
         <h2 id="pageTitle">Kasir Harian</h2>
         <div class="sub" id="pageSub">Input penjualan & topping — harga otomatis, laba langsung kehitung</div>
@@ -361,6 +382,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
   </div>
 </div>
 
+
+<nav class="bottom-nav" id="bottomNav">
+  <button class="active" data-bview="kasir" onclick="showView('kasir')"><span class="ico">🧾</span>Kasir</button>
+  <button data-bview="beranda" onclick="showView('beranda')"><span class="ico">📊</span>Dash</button>
+  <button data-bview="history" onclick="showView('history')"><span class="ico">📜</span>Riwayat</button>
+  <button data-bview="tanya" onclick="showView('tanya')"><span class="ico">💬</span>AI</button>
+  <button data-bview="rencana" onclick="showView('rencana')"><span class="ico">🎯</span>Rencana</button>
+</nav>
+
 <div id="bizModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:50;align-items:center;justify-content:center;padding:16px"><div class="card" style="max-width:420px;width:100%"><div class="card-h">+ Bisnis baru</div><div class="card-sub">1 akun bisa banyak warung/brand — data pisah per business_id</div><div style="display:grid;gap:8px;margin-top:10px"><input id="newBizId" placeholder="ID mis: biz_cikarang (huruf, angka, _ , -)"><input id="newBizName" placeholder="Nama mis: Poody Cikarang"><input id="newBizAvg" type="number" placeholder="Target harian mis: 250000" value="200000"><div style="display:flex;gap:8px"><button class="btn" onclick="createBusiness()">Simpan</button><button class="btn secondary" onclick="closeBizModal()">Batal</button></div><div class="small" id="newBizMsg"></div><div class="small">Sheets default: 1MMS_23QeS5rUScwAaGM35ooxxCSoy2SX — sinkron akan tarik JUL-26/AGUST-26/SEP-26/OKT-26 ke bisnis dipilih.</div></div></div></div>
 <script>
 const API=(location.hostname==='localhost'||location.hostname==='127.0.0.1') ? 'http://localhost:8001/api/v1' : location.origin+'/api/v1';
@@ -389,6 +419,8 @@ document.getElementById('sumDate').textContent=todayStr;
 const titles={kasir:['Kasir Harian','Input penjualan & topping — harga otomatis, laba langsung kehitung'],beranda:['Dashboard','Ringkasan kesehatan, insight AI, dan performa 7 hari'],history:['Riwayat','Filter tanggal, lihat detail + topping'],tanya:['Tanya AI','Tanya pakai bahasa sehari-hari — AI jawab pakai data hari ini'],rencana:['Rencana','AI pecah tujuan jadi tugas tim'],foto:['Foto Produk','Cek foto & ubah gaya katalog']};
 function setTitle(id){ document.getElementById('pageTitle').textContent=titles[id][0]; document.getElementById('pageSub').textContent=titles[id][1]; }
 function showView(id){
+  try{ document.querySelectorAll("#bottomNav button").forEach(b=> b.classList.toggle("active", b.dataset.bview===id)); closeSidebar(); }catch(e){}
+
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
   document.querySelectorAll('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.view===id));
@@ -1044,6 +1076,21 @@ async function syncSheetsLive(){
 function populateWasteBahan(){ const s=document.getElementById('wasteBahan'); if(!s) return; s.innerHTML=''; CATALOG.variants.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v+` (HPP ${rupiah(CATALOG.sizes.M.hpp)})`; s.appendChild(o); }); TOPPINGS.forEach(tt=>{ const o=document.createElement('option'); o.value=tt.key; o.textContent=tt.label+` (HPP ${rupiah(tt.hpp)})`; s.appendChild(o); }); const o=document.createElement('option'); o.value='lain'; o.textContent='lain (isi nominal manual)'; s.appendChild(o); }
 buildPose(); populateWasteBahan(); recalc(); loadSummary(); loadBusinesses().then(()=>{ updateBizSide(); });
   populateMonthSelects(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); loadMonthSummary('2026-08'); loadBarsForMonth('2026-08','month');
+
+function toggleSidebar(){
+  const s = document.getElementById('sidebar');
+  const b = document.getElementById('backdrop');
+  if(!s || !b) return;
+  if(s.classList.contains('open')){ s.classList.remove('open'); b.classList.remove('show'); }
+  else { s.classList.add('open'); b.classList.add('show'); }
+}
+function closeSidebar(){
+  const s = document.getElementById('sidebar');
+  const b = document.getElementById('backdrop');
+  if(s) s.classList.remove('open');
+  if(b) b.classList.remove('show');
+}
+
 </script>
 </body>
 </html>

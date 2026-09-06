@@ -55,8 +55,8 @@ app.get('/api/v1/auth/me', authMiddleware, (req,res)=>res.json({user:req.user}))
 
 app.use('/api/v1', (req,res,next)=>{
   const p = req.path; // sudah strip /api/v1
-  // briefing/forecast/kpi/rag/business/sync/workflows/tasks/memories/export terbuka tanpa login untuk UMKM
-  if(p.startsWith('/briefing') || p.startsWith('/forecast') || p.startsWith('/kpi') || p.startsWith('/rag') || p.startsWith('/businesses') || p.startsWith('/sync') || p.startsWith('/workflows') || p.startsWith('/tasks') || p.startsWith('/memories') || p.startsWith('/export/') || p==='/export/excel' || p==='/export/receipt') {
+  // briefing/forecast/kpi/rag/business/sync/workflows/tasks/memories/export/hpp terbuka tanpa login untuk UMKM
+  if(p.startsWith('/briefing') || p.startsWith('/forecast') || p.startsWith('/kpi') || p.startsWith('/rag') || p.startsWith('/businesses') || p.startsWith('/sync') || p.startsWith('/workflows') || p.startsWith('/tasks') || p.startsWith('/memories') || p.startsWith('/hpp') || p.startsWith('/export/') || p==='/export/excel' || p==='/export/receipt') {
     const h = req.headers.authorization;
     if(h && h.startsWith('Bearer ')){
       try{ const jwt=require('jsonwebtoken'); const sec=process.env.JWT_SECRET||'dev-secret-change-in-prod-32chars!'; req.user=jwt.verify(h.slice(7), sec);}catch{}
@@ -64,8 +64,8 @@ app.use('/api/v1', (req,res,next)=>{
     if(!req.user) req.user={ id:'usr_anon_poody', role:'owner' };
     return next();
   }
-  const openExact = ['/catalog','/sales','/expenses','/wastes','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
-  const openPrefix = ['/catalog','/sales','/expenses','/wastes','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
+  const openExact = ['/catalog','/sales','/expenses','/wastes','/hpp','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
+  const openPrefix = ['/catalog','/sales','/expenses','/wastes','/hpp','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
   const isOpen = openExact.includes(p) || openPrefix.some(pref => p === pref || p.startsWith(pref + '/') || p.startsWith(pref));
   if(isOpen){
     const h = req.headers.authorization;
@@ -149,17 +149,45 @@ app.delete('/api/v1/sales/:id', async (req,res)=>{
   const removed=db.sales.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
 });
 
-// EXPENSES
+// EXPENSES — upgraded: qty/unit/unit_price auto amount
+const EXP_UNITS=['kg','gram','g','liter','l','ml','pcs','pack','ikat','dus','karung','cup','pouch','box','sachet','botol','kaleng','lembar','meter','roll','biji','ekor','ember','hari','bulan'];
 app.post('/api/v1/expenses', async (req,res)=>{
   const business_id=req.body.business_id||DEFAULT_BIZ;
   const date=(req.body.date||todayStr()).slice(0,10);
-  const amount=Math.max(0, parseInt(req.body.amount||0,10));
-  if(!amount) return res.status(400).json({error:'amount required >0'});
+  let amount=parseInt(req.body.amount||0,10);
+  let qty=req.body.qty!=null? parseFloat(req.body.qty): null;
+  if(qty!=null && isNaN(qty)) qty=null;
+  if(qty!=null && qty<0) qty=0;
+  let unit=(req.body.unit||'').toString().trim().toLowerCase();
+  if(unit && !EXP_UNITS.includes(unit)) unit=unit.slice(0,12);
+  let unit_price=req.body.unit_price!=null? parseInt(req.body.unit_price,10): null;
+  if(unit_price!=null && isNaN(unit_price)) unit_price=null;
+  // auto hitung amount = qty * unit_price jika keduanya ada
+  if((!amount || isNaN(amount) || amount<=0) && qty!=null && qty>0 && unit_price!=null && unit_price>0){
+    amount=Math.round(qty * unit_price);
+  }
+  // fallback: qty*unit_price overwrite amount jika qty+unit_price dikirim dan amount tidak konsisten
+  if(qty!=null && qty>0 && unit_price!=null && unit_price>0){
+    const calc=Math.round(qty * unit_price);
+    // if amount beda jauh dari calc dan amount diisi manual, tetap pakai amount manual? tapi kita prioritas calc jika selisih
+    // untuk bahan baku, pakai calc
+    if(!req.body.amount || Math.abs(calc - amount) > 1) amount=calc;
+  }
+  amount=Math.max(0, parseInt(amount||0,10));
+  if(!amount) return res.status(400).json({error:'amount required >0 — isi nominal atau qty x harga satuan'});
   const db=loadDB();
-  const rec={ id:`exp_${Date.now().toString(36)}`, business_id, date, title:req.body.title||'Pengeluaran', category:req.body.category||'operasional', amount, note:req.body.note||'', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
+  const rec={ id:`exp_${Date.now().toString(36)}`, business_id, date, title:req.body.title||'Pengeluaran', category:req.body.category||'operasional', amount, qty: qty!=null? qty : null, unit: unit||null, unit_price: unit_price!=null? unit_price : null, note:req.body.note||'', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
+  // auto category bahan if title contains bahan keywords and category masih operasional
+  if((rec.category==='operasional' || rec.category==='lain') && catForExp(rec.title)==='bahan') rec.category='bahan';
   db.expenses=db.expenses||[]; db.expenses.push(rec); await saveDB(db);
   res.status(201).json(rec);
 });
+function catForExp(title){
+  const up=(title||'').toUpperCase();
+  if(up.includes('MAIN')||up.includes('PISAHIN')) return 'pribadi';
+  if(up.includes('PUDDING')||up.includes('EVAPORASI')||up.includes('CREAMER')||up.includes('ES KRIM')||up.includes('ICE CREAM')||up.includes('GULA')||up.includes('KEJU')||up.includes('OREO')||up.includes('FROOT')||up.includes('KOKO')||up.includes('PAPER')||up.includes('PAPPER')||up.includes('KRESEK')||up.includes('SENDOK')||up.includes('TOPPING')||up.includes('LIQUID')||up.includes('SKM')||up.includes('ES BATU')) return 'bahan';
+  return 'operasional';
+}
 app.get('/api/v1/expenses', (req,res)=>{
   const db=loadDB(); let data=db.expenses||[];
   if(req.query.business_id) data=data.filter(e=>e.business_id===req.query.business_id);
@@ -338,6 +366,43 @@ app.post('/api/v1/sync/sheets', async (req,res)=>{
     const summary=await syncSheets({ spreadsheetId, businessId: business_id });
     res.json({ ok:true, business_id, spreadsheetId, summary });
   }catch(e){ console.error(e); res.status(500).json({error:e.message}); }
+});
+app.get('/api/v1/hpp', (req,res)=>{
+  const business_id=req.query.business_id||DEFAULT_BIZ;
+  const db=loadDB();
+  const hpp=(db.hppMaster||{})[business_id] || null;
+  if(!hpp) return res.json({ business_id, hpp:null, hint:'Belum sync Sheets HPP. Klik Sync Sheets.' });
+  res.json({ business_id, hpp });
+});
+app.post('/api/v1/hpp/generate-expenses', async (req,res)=>{
+  const business_id=req.body.business_id||req.query.business_id||DEFAULT_BIZ;
+  const date=(req.body.date||todayStr()).slice(0,10);
+  const ym=date.slice(0,7);
+  const db=loadDB();
+  const hpp=(db.hppMaster||{})[business_id];
+  if(!hpp || !hpp.monthly) return res.status(400).json({error:'hpp not synced, Sync Sheets dulu'});
+  const exists=(db.expenses||[]).filter(e=> e.business_id===business_id && (e.date||'').startsWith(ym) && e.source==='hpp_monthly');
+  if(exists.length && !req.body.force) return res.status(409).json({error:'hpp_monthly already generated for '+ym, count:exists.length, hint:'kirim force:true untuk regenerate'});
+  if(req.body.force){
+    db.expenses=(db.expenses||[]).filter(e=> !(e.business_id===business_id && (e.date||'').startsWith(ym) && e.source==='hpp_monthly'));
+  }
+  const created=[];
+  for(const it of hpp.monthly){
+    if(!it.total||it.total<=0) continue;
+    const cat=catForExp(it.item);
+    // satuan like "1 KARTON" / "300 GRAM" / "2 KG" -> ambil kata terakhir sebagai unit
+    const rawSat=(it.satuan||'').toString().trim();
+    const parts=rawSat.split(/\s+/);
+    let unit=(parts.length>1? parts[parts.length-1] : parts[0]||'').toLowerCase();
+    // normalisasi gram variants
+    if(unit==='gram'||unit==='gr'||unit==='grm') unit='gram';
+    if(unit==='karton') unit='dus';
+    if(!EXP_UNITS.includes(unit)) unit=unit.slice(0,12);
+    const exp={ id:`exp_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`, business_id, date, title: it.item, category: cat, amount: it.total, qty: it.terpakai||null, unit: unit||null, unit_price: it.harga||null, note:`RATA-RATA PERBULAN HPP (${it.terpakai} x ${rawSat})`, source:'hpp_monthly', created_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
+    db.expenses.push(exp); created.push(exp);
+  }
+  await saveDB(db);
+  res.json({ok:true, business_id, date, ym, count:created.length, total:created.reduce((a,b)=>a+b.amount,0), items:created});
 });
 app.get('/api/v1/rag/search', (req,res)=>{
   const q=(req.query.q||req.query.query||'').toString().slice(0,120);

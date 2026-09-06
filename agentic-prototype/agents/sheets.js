@@ -56,6 +56,9 @@ function parseSheet(wb, name){
     // JUL-26 : NO,TANGGAL,KETERANGAN,SATUAN,PEMASUKAN,PENGELUARAN,SALDO
     pemasukanIdx=4; pengeluaranIdx=5; ketIdx=2; tanggalIdx=1;
   }
+  let expectedPrefix=null;
+  if(name==='JUL-26') expectedPrefix='2026-07';
+  // AGUST/SEP tidak pakai strict filter — 09-08 nyasar di AGUST tetap dihitung
   let cur=null;
   const rev={}; // date -> total rev
   const exp={}; // date -> [[title, amt],...]
@@ -83,8 +86,17 @@ function parseSheet(wb, name){
     // date detect
     if(typeof c1==='number' && c1>40000){
       cur=exToISO(c1);
+      // fix: 09-08 nyasar di tab AGUST-26 itu sebenarnya 09 Agustus (524k)
+      if(name==='AGUST-26' && cur==='2026-09-08') cur='2026-08-09';
+      else if(name==='AGUST-26' && cur && cur.startsWith('2026-09-')) {
+        // fallback: any Sep date in AGUST tab -> map to Aug same day
+        cur='2026-08-'+cur.slice(8);
+      }
     } else if(typeof c1==='string' && /^\d{4}-\d{2}-\d{2}$/.test(c1)){
-      cur=c1;
+      let tmp=c1;
+      if(name==='AGUST-26' && tmp==='2026-09-08') tmp='2026-08-09';
+      else if(name==='AGUST-26' && tmp.startsWith('2026-09-')) tmp='2026-08-'+tmp.slice(8);
+      cur=tmp;
     } else if(typeof c1==='string' && c1.trim()){
       // sometimes date as string like 01/08/26? but xlsx gives number, rare
       const m=c1.trim().match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
@@ -96,11 +108,23 @@ function parseSheet(wb, name){
       }
     }
     const aMasuk=num(cMasuk), aKeluar=num(cKeluar);
-    // skip TOTAL summary row for July (both totals)
+    const upKet=(cKet||'').toString().toUpperCase();
+    // skip SALDO/LABA/TOTAL — jangan kehitung omset (LABA 978615 itu balance, bukan omset harian)
+    // SALDO BULAN AGUSTUS 828266 di SEP-26 juga bukan omset
+    const isSaldo = upKet.includes('SALDO');
+    const isLaba = upKet.includes('LABA');
+    const isTotal = upKet.includes('TOTAL');
+    if(isSaldo || isLaba || isTotal){
+      continue;
+    }
+    // skip TOTAL summary legacy (angka total bulanan)
     if(aMasuk===4987000 && aKeluar===4077161) continue;
-    if(aMasuk===9044015 || aKeluar===8369388) continue; // August total row
+    if(aMasuk===9044015 || aKeluar===8369388) continue;
     // skip rows with no cur
     if(!cur) continue;
+    // NOTE: tanggal 2026-09-08 yang nyasar di tab AGUST-26 tetap dihitung sebagai omset
+    // (jangan filter strict bulan), hanya SALDO/LABA/TOTAL yang di-skip
+    // jadi month filter dimatikan — biar 09-08 masuk
     // skip AWAL header date cur? cur should be defined; but awal rows have cur as July dates, they still have pemasukan cols? We already captured awal, but also need to ensure we don't double count TOTAL
     if(aMasuk>0){
       rev[cur]=(rev[cur]||0)+aMasuk;
@@ -116,12 +140,46 @@ function parseSheet(wb, name){
   return { rev, exp, awal: awalFiltered, rowsCount: rows.length };
 }
 
+function parseHPP(wb){
+  const ws=wb.Sheets['HPP'];
+  if(!ws) return null;
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',blankrows:false});
+  const toNum=v=> num(v);
+  const perCup={ L:[], M:[] };
+  for(let i=2;i<=9;i++){
+    const r=rows[i]||[];
+    const lItem=(r[0]||'').toString().trim(), lSat=(r[1]||'').toString().trim(), lHarga=toNum(r[2]), lPakai=toNum(r[3]), lHpp=toNum(r[4]);
+    if(lItem) perCup.L.push({item:lItem,satuan:lSat,harga:lHarga,terpakai:lPakai,hpp:lHpp|| (lHarga&&lPakai? Math.round(lHarga/lPakai):0)});
+    const mItem=(r[6]||'').toString().trim(), mSat=(r[7]||'').toString().trim(), mHarga=toNum(r[8]), mPakai=toNum(r[9]), mHpp=toNum(r[10]);
+    if(mItem) perCup.M.push({item:mItem,satuan:mSat,harga:mHarga,terpakai:mPakai,hpp:mHpp|| (mHarga&&mPakai? Math.round(mHarga/mPakai):0)});
+  }
+  const monthly=[];
+  for(let i=14;i<=30;i++){
+    const r=rows[i]||[];
+    const item=(r[3]||'').toString().trim();
+    if(!item) continue;
+    const satuan=(r[4]||'').toString().trim();
+    const harga=toNum(r[5]), pakai=toNum(r[6]), total=toNum(r[7]) || (harga&&pakai? harga*pakai:0);
+    if(item.toUpperCase()==='TOTAL' || !harga) {
+      if(item.toUpperCase()==='TOTAL') continue;
+      // allow RED VELVET 0 harga still push
+      if(!item) continue;
+    }
+    monthly.push({item,satuan,harga,terpakai:pakai,total});
+  }
+  const totalMonthly=monthly.reduce((a,b)=>a+(b.total||0),0);
+  const hppL = perCup.L.reduce((a,b)=>a+(b.hpp||0),0);
+  const hppM = perCup.M.reduce((a,b)=>a+(b.hpp||0),0);
+  return {perCup, hppL, hppM, monthly, totalMonthly, hargaJual:{L:12000,M:10000}};
+}
+
 async function syncSheets({ spreadsheetId, businessId='biz_poody' }){
   if(!XLSX) throw new Error('xlsx not installed');
   if(!spreadsheetId) throw new Error('spreadsheetId required');
   const buf = await fetchXlsxBuffer(spreadsheetId);
   const wb2 = XLSX.read(buf, { type:'buffer' });
   const names = wb2.SheetNames;
+  const hpp=parseHPP(wb2);
   // Parse JUL-26 and AGUST-26 etc
   const jul = names.includes('JUL-26') ? parseSheet(wb2,'JUL-26') : { rev:{}, exp:{}, awal:[] };
   const agust = names.includes('AGUST-26') ? parseSheet(wb2,'AGUST-26') : { rev:{}, exp:{}, awal:[] };
@@ -193,7 +251,12 @@ async function syncSheets({ spreadsheetId, businessId='biz_poody' }){
   if(!db.businesses.find(b=>b.id===businessId)){
     db.businesses.push({ id:businessId, name: businessId==='biz_poody'?'Poody Silky Pudding':businessId, type:'F&B Dessert', avg_daily_revenue:200000 });
   }
-  saveDB(db);
+  // persist master bahan ke db.hppMaster SEBELUM save — biar ke-save bareng
+  if(hpp){
+    db.hppMaster=db.hppMaster||{};
+    db.hppMaster[businessId]={...hpp, synced_at:new Date().toISOString(), spreadsheetId};
+  }
+  await saveDB(db);
 
   const summary={
     sheetNames:names,
@@ -201,10 +264,11 @@ async function syncSheets({ spreadsheetId, businessId='biz_poody' }){
     agust:{ revDays:Object.keys(agust.rev).length, revTotal:Object.values(agust.rev).reduce((a,b)=>a+b,0), expTotal:Object.values(agust.exp).flat().reduce((a,b)=>a+b[1],0) },
     sep:{ revDays:Object.keys(sep.rev).length, revTotal:Object.values(sep.rev).reduce((a,b)=>a+b,0), expTotal:Object.values(sep.exp).flat().reduce((a,b)=>a+b[1],0) },
     okt:{ revDays:Object.keys(okt.rev).length, revTotal:Object.values(okt.rev).reduce((a,b)=>a+b,0), expTotal:Object.values(okt.exp).flat().reduce((a,b)=>a+b[1],0) },
+    hpp: hpp? {hppL:hpp.hppL, hppM:hpp.hppM, monthly: hpp.monthly, totalMonthly: hpp.totalMonthly, perCup: hpp.perCup}: null,
     imported:{ sales: newSales.filter(s=>s.source==='sheet' && s.business_id===businessId).length, expenses: newExp.filter(e=>e.source==='sheet' && e.business_id===businessId).length },
     total:{ sales: newSales.length, expenses: newExp.length }
   };
   return summary;
 }
 
-module.exports={ syncSheets, parseSheet, catFor };
+module.exports={ syncSheets, parseSheet, parseHPP, catFor };

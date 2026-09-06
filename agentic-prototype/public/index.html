@@ -134,6 +134,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
       <button class="active" data-view="kasir"><span class="ico">🧾</span> Kasir Harian <span style="margin-left:auto" class="badge neutral" id="navKasirBadge">—</span></button>
       <button data-view="beranda"><span class="ico">📊</span> Dashboard</button>
       <button data-view="history"><span class="ico">📜</span> Riwayat</button>
+      <button data-view="keuangan"><span class="ico">💰</span> Keuangan</button>
       <button data-view="tanya"><span class="ico">💬</span> Tanya AI</button>
       <button data-view="rencana"><span class="ico">🎯</span> Rencana</button>
       <button data-view="foto"><span class="ico">📸</span> Foto Produk</button>
@@ -332,6 +333,54 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
         </div>
       </div>
 
+      <!-- KEUANGAN -->
+      <div id="view-keuangan" class="view">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center">
+            <div><div class="card-h">💰 Keuangan — Pemasukan & Pengeluaran</div><div class="card-sub">Filter bulan, lihat semua transaksi + beli bahan per kg/gram/satuan</div></div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="keuMonthSelect" onchange="onKeuMonth()"></select>
+              <input type="date" id="keuFrom"><span class="small">—</span><input type="date" id="keuTo">
+              <button class="btn secondary" onclick="loadKeuangan()">Tampilkan</button>
+              <button class="btn ghost" onclick="exportExcelKeuangan()">📥 Excel</button>
+            </div>
+          </div>
+          <div class="kpis" style="margin-top:12px" id="keuKpis"></div>
+          <div class="small" id="keuExtra" style="margin-top:6px;color:#64748B"></div>
+          <!-- Form pengeluaran lengkap satuan -->
+          <div style="margin-top:14px;padding:14px;border:1px solid #0F172A;border-radius:14px;background:#FFFBEB">
+            <div class="card-h" style="font-size:14px">+ Tambah pengeluaran / beli bahan</div>
+            <div class="card-sub">Isi qty + satuan + harga satuan → total auto (mis 2 kg x 17000 = 34000)</div>
+            <div style="display:grid;grid-template-columns:1.4fr .7fr .7fr .9fr;gap:8px;margin-top:10px">
+              <input id="keuTitle" placeholder="Nama bahan / judul mis: Gula 2kg">
+              <input id="keuQty" type="number" step="0.01" placeholder="Qty mis: 2">
+              <select id="keuUnit"><option value="">satuan</option><option value="kg">kg</option><option value="gram">gram</option><option value="g">g</option><option value="liter">liter</option><option value="ml">ml</option><option value="pcs">pcs</option><option value="pack">pack</option><option value="ikat">ikat</option><option value="dus">dus</option><option value="karung">karung</option><option value="cup">cup</option><option value="pouch">pouch</option><option value="box">box</option><option value="sachet">sachet</option><option value="botol">botol</option><option value="kaleng">kaleng</option><option value="lembar">lembar</option><option value="meter">meter</option><option value="roll">roll</option><option value="ember">ember</option><option value="hari">hari</option><option value="bulan">bulan</option></select>
+              <input id="keuUnitPrice" type="number" placeholder="Harga/satuan mis: 17000" oninput="keuCalcTotal()">
+            </div>
+            <div style="display:grid;grid-template-columns:.8fr .9fr 1fr;gap:8px;margin-top:8px">
+              <select id="keuCat"><option value="bahan">bahan</option><option value="operasional">operasional</option><option value="sewa">sewa</option><option value="transport">transport</option><option value="utilitas">utilitas</option><option value="pribadi">pribadi (PISAHIN)</option><option value="lain">lain</option></select>
+              <input id="keuAmount" type="number" placeholder="Total Rp auto" oninput="keuSyncCalc()">
+              <input id="keuNote" placeholder="Catatan (opsional)">
+            </div>
+            <div class="small" id="keuCalcHint" style="margin-top:6px;color:#92400E;font-weight:700;min-height:14px"></div>
+            <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+              <button class="btn" onclick="submitKeuangan()">💾 Simpan pengeluaran</button>
+              <span class="small" id="keuMsg"></span>
+            </div>
+          </div>
+          <!-- Tabel pengeluaran -->
+          <div class="card-h" style="margin-top:16px">📤 Pengeluaran <span class="small" id="keuExpCount"></span></div>
+          <div style="overflow:auto;max-height:420px;margin-top:8px;border:1px solid #E2E8F0;border-radius:12px">
+            <table class="table" id="keuExpTable"><thead><tr><th>Tanggal</th><th>Judul</th><th>Kategori</th><th>Qty</th><th>Harga/sat</th><th>Total</th><th>Aksi</th></tr></thead><tbody id="keuExpBody"><tr><td colspan="7" class="small">Memuat…</td></tr></tbody></table>
+          </div>
+          <!-- Tabel pemasukan -->
+          <div class="card-h" style="margin-top:16px">📥 Pemasukan <span class="small" id="keuSalesCount"></span></div>
+          <div style="overflow:auto;max-height:320px;margin-top:8px;border:1px solid #E2E8F0;border-radius:12px">
+            <table class="table" id="keuSalesTable"><thead><tr><th>Tanggal</th><th>Detail</th><th>Cup</th><th>Omset</th><th>HPP</th><th>Laba</th><th>Aksi</th></tr></thead><tbody id="keuSalesBody"><tr><td colspan="7" class="small">Memuat…</td></tr></tbody></table>
+          </div>
+        </div>
+      </div>
+
             <!-- TANYA -->
       <div id="view-tanya" class="view">
         <div class="card">
@@ -386,6 +435,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
 <nav class="bottom-nav" id="bottomNav">
   <button class="active" data-bview="kasir" onclick="showView('kasir')"><span class="ico">🧾</span>Kasir</button>
   <button data-bview="beranda" onclick="showView('beranda')"><span class="ico">📊</span>Dash</button>
+  <button data-bview="keuangan" onclick="showView('keuangan')"><span class="ico">💰</span>Keuangan</button>
   <button data-bview="history" onclick="showView('history')"><span class="ico">📜</span>Riwayat</button>
   <button data-bview="tanya" onclick="showView('tanya')"><span class="ico">💬</span>AI</button>
   <button data-bview="rencana" onclick="showView('rencana')"><span class="ico">🎯</span>Rencana</button>
@@ -416,7 +466,7 @@ document.getElementById('fromDate').value=new Date(Date.now()-6*86400000).toISOS
 document.getElementById('toDate').value=todayStr;
 document.getElementById('sumDate').textContent=todayStr;
 
-const titles={kasir:['Kasir Harian','Input penjualan & topping — harga otomatis, laba langsung kehitung'],beranda:['Dashboard','Ringkasan kesehatan, insight AI, dan performa 7 hari'],history:['Riwayat','Filter tanggal, lihat detail + topping'],tanya:['Tanya AI','Tanya pakai bahasa sehari-hari — AI jawab pakai data hari ini'],rencana:['Rencana','AI pecah tujuan jadi tugas tim'],foto:['Foto Produk','Cek foto & ubah gaya katalog']};
+const titles={kasir:['Kasir Harian','Input penjualan & topping — harga otomatis, laba langsung kehitung'],beranda:['Dashboard','Ringkasan kesehatan, insight AI, dan performa 7 hari'],history:['Riwayat','Filter tanggal, lihat detail + topping'],keuangan:['Keuangan','Semua pemasukan & pengeluaran — beli bahan per kg/gram/satuan lengkap'],tanya:['Tanya AI','Tanya pakai bahasa sehari-hari — AI jawab pakai data hari ini'],rencana:['Rencana','AI pecah tujuan jadi tugas tim'],foto:['Foto Produk','Cek foto & ubah gaya katalog']};
 function setTitle(id){ document.getElementById('pageTitle').textContent=titles[id][0]; document.getElementById('pageSub').textContent=titles[id][1]; }
 function showView(id){
   try{ document.querySelectorAll("#bottomNav button").forEach(b=> b.classList.toggle("active", b.dataset.bview===id)); closeSidebar(); }catch(e){}
@@ -427,6 +477,7 @@ function showView(id){
   setTitle(id);
   if(id==='beranda'){ loadSummary(); loadBars(); loadKpi(); }
   if(id==='history') loadHistory();
+  if(id==='keuangan') loadKeuangan();
   if(id==='rencana'){ loadWorkflows(); loadApprovals(); }
   if(id==='tanya'){ loadMemCount(); }
 }
@@ -885,10 +936,104 @@ async function loadBarsForMonth(ym, rng){
 }
 function exportExcelMonth(){ const ym=document.getElementById('monthSelect').value; const from=ym+'-01', to=lastDayOfMonth(ym); window.open(`${API}/export/excel?from=${from}&to=${to}&business_id=${BIZ}`,'_blank'); }
 
+function populateKeuMonth(){
+  const sel=document.getElementById('keuMonthSelect');
+  if(!sel) return;
+  if(sel.options.length) return;
+  for(let m=1;m<=12;m++){ const ym=`2026-${String(m).padStart(2,'0')}`; const o=document.createElement('option'); o.value=ym; o.textContent=new Date(ym+'-01').toLocaleDateString('id-ID',{month:'long',year:'numeric'}); sel.appendChild(o); }
+  sel.value=document.getElementById('monthSelect')?.value||'2026-08';
+}
+function onKeuMonth(){
+  const ym=document.getElementById('keuMonthSelect').value;
+  document.getElementById('keuFrom').value=ym+'-01';
+  document.getElementById('keuTo').value=lastDayOfMonth(ym);
+  loadKeuangan();
+}
+function exportExcelKeuangan(){ const a=document.getElementById('keuFrom').value, b=document.getElementById('keuTo').value; if(!a||!b) return alert('Pilih tanggal dulu'); window.open(`${API}/export/excel?from=${a}&to=${b}&business_id=${BIZ}`,'_blank'); }
+function keuCalcTotal(){
+  const qty=parseFloat(document.getElementById('keuQty').value||0), price=parseInt(document.getElementById('keuUnitPrice').value||0,10);
+  const hint=document.getElementById('keuCalcHint'), totalEl=document.getElementById('keuAmount');
+  if(qty>0 && price>0){
+    const tot=Math.round(qty*price);
+    totalEl.value=tot;
+    hint.textContent=`${qty} x ${rupiah(price)} = ${rupiah(tot)}`;
+  } else if(qty>0 || price>0){
+    hint.textContent='Isi qty & harga/satuan biar auto';
+  } else hint.textContent='';
+}
+function keuSyncCalc(){
+  const qty=parseFloat(document.getElementById('keuQty').value||0), price=parseInt(document.getElementById('keuUnitPrice').value||0,10), tot=parseInt(document.getElementById('keuAmount').value||0,10);
+  const hint=document.getElementById('keuCalcHint');
+  if(qty>0 && price>0) hint.textContent=`${qty} x ${rupiah(price)} = ${rupiah(Math.round(qty*price))}${tot && tot!==Math.round(qty*price)?' • manual '+rupiah(tot):''}`;
+}
+async function submitKeuangan(){
+  const title=document.getElementById('keuTitle').value.trim();
+  const qty=document.getElementById('keuQty').value.trim();
+  const unit=document.getElementById('keuUnit').value;
+  const unit_price=document.getElementById('keuUnitPrice').value.trim();
+  const amount=document.getElementById('keuAmount').value.trim();
+  const category=document.getElementById('keuCat').value;
+  const note=document.getElementById('keuNote').value.trim();
+  const from=document.getElementById('keuFrom').value||document.getElementById('saleDate').value||todayStr;
+  const msg=document.getElementById('keuMsg');
+  if(!title) return msg.textContent='Nama bahan/judul wajib';
+  if(!amount && !(qty && unit_price)) return msg.textContent='Isi total atau qty x harga satuan';
+  msg.textContent='Menyimpan...';
+  try{
+    const body={business_id:BIZ,date:from,title,category,note};
+    if(qty) body.qty=qty;
+    if(unit) body.unit=unit;
+    if(unit_price) body.unit_price=unit_price;
+    if(amount) body.amount=amount;
+    const r=await fetch(`${API}/expenses`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json(); if(!r.ok) throw new Error(j.error);
+    msg.textContent=`✅ ${j.title} ${j.qty?`(${j.qty} ${j.unit||''} x ${rupiah(j.unit_price||0)}) `:''}→ ${rupiah(j.amount)}`;
+    document.getElementById('keuTitle').value=''; document.getElementById('keuQty').value=''; document.getElementById('keuUnitPrice').value=''; document.getElementById('keuAmount').value=''; document.getElementById('keuNote').value=''; document.getElementById('keuCalcHint').textContent='';
+    loadKeuangan(); loadSummary(); loadBars();
+  }catch(e){ msg.textContent='❌ '+e.message; }
+}
+async function loadKeuangan(){
+  const from=document.getElementById('keuFrom').value, to=document.getElementById('keuTo').value;
+  const kpisEl=document.getElementById('keuKpis'), extraEl=document.getElementById('keuExtra');
+  const expBody=document.getElementById('keuExpBody'), salesBody=document.getElementById('keuSalesBody');
+  const expCount=document.getElementById('keuExpCount'), salesCount=document.getElementById('keuSalesCount');
+  if(!from||!to){
+    const ym=document.getElementById('keuMonthSelect')?.value||'2026-08';
+    document.getElementById('keuFrom').value=ym+'-01'; document.getElementById('keuTo').value=lastDayOfMonth(ym);
+    return loadKeuangan();
+  }
+  if(kpisEl) kpisEl.innerHTML='<div class="small">Memuat…</div>';
+  if(expBody) expBody.innerHTML='<tr><td colspan="7" class="small">Memuat…</td></tr>';
+  if(salesBody) salesBody.innerHTML='<tr><td colspan="7" class="small">Memuat…</td></tr>';
+  try{
+    const sales=(await (await fetch(`${API}/sales?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const exps=(await (await fetch(`${API}/expenses?business_id=${BIZ}&from=${from}&to=${to}`)).json()).data||[];
+    const rev=sales.reduce((a,b)=>a+b.revenue,0), cost=sales.reduce((a,b)=>a+b.cost,0), profit=sales.reduce((a,b)=>a+b.profit,0), cups=sales.reduce((a,b)=>a+b.total_cups,0);
+    const expTot=exps.reduce((a,b)=>a+b.amount,0), expBiz=exps.filter(e=>(e.category||'').toLowerCase()!=='pribadi').reduce((a,b)=>a+b.amount,0), expPri=expTot-expBiz;
+    const netBiz=profit-expBiz, netAll=profit-expTot;
+    if(kpisEl){
+      kpisEl.innerHTML=`<div class="kpi"><div class="label">Pemasukan</div><div class="val">${rupiah(rev)}</div><div class="hint">${cups} cup • ${sales.length} nota</div></div><div class="kpi"><div class="label">Pengeluaran</div><div class="val">${rupiah(expTot)}</div><div class="hint">${exps.length} pos${expPri?` • pribadi ${rupiah(expPri)}`:''}</div></div><div class="kpi" style="border-color:${netBiz>=0?'#A7F3D0':'#FECACA'};background:${netBiz>=0?'#ECFDF5':'#FEF2F2'}"><div class="label">Laba bersih usaha</div><div class="val">${rupiah(netBiz)}</div><div class="hint">margin ${rev?((netBiz/rev)*100).toFixed(1)+'%':'-'}</div></div><div class="kpi"><div class="label">Sisa kas</div><div class="val">${rupiah(netAll)}</div><div class="hint">setelah pribadi</div></div>`;
+    }
+    if(extraEl) extraEl.innerHTML=`HPP ${rupiah(cost)} • laba kotor ${rupiah(profit)} • usaha ${rupiah(expBiz)}${expPri?` • pribadi ${rupiah(expPri)}`:''} • <b style="color:${netBiz>=0?'#065F46':'#991B1B'}">laba usaha ${rupiah(netBiz)}</b>`;
+    if(expCount) expCount.textContent=`(${exps.length})`;
+    if(salesCount) salesCount.textContent=`(${sales.length})`;
+    if(expBody){
+      if(!exps.length) expBody.innerHTML='<tr><td colspan="7" class="small">Belum ada pengeluaran di rentang ini</td></tr>';
+      else expBody.innerHTML=exps.slice().sort((a,b)=> b.date.localeCompare(a.date)).map(e=>`<tr><td>${e.date}</td><td><b>${e.title}</b><div class="small">${e.note||''}</div></td><td><span class="badge ${e.category==='pribadi'?'warn':e.category==='bahan'?'ok':'neutral'}" style="font-size:10px">${e.category}</span></td><td>${e.qty!=null? e.qty+' '+(e.unit||'') : '-'}</td><td>${e.unit_price? rupiah(e.unit_price):'-'}</td><td><b>${rupiah(e.amount)}</b></td><td><button class="btn secondary" style="padding:4px 8px;font-size:11px" onclick="delKeuExp('${e.id}')">Hapus</button></td></tr>`).join('');
+    }
+    if(salesBody){
+      if(!sales.length) salesBody.innerHTML='<tr><td colspan="7" class="small">Belum ada pemasukan</td></tr>';
+      else salesBody.innerHTML=sales.slice().sort((a,b)=> b.date.localeCompare(a.date)).map(s=>`<tr><td>${s.date}</td><td>${s.items.map(i=>`${i.variant} ${i.size} x${i.qty}${i.toppings&&i.toppings.length?' +'+i.toppings.join('+'):''}`).join(', ')}<div class="small">${s.note||''}</div></td><td>${s.total_cups}</td><td>${rupiah(s.revenue)}</td><td>${rupiah(s.cost)}</td><td style="color:${s.profit>=0?'#065F46':'#991B1B'};font-weight:700">${rupiah(s.profit)}</td><td><button class="btn secondary" style="padding:4px 8px;font-size:11px" onclick="delKeuSale('${s.id}')">Hapus</button></td></tr>`).join('');
+    }
+  }catch(e){ if(kpisEl) kpisEl.innerHTML='<div class="small">Error: '+e.message+'</div>'; }
+}
+async function delKeuExp(id){ if(!confirm('Hapus pengeluaran ini?')) return; await fetch(`${API}/expenses/${id}`,{method:'DELETE'}); loadKeuangan(); loadSummary(); loadBars(); }
+async function delKeuSale(id){ if(!confirm('Hapus pemasukan ini?')) return; await fetch(`${API}/sales/${id}`,{method:'DELETE'}); loadKeuangan(); loadSummary(); loadBars(); }
+
 // patch showView beranda to refresh month
 const _showView=showView;
 showView=function(id){ _showView(id); if(id==='beranda'){ if(!document.getElementById('monthSelect').options.length) loadBusinesses().then(()=>{ updateBizSide(); });
-  populateMonthSelects(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); const ym=document.getElementById('monthSelect').value||'2026-08'; loadMonthSummary(ym); loadBarsForMonth(ym, document.getElementById('rangeSelect').value); loadBriefingLatest(); loadForecast(); if(!document.getElementById('briefingDate').value) document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); } };
+ populateMonthSelects(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); const ym=document.getElementById('monthSelect').value||'2026-08'; loadMonthSummary(ym); loadBarsForMonth(ym, document.getElementById('rangeSelect').value); loadBriefingLatest(); loadForecast(); if(!document.getElementById('briefingDate').value) document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); } if(id==='keuangan'){ populateKeuMonth(); loadKeuangan(); } };
 
 
 
@@ -1075,7 +1220,9 @@ async function syncSheetsLive(){
 }
 function populateWasteBahan(){ const s=document.getElementById('wasteBahan'); if(!s) return; s.innerHTML=''; CATALOG.variants.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v+` (HPP ${rupiah(CATALOG.sizes.M.hpp)})`; s.appendChild(o); }); TOPPINGS.forEach(tt=>{ const o=document.createElement('option'); o.value=tt.key; o.textContent=tt.label+` (HPP ${rupiah(tt.hpp)})`; s.appendChild(o); }); const o=document.createElement('option'); o.value='lain'; o.textContent='lain (isi nominal manual)'; s.appendChild(o); }
 buildPose(); populateWasteBahan(); recalc(); loadSummary(); loadBusinesses().then(()=>{ updateBizSide(); });
-  populateMonthSelects(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); loadMonthSummary('2026-08'); loadBarsForMonth('2026-08','month');
+  populateMonthSelects(); populateKeuMonth(); document.getElementById('briefingDate').value=new Date(Date.now()-86400000).toISOString().slice(0,10); loadBriefingLatest(); loadForecast(); loadMonthSummary('2026-08'); loadBarsForMonth('2026-08','month');
+  // init keuangan dates
+  const _ym='2026-08'; document.getElementById('keuFrom').value=_ym+'-01'; document.getElementById('keuTo').value=lastDayOfMonth(_ym);
 
 function toggleSidebar(){
   const s = document.getElementById('sidebar');

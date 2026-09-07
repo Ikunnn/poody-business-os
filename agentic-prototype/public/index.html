@@ -97,22 +97,96 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
 .small{font-size:12px;color:#64748B} pre{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,monospace;font-size:12px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:12px}
 .muted{color:#64748B}
 
-/* MOBILE BOTTOM NAV & HAMBURGER */
+/* MOBILE BOTTOM NAV & HAMBURGER — Noventra Hybrid + 5-menu compact */
 .hamburger{display:none;place-items:center;width:36px;height:36px;border-radius:10px;border:1px solid #E2E8F0;background:white;font-size:16px;cursor:pointer}
 .backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:39}
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #F1E9DA;z-index:30;padding:6px 8px 10px;justify-content:space-around;gap:4px;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
-.bottom-nav button{flex:1;background:transparent;border:none;padding:6px 2px;font-size:10px;font-weight:700;color:#64748B;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #F1E9DA;z-index:30;padding:6px 6px calc(6px + env(safe-area-inset-bottom));justify-content:space-around;gap:2px;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+.bottom-nav button{flex:1;background:transparent;border:none;padding:4px 1px;font-size:9px;font-weight:700;color:#64748B;display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;min-height:44px;justify-content:center}
 .bottom-nav button.active{color:#0F172A}
-.bottom-nav button .ico{font-size:16px;line-height:1;padding:4px 8px;border-radius:10px}
+.bottom-nav button .ico{font-size:15px;line-height:1;padding:4px 10px;border-radius:10px}
 .bottom-nav button.active .ico{background:#0F172A;color:white}
+/* Accordion flavor — desktop: selalu terbuka, mobile: collapsed */
+.flavor-head{cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+.flavor-head .acc{margin-left:auto;transition:transform .2s;font-size:12px;color:#64748B}
+.flavor.open .acc{transform:rotate(180deg)}
+.flavor-body{display:block}
+.flavor-ctrl{display:flex;gap:6px;margin-top:8px}
+.flavor-ctrl button{padding:6px 10px;border-radius:999px;border:1px solid #E2E8F0;background:white;font-size:11px;font-weight:700;cursor:pointer}
+/* Smart calc */
+.calc-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border:1px solid #F1E9DA;border-radius:12px;background:#FFFBEB;margin-top:10px}
+.calc-bar input{width:118px}
+.calc-quick{display:flex;gap:6px;flex-wrap:wrap}
+.calc-quick button{padding:6px 10px;border-radius:999px;border:1px solid #E2E8F0;background:white;font-weight:700;font-size:11px;cursor:pointer}
+.calc-quick button.active{background:#0F172A;color:white;border-color:#0F172A}
+.calc-kembali{font-weight:800;color:#065F46}
+.calc-kembali.neg{color:#991B1B}
+.calc-fixed{display:none}
+html,body{overflow-x:hidden;max-width:100vw}
+.main{min-width:0;overflow-x:hidden}
+.content{overflow-x:hidden}
 @media(max-width:640px){
   .app{grid-template-columns:1fr}
   .sidebar{display:none}
   .sidebar.open{display:flex;position:fixed;inset:0;z-index:40;width:80%;max-width:300px;box-shadow:8px 0 24px rgba(0,0,0,.25);overflow:auto}
   .backdrop.show{display:block}
-  .content{padding:12px 12px 80px}
+  .content{padding:8px 8px 132px;max-width:100vw}
   .bottom-nav{display:flex !important}
   .hamburger{display:grid !important}
+  .top{padding:8px 10px;gap:8px;align-items:flex-start}
+  .top h2{font-size:14px}
+  .top .sub{display:none}
+  .top-actions{width:100%;gap:6px;justify-content:flex-start}
+  .top-actions select,.top-actions input{flex:1 1 0;min-width:0 !important;font-size:12px;padding:7px 8px}
+  .top-actions #bizSelect{min-width:0 !important;flex:1 1 110px}
+  .top-actions #saleDate,.top-actions #saleNote{flex:1 1 110px;min-width:0 !important}
+  .top-actions .btn{padding:6px 8px;font-size:11px;white-space:nowrap}
+  .top-actions .pill{font-size:10px;padding:4px 7px;white-space:nowrap}
+  .pose{grid-template-columns:1fr;gap:8px;margin-top:8px}
+  .grid2{gap:8px;margin-top:8px}
+  .flavor{padding:10px;border-radius:14px;min-width:0}
+  .card{padding:12px;border-radius:16px;min-width:0;overflow:hidden}
+  .kpis{gap:8px}
+  .kpis[style*="repeat(2"]{gap:6px}
+  .flavor-body{display:none}
+  .flavor.open .flavor-body{display:block}
+  .size-block{min-width:0}
+  .size-block .head{flex-wrap:wrap;gap:6px}
+  .step button{width:28px;height:28px}
+  .step input{width:44px}
+  .toppick-menu{left:-4px;right:-4px}
+  .calc-bar{padding:8px;gap:6px}
+  .calc-bar input{width:92px;padding:7px;font-size:12px}
+  .calc-quick{gap:4px}
+  .calc-quick button{padding:5px 8px;font-size:10px}
+  .calc-fixed{display:flex;position:fixed;left:8px;right:8px;bottom:58px;z-index:29;background:white;border:1px solid #F1E9DA;border-radius:16px;box-shadow:0 8px 24px rgba(15,23,42,.14);padding:8px 10px;gap:8px;align-items:center;justify-content:space-between;flex-wrap:nowrap}
+  .calc-fixed .left{flex:1;min-width:0}
+  .calc-fixed .right{display:flex;gap:6px;align-items:center}
+  .calc-fixed input{width:88px;padding:8px;font-size:13px}
+  .calc-fixed .total{font-weight:800;font-size:13px}
+  .calc-fixed .kembali{font-weight:800;font-size:12px}
+  .stock-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .stock-card{border:1px solid #E2E8F0;border-radius:14px;padding:12px;background:white}
+  .stock-bar{height:8px;background:#E2E8F0;border-radius:999px;overflow:hidden;margin-top:6px}
+  .stock-bar>div{height:100%;border-radius:999px}
+}
+@media(max-width:720px){ .stock-grid{grid-template-columns:1fr} }
+@media(max-width:640px){
+  /* STOK — mobile rapih no sesak */
+  #view-stok .card{padding:10px}
+  #view-stok [style*="grid-template-columns"]{grid-template-columns:1fr !important; gap:6px !important}
+  #view-stok #stockList .stock-grid{grid-template-columns:1fr !important}
+  #view-stok .stock-card{padding:10px; border-radius:12px}
+  #view-stok .stock-card .stock-bar{margin-top:6px}
+  #view-stok input,#view-stok select{font-size:13px; padding:8px 9px; min-width:0}
+  #view-stok #stockAlerts .insight{padding:8px; margin:6px 0; flex-wrap:wrap}
+  #view-stok [id^="usage-box-"]{padding:8px}
+  #view-stok [id^="usage-box-"] [style*="grid-template-columns"]{grid-template-columns:1fr !important}
+  #view-stok .stock-card div[style*="display:flex"][style*="gap:6px"]{gap:6px}
+  #view-stok .stock-card button{padding:6px 10px !important; font-size:11px !important; min-height:34px}
+  #view-stok #stockFilter{width:100%}
+}
+@media(min-width:641px){
+  .flavor-body{display:block !important}
 }
 
 </style>
@@ -135,6 +209,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
       <button data-view="beranda"><span class="ico">📊</span> Dashboard</button>
       <button data-view="history"><span class="ico">📜</span> Riwayat</button>
       <button data-view="keuangan"><span class="ico">💰</span> Keuangan</button>
+      <button data-view="stok"><span class="ico">📦</span> Stok <span class="badge warn" id="navStokBadge" style="display:none;margin-left:4px">!</span></button>
       <button data-view="tanya"><span class="ico">💬</span> Tanya AI</button>
       <button data-view="rencana"><span class="ico">🎯</span> Rencana</button>
       <button data-view="foto"><span class="ico">📸</span> Foto Produk</button>
@@ -177,10 +252,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
       <div id="view-kasir" class="view active">
         <div class="grid2">
           <div class="card">
-            <div class="card-h">Pilih menu hari ini</div>
-            
-            
+            <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div class="card-h">Pilih menu hari ini</div><div class="flavor-ctrl"><button onclick="setAllFlavors(true)">Buka semua</button><button onclick="setAllFlavors(false)">Tutup semua</button></div></div>
+            <div class="small" style="margin-top:4px">Tap rasa untuk buka — pilih size M/L, atur jumlah, topping opsional. Harga auto.</div>
             <div class="pose" id="poseGrid"></div>
+            <div class="calc-bar" id="calcBar">
+              <div style="flex:1;min-width:140px"><div class="small">Total bayar</div><div style="font-weight:800;font-size:15px" id="calcTotal">Rp 0</div><div class="small" id="calcCups">0 cup</div></div>
+              <div><div class="small">Uang pembeli</div><input id="calcBayar" type="number" placeholder="mis 50000" oninput="syncBayar('main')"></div>
+              <div><div class="small">Kembalian</div><div id="calcKembali" class="calc-kembali">Rp 0</div><div class="small" id="calcKembaliHint">—</div></div>
+              <div class="calc-quick" id="calcQuick"><button onclick="setBayar(20000)">20k</button><button onclick="setBayar(50000)">50k</button><button onclick="setBayar(100000)">100k</button><button onclick="setBayarExact()">Pas</button></div>
+            </div>
             <div class="divider"></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
               <button class="btn" onclick="submitSale()">💾 Simpan penjualan</button>
@@ -204,15 +284,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
             <div style="margin-top:8px" id="sumBody">Memuat…</div>
             <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn secondary" onclick="loadSummary()">Refresh</button><button class="btn ghost" onclick="askFinance()">Tanya AI keuangan</button><button class="btn ghost" onclick="exportExcelToday()">📥 Excel hari ini</button><button class="btn ghost" onclick="openReceipt()">🧾 Struk</button></div>
             <div class="divider"></div>
-            <div class="card-h">Pengeluaran hari ini</div>
-            <div class="card-sub">Bahan, topping, operasional — biar laba bersih akurat</div>
-            <div style="display:grid;grid-template-columns:1.2fr .8fr .9fr;gap:8px;margin-top:8px">
-              <input id="expTitle" placeholder="Judul mis: Beli susu 2L">
-              <select id="expCat"><option value="bahan">bahan</option><option value="topping">topping</option><option value="operasional">operasional</option><option value="transport">transport</option><option value="lain">lain</option></select>
-              <input id="expAmount" type="number" placeholder="Rp 50000">
-            </div>
-            <div style="display:flex;gap:8px;margin-top:8px"><button class="btn ghost" onclick="submitExpense()">+ Tambah pengeluaran</button><span class="small" id="expMsg"></span></div>
-            <div id="expList" style="margin-top:10px"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div class="card-h">Pengeluaran</div><button class="btn ghost" style="padding:6px 10px;font-size:11px" onclick="showView('keuangan')">Buka Keuangan →</button></div>
+            <div class="small" style="margin-top:4px">Kelola pengeluaran lengkap di menu Keuangan (bahan per kg/gram, sewa, dll).</div>
+            <div id="expList" style="display:none"></div><span id="expMsg" style="display:none"></span>
+            <!-- legacy kasir inputs hidden: moved to Keuangan -->
+            <div style="display:none"><input id="expTitle"><select id="expCat"><option value="bahan">bahan</option></select><input id="expAmount"></div>
             <div class="divider"></div>
             <div class="card-h">🗑️ Bahan terbuang</div>
             <div class="card-sub">Qty x HPP auto — pilih bahan, alasan, catat nominal terbuang</div>
@@ -381,6 +457,43 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
         </div>
       </div>
 
+      <!-- STOK -->
+      <div id="view-stok" class="view">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+            <div><div class="card-h">📦 Stok Barang</div><div class="card-sub">Catat bahan baru dibeli — sistem hitung pakai/hari + ingetin kalau menipis</div></div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="pill" id="stockAlertPill">Memuat…</span><button class="btn ghost" style="padding:6px 10px" onclick="loadStocks()">↻ Refresh</button></div>
+          </div>
+          <div id="stockAlerts" style="margin-top:10px"></div>
+          <!-- Form tambah stok -->
+          <div style="margin-top:12px;padding:14px;border:1px solid #0F172A;border-radius:14px;background:#FFFBEB">
+            <div class="card-h" style="font-size:13px">+ Tambah stok baru</div>
+            <div class="card-sub">Contoh: Pudding 1 dus untuk 14 hari → isi qty 1 dus, durasi 14, sistem auto pakai/hari</div>
+            <div style="display:grid;grid-template-columns:1.2fr .6fr .6fr;gap:8px;margin-top:10px">
+              <input id="stockBahan" placeholder="Nama bahan mis: Pudding bubuk">
+              <input id="stockQty" type="number" step="0.01" placeholder="Qty mis: 1" oninput="stockCalcHint()">
+              <select id="stockUnit"><option value="dus">dus</option><option value="karung">karung</option><option value="pack">pack</option><option value="kg">kg</option><option value="gram">gram</option><option value="liter">liter</option><option value="pcs">pcs</option><option value="cup">cup</option><option value="box">box</option><option value="botol">botol</option><option value="kaleng">kaleng</option><option value="ember">ember</option><option value="roll">roll</option></select>
+            </div>
+            <div style="display:grid;grid-template-columns:.7fr .7fr .7fr .7fr;gap:8px;margin-top:8px">
+              <select id="stockDuration" onchange="stockDurationChange()"><option value="7">7 hari</option><option value="14" selected>14 hari (2 minggu)</option><option value="21">21 hari</option><option value="30">30 hari</option><option value="custom">custom</option></select>
+              <input id="stockDurationCustom" type="number" placeholder="Hari custom" style="display:none" oninput="stockCalcHint()">
+              <input id="stockDaily" type="number" step="0.01" placeholder="mis: 1 (pcs/hari)" oninput="stockSyncDaily()">
+              <input id="stockMin" type="number" step="0.01" placeholder="Min menipis mis: 0.2">
+              <input id="stockDate" type="date">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px"><input id="stockNote" placeholder="Catatan mis: dus isi 24 sachet"></div>
+            <div class="small" id="stockCalcHint" style="margin-top:6px;color:#92400E;font-weight:700;min-height:14px"></div>
+            <div style="display:flex;gap:8px;margin-top:8px;align-items:center"><button class="btn" onclick="submitStock()">💾 Simpan stok</button><span class="small" id="stockMsg"></span></div>
+          </div>
+          <!-- List stok -->
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:8px;flex-wrap:wrap">
+            <div class="card-h">Daftar stok <span class="small" id="stockCount"></span></div>
+            <select id="stockFilter" onchange="loadStocks()" style="padding:6px 8px;font-size:12px"><option value="">Semua</option><option value="menipis">Menipis</option><option value="waspada">Waspada</option><option value="habis">Habis</option><option value="aman">Aman</option></select>
+          </div>
+          <div id="stockList" style="margin-top:8px;display:grid;gap:10px"></div>
+        </div>
+      </div>
+
             <!-- TANYA -->
       <div id="view-tanya" class="view">
         <div class="card">
@@ -435,11 +548,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#0F172A;box-sh
 <nav class="bottom-nav" id="bottomNav">
   <button class="active" data-bview="kasir" onclick="showView('kasir')"><span class="ico">🧾</span>Kasir</button>
   <button data-bview="beranda" onclick="showView('beranda')"><span class="ico">📊</span>Dash</button>
-  <button data-bview="keuangan" onclick="showView('keuangan')"><span class="ico">💰</span>Keuangan</button>
   <button data-bview="history" onclick="showView('history')"><span class="ico">📜</span>Riwayat</button>
   <button data-bview="tanya" onclick="showView('tanya')"><span class="ico">💬</span>AI</button>
-  <button data-bview="rencana" onclick="showView('rencana')"><span class="ico">🎯</span>Rencana</button>
+  <button data-bview="keuangan" onclick="showView('keuangan')"><span class="ico">💰</span>Keuangan</button>
+  <button data-bview="stok" onclick="showView('stok')"><span class="ico">📦</span>Stok</button>
 </nav>
+<div class="calc-fixed" id="calcFixed">
+  <div class="left"><div class="total" id="calcFixedTotal">Rp 0</div><div class="small" id="calcFixedCups" style="font-size:11px">0 cup</div></div>
+  <div class="right"><input id="calcBayarFixed" type="number" placeholder="Bayar" oninput="syncBayar('fixed')"><div><div class="kembali" id="calcFixedKembali">Rp 0</div><div class="small" id="calcFixedHint" style="font-size:10px">—</div></div></div>
+</div>
 
 <div id="bizModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:50;align-items:center;justify-content:center;padding:16px"><div class="card" style="max-width:420px;width:100%"><div class="card-h">+ Bisnis baru</div><div class="card-sub">1 akun bisa banyak warung/brand — data pisah per business_id</div><div style="display:grid;gap:8px;margin-top:10px"><input id="newBizId" placeholder="ID mis: biz_cikarang (huruf, angka, _ , -)"><input id="newBizName" placeholder="Nama mis: Poody Cikarang"><input id="newBizAvg" type="number" placeholder="Target harian mis: 250000" value="200000"><div style="display:flex;gap:8px"><button class="btn" onclick="createBusiness()">Simpan</button><button class="btn secondary" onclick="closeBizModal()">Batal</button></div><div class="small" id="newBizMsg"></div><div class="small">Sheets default: 1MMS_23QeS5rUScwAaGM35ooxxCSoy2SX — sinkron akan tarik JUL-26/AGUST-26/SEP-26/OKT-26 ke bisnis dipilih.</div></div></div></div>
 <script>
@@ -461,13 +578,16 @@ function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',curren
 const todayStr=new Date().toISOString().slice(0,10);
 document.getElementById('sideDate').textContent=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
 document.getElementById('todayPill').textContent=todayStr;
+try{ const sd=document.getElementById('stockDate'); if(sd) sd.value=todayStr; }catch{}
+try{ const initId=document.querySelector('.view.active')?.id?.replace('view-','')||'kasir'; updateCalcFixed(initId); window.addEventListener('resize', ()=>{ const cur=document.querySelector('.view.active')?.id?.replace('view-','')||'kasir'; updateCalcFixed(cur); }); }catch{}
 document.getElementById('saleDate').value=todayStr;
 document.getElementById('fromDate').value=new Date(Date.now()-6*86400000).toISOString().slice(0,10);
 document.getElementById('toDate').value=todayStr;
 document.getElementById('sumDate').textContent=todayStr;
 
-const titles={kasir:['Kasir Harian','Input penjualan & topping — harga otomatis, laba langsung kehitung'],beranda:['Dashboard','Ringkasan kesehatan, insight AI, dan performa 7 hari'],history:['Riwayat','Filter tanggal, lihat detail + topping'],keuangan:['Keuangan','Semua pemasukan & pengeluaran — beli bahan per kg/gram/satuan lengkap'],tanya:['Tanya AI','Tanya pakai bahasa sehari-hari — AI jawab pakai data hari ini'],rencana:['Rencana','AI pecah tujuan jadi tugas tim'],foto:['Foto Produk','Cek foto & ubah gaya katalog']};
+const titles={kasir:['Kasir Harian','Input penjualan & topping — harga otomatis, laba langsung kehitung'],beranda:['Dashboard','Ringkasan kesehatan, insight AI, dan performa 7 hari'],history:['Riwayat','Filter tanggal, lihat detail + topping'],keuangan:['Keuangan','Semua pemasukan & pengeluaran — beli bahan per kg/gram/satuan lengkap'],stok:['Stok','Kelola stok bahan — sisa, pakai/hari, pengingat menipis'],tanya:['Tanya AI','Tanya pakai bahasa sehari-hari — AI jawab pakai data hari ini'],rencana:['Rencana','AI pecah tujuan jadi tugas tim'],foto:['Foto Produk','Cek foto & ubah gaya katalog']};
 function setTitle(id){ document.getElementById('pageTitle').textContent=titles[id][0]; document.getElementById('pageSub').textContent=titles[id][1]; }
+function updateCalcFixed(id){ try{ const el=document.getElementById('calcFixed'); if(!el) return; const isMobile=window.matchMedia('(max-width:640px)').matches; el.style.display=(id==='kasir' && isMobile)?'flex':'none'; }catch{} }
 function showView(id){
   try{ document.querySelectorAll("#bottomNav button").forEach(b=> b.classList.toggle("active", b.dataset.bview===id)); closeSidebar(); }catch(e){}
 
@@ -475,9 +595,11 @@ function showView(id){
   document.getElementById('view-'+id).classList.add('active');
   document.querySelectorAll('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.view===id));
   setTitle(id);
+  updateCalcFixed(id);
   if(id==='beranda'){ loadSummary(); loadBars(); loadKpi(); }
   if(id==='history') loadHistory();
   if(id==='keuangan') loadKeuangan();
+  if(id==='stok') loadStocks();
   if(id==='rencana'){ loadWorkflows(); loadApprovals(); }
   if(id==='tanya'){ loadMemCount(); }
 }
@@ -488,6 +610,50 @@ function setSize(v,s){
   document.querySelectorAll(`[data-tab-v="${v}"]`).forEach(b=> b.classList.toggle('active', b.dataset.tab===s));
 }
 function toggleToppick(v,s){ const m=document.getElementById(`menu-${v}-${s}`); const isOpen=m.classList.contains('open'); document.querySelectorAll('.toppick-menu.open').forEach(x=>x.classList.remove('open')); if(!isOpen) m.classList.add('open'); }
+function toggleFlavor(v){ const card=document.getElementById(`body-${v}`)?.closest('.flavor'); if(card) card.classList.toggle('open'); }
+function setAllFlavors(open){ document.querySelectorAll('.flavor').forEach(card=> card.classList.toggle('open', open)); }
+function getCalcTotal(){ try{ const t=document.getElementById('kRevenue')?.textContent||'Rp 0'; return t; }catch{return 'Rp 0';} }
+function calcParseRp(s){ return parseInt((s||'').replace(/[^0-9]/g,'')||0,10); }
+function updateCalc(){
+  try{
+    const items=getItems(); let rev=0, cups=0;
+    items.forEach(it=>{ const sz=CATALOG.sizes[it.size]; let tp=0; (it.toppings||[]).forEach(k=>{const t=TOPPINGS.find(x=>x.key===k); if(t) tp+=t.price;}); cups+=it.qty; rev+=it.qty*(sz.price+tp); });
+    const totalEl=document.getElementById('calcTotal'), cupsEl=document.getElementById('calcCups');
+    const fixedTotal=document.getElementById('calcFixedTotal'), fixedCups=document.getElementById('calcFixedCups');
+    if(totalEl) totalEl.textContent=rupiah(rev); if(cupsEl) cupsEl.textContent=cups+' cup'+(rev>=200000?' • ✅ target': rev? ' • kurang '+rupiah(Math.max(0,200000-rev)):'');
+    if(fixedTotal) fixedTotal.textContent=rupiah(rev); if(fixedCups) fixedCups.textContent=cups+' cup';
+    const bayarEl=document.getElementById('calcBayar'), bayarFixed=document.getElementById('calcBayarFixed');
+    const bayar=parseInt((bayarEl?.value||bayarFixed?.value||0),10)||0;
+    const kembali= bayar? bayar - rev : 0;
+    const kembaliEl=document.getElementById('calcKembali'), hintEl=document.getElementById('calcKembaliHint');
+    const fKembali=document.getElementById('calcFixedKembali'), fHint=document.getElementById('calcFixedHint');
+    const quick=document.getElementById('calcQuick');
+    if(bayar && rev){
+      const txt=rupiah(Math.abs(kembali)); const neg=kembali<0;
+      if(kembaliEl){ kembaliEl.textContent=(neg?'-':'')+txt; kembaliEl.className='calc-kembali'+(neg?' neg':'');}
+      if(hintEl) hintEl.textContent=neg? 'kurang '+rupiah(-kembali) : kembali===0?'pas':'kembalian';
+      if(fKembali){ fKembali.textContent=(neg?'-':'')+txt; fKembali.className='kembali'+(neg?' neg':'');}
+      if(fHint) fHint.textContent=neg?'kurang': kembali===0?'pas':'kembali';
+    } else {
+      if(kembaliEl){kembaliEl.textContent='Rp 0'; kembaliEl.className='calc-kembali';}
+      if(hintEl) hintEl.textContent= rev? 'isi uang pembeli':'—';
+      if(fKembali){fKembali.textContent='Rp 0'; fKembali.className='kembali';}
+      if(fHint) fHint.textContent='—';
+    }
+    if(quick){ [...quick.querySelectorAll('button')].forEach(b=>{
+      const v=parseInt(b.textContent.replace(/[^0-9]/g,''),10);
+      b.classList.toggle('active', !!bayar && v===bayar);
+    });}
+  }catch(e){}
+}
+function syncBayar(src){
+  const a=document.getElementById('calcBayar'), b=document.getElementById('calcBayarFixed');
+  if(src==='fixed' && b && a) a.value=b.value;
+  if(src==='main' && a && b) b.value=a.value;
+  updateCalc();
+}
+function setBayar(n){ const a=document.getElementById('calcBayar'), b=document.getElementById('calcBayarFixed'); if(a) a.value=n; if(b) b.value=n; updateCalc(); }
+function setBayarExact(){ try{ const items=getItems(); let rev=0; items.forEach(it=>{const sz=CATALOG.sizes[it.size]; let tp=0;(it.toppings||[]).forEach(k=>{const t=TOPPINGS.find(x=>x.key===k); if(t) tp+=t.price;}); rev+=it.qty*(sz.price+tp);}); setBayar(rev); }catch{} }
 function updateToppickTags(v,s){ const tags=[]; TOPPINGS.forEach(tt=>{ const el=document.getElementById(`top-${v}-${s}-${slug(tt.key)}`); if(el?.checked) tags.push(tt.label); }); const c=document.getElementById(`cnt-${v}-${s}`), tg=document.getElementById(`tags-${v}-${s}`); if(c) c.textContent=tags.length? `• ${tags.length} dipilih` : '';
   if(tg) tg.innerHTML=tags.map(x=>`<span>${x}</span>`).join(''); }
 document.addEventListener('click', e=>{ if(!e.target.closest('.toppick')) document.querySelectorAll('.toppick-menu.open').forEach(x=>x.classList.remove('open')); });
@@ -499,11 +665,23 @@ function buildPose(){
       const tops=TOPPINGS.map(t=>`<label><input type="checkbox" id="top-${v}-${size}-${slug(t.key)}" data-variant="${v}" data-size="${size}" data-topping="${t.key}" onchange="recalc();updateToppickTags('${v}','${size}')"> ${t.label} +${t.price/1000}k</label>`).join('');
       return `<div class="size-pane active" data-pane-v="${v}" data-pane="${size}"><div class="size-block"><div class="head"><div class="meta"><b>Size ${size}</b> • ${rupiah(price)} <span class="muted">HPP ${rupiah(hpp)}</span></div><div class="step"><button onclick="step('${v}','${size}',-1)">−</button><input id="qty-${v}-${size}" type="number" min="0" value="0" oninput="recalc()"><button onclick="step('${v}','${size}',1)">+</button></div></div><div class="toppick"><button class="toppick-btn" onclick="toggleToppick('${v}','${size}')" id="btn-${v}-${size}">+ Topping <span class="muted" style="font-weight:600">2–3k</span> <span id="cnt-${v}-${size}" style="margin-left:auto;font-weight:800;color:#0F172A"></span> ▾</button><div class="toppick-menu" id="menu-${v}-${size}"><div class="toppings">${tops}</div></div></div><div class="toppick-tags" id="tags-${v}-${size}"></div></div></div>`;
     };
-    card.innerHTML=`<div class="flavor-head"><h3>${v}</h3><span class="small" id="badge-${v}" style="font-weight:700;color:#64748B"></span></div><div class="size-tabs"><button class="size-tab active" data-tab-v="${v}" data-tab="M" onclick="setSize('${v}','M')">M • 10k</button><button class="size-tab" data-tab-v="${v}" data-tab="L" onclick="setSize('${v}','L')">L • 12k</button></div>${mk('M',10000,5100)}${mk('L',12000,6100)}`;
+    const badgeHtml=`<span class="small" id="badge-${v}" style="font-weight:700;color:#64748B"></span><span class="acc">▾</span>`;
+    card.innerHTML=`<div class="flavor-head" onclick="toggleFlavor('${v}')"><h3>${v}</h3>${badgeHtml}</div><div class="flavor-body" id="body-${v}"><div class="size-tabs"><button class="size-tab active" data-tab-v="${v}" data-tab="M" onclick="setSize('${v}','M')">M • 10k</button><button class="size-tab" data-tab-v="${v}" data-tab="L" onclick="setSize('${v}','L')">L • 12k</button></div>${mk('M',10000,5100)}${mk('L',12000,6100)}</div>`;
     grid.appendChild(card);
   });
   // default show M only per flavor so grid tidak padat
   CATALOG.variants.forEach(v=> setSize(v,'M'));
+  // accordion init: mobile collapsed except first, desktop all open
+  try{
+    const isMobile=window.matchMedia && window.matchMedia('(max-width:640px)').matches;
+    CATALOG.variants.forEach((v,i)=>{
+      const card=document.querySelector(`#body-${v}`)?.closest('.flavor');
+      if(!card) return;
+      if(isMobile) card.classList.toggle('open', i===0);
+      else card.classList.add('open');
+    });
+  }catch(e){}
+  try{updateCalc();}catch(e){}
   // update badge when recalc
   const _recalc=recalc;
   window._origRecalc=_recalc;
@@ -538,6 +716,7 @@ function recalc(){
   document.getElementById('kExtraHint').textContent=topExtra? 'Bahan + topping':'Bahan baku';
   document.getElementById('navKasirBadge').textContent=cups? `${cups} cup` : '—';
   try{CATALOG.variants.forEach(v=>{ const m=parseInt(document.getElementById(`qty-${v}-M`)?.value||0,10), l=parseInt(document.getElementById(`qty-${v}-L`)?.value||0,10); const el=document.getElementById(`badge-${v}`); if(el) el.textContent=(m+l)? `${m+l} cup` : ''; });}catch{}
+  try{updateCalc();}catch{}
 }
 function resetSale(){
   CATALOG.variants.forEach(v=>['M','L'].forEach(s=>{
@@ -643,7 +822,7 @@ async function loadSummary(){
       ${j.expenses.totalPribadi? `<div class="small" style="margin-top:6px;padding:8px;border:1px dashed #FDE68A;background:#FFFBEB;border-radius:10px">Ambil pribadi (PISAHIN) ${rupiah(j.expenses.totalPribadi)} — tidak dihitung sebagai biaya usaha. Sisa kas setelah pribadi: <b>${rupiah(j.net.profit)}</b></div>`:''}
       <div class="small" style="margin-top:8px">Rasa: ${Object.entries(j.sales.byVariant).map(([k,v])=>`${k} ${v}`).join(' • ')||'-'} | M ${j.sales.bySize.M||0} • L ${j.sales.bySize.L||0}</div>
       <div class="small">Topping: ${byTop}</div>`;
-    document.getElementById('expList').innerHTML=j.expenses.items.length? j.expenses.items.map(e=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border:1px solid #E2E8F0;border-radius:10px;margin-top:6px;background:#F8FAFC"><div><b>${e.title}</b> <span class="small">${e.category}</span><div class="small">${e.date}</div></div><div style="display:flex;gap:8px;align-items:center"><b>${rupiah(e.amount)}</b><button class="btn secondary" style="padding:6px 8px" onclick="delExp('${e.id}')">Hapus</button></div></div>`).join(''):'<div class="small">Belum ada pengeluaran.</div>';
+    const _expList=document.getElementById('expList'); if(_expList && _expList.style.display!=='none'){ _expList.innerHTML=j.expenses.items.length? j.expenses.items.map(e=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border:1px solid #E2E8F0;border-radius:10px;margin-top:6px;background:#F8FAFC"><div><b>${e.title}</b> <span class="small">${e.category}</span><div class="small">${e.date}</div></div><div style="display:flex;gap:8px;align-items:center"><b>${rupiah(e.amount)}</b><button class="btn secondary" style="padding:6px 8px" onclick="delExp('${e.id}')">Hapus</button></div></div>`).join(''):'<div class="small">Belum ada pengeluaran.</div>'; }
     // wastes
     const wl=document.getElementById('wasteList');
     if(wl){
@@ -810,6 +989,119 @@ async function transformImage(){
   const out=document.getElementById('imgOut2'); out.textContent='…AI bikin prompt…';
   try{ const r=await fetch(`${API}/image/transform`,{method:'POST',body:fd}); const j=await r.json(); out.textContent=j.reply||JSON.stringify(j,null,2); const url=URL.createObjectURL(f); const img=document.getElementById('imgPreview2'); img.src=url; img.style.display='block'; }catch(e){ out.textContent='Error: '+e.message; }
 }
+// === STOK ===
+function stockDurationChange(){ const sel=document.getElementById('stockDuration').value; const cust=document.getElementById('stockDurationCustom'); cust.style.display= sel==='custom'?'block':'none'; stockCalcHint(); }
+function stockCalcHint(){
+  const qty=parseFloat(document.getElementById('stockQty').value||0);
+  const sel=document.getElementById('stockDuration').value;
+  const dur= sel==='custom'? parseInt(document.getElementById('stockDurationCustom').value||0,10) : parseInt(sel,10);
+  const hint=document.getElementById('stockCalcHint'), dailyEl=document.getElementById('stockDaily');
+  if(qty>0 && dur>0){ const d=(qty/dur); dailyEl.placeholder=`mis: ${(Math.ceil(d*10)/10)} ${document.getElementById('stockUnit').value}/hari`; hint.textContent=`${qty} / ${dur} hari = ~${(Math.round(d*100)/100)} /hari • ubah auto di samping jadi 1 kalau mau bulat (mis 1 pcs/hari)`; } else if(qty>0) hint.textContent='Pilih durasi biar auto pakai/hari'; else hint.textContent='';
+}
+function stockSyncDaily(){ const qty=parseFloat(document.getElementById('stockQty').value||0), d=parseFloat(document.getElementById('stockDaily').value||0); const hint=document.getElementById('stockCalcHint'); if(qty>0 && d>0) hint.textContent=`Manual: ${qty} stok, pakai ${d}/hari → habis ~${(Math.round(qty/d*10)/10)} hari`;
+}
+async function submitStock(){
+  const bahan=document.getElementById('stockBahan').value.trim(); const qty=document.getElementById('stockQty').value.trim(); const unit=document.getElementById('stockUnit').value;
+  const sel=document.getElementById('stockDuration').value; const dur= sel==='custom'? document.getElementById('stockDurationCustom').value.trim(): sel;
+  const daily=document.getElementById('stockDaily').value.trim(); const min=document.getElementById('stockMin').value.trim(); const date=document.getElementById('stockDate').value||todayStr; const note=document.getElementById('stockNote').value.trim();
+  const msg=document.getElementById('stockMsg');
+  if(!bahan) return msg.textContent='Nama bahan wajib'; if(!qty) return msg.textContent='Qty wajib';
+  msg.textContent='Menyimpan...';
+  try{
+    const body={business_id:BIZ, bahan, qty_total:qty, unit, duration_days:dur, purchased_at:date, note};
+    if(daily) body.daily_use=daily; if(min) body.min_threshold=min;
+    const r=await fetch(`${API}/stocks`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json(); if(!r.ok) throw new Error(j.error);
+    msg.textContent=`✅ ${j.bahan} ${j.qty_total} ${j.unit} • pakai ${j.daily_use}/hari • ${j.computed.daysLeft} hari`;
+    document.getElementById('stockBahan').value=''; document.getElementById('stockQty').value=''; document.getElementById('stockDaily').value=''; document.getElementById('stockMin').value=''; document.getElementById('stockNote').value=''; document.getElementById('stockCalcHint').textContent='';
+    loadStocks();
+  }catch(e){ msg.textContent='❌ '+e.message; }
+}
+function stockBadgeColor(status){ return status==='habis'?'#EF4444':status==='menipis'?'#F59E0B':status==='waspada'?'#FDE68A':'#10B981'; }
+function stockStatusLabel(s){ const c=s.computed; const map={habis:'Habis',menipis:'Menipis',waspada:'Waspada',aman:'Aman'}; return map[c.status]||c.status; }
+async function loadStocks(){
+  const list=document.getElementById('stockList'), alertsEl=document.getElementById('stockAlerts'), pill=document.getElementById('stockAlertPill'), badge=document.getElementById('navStokBadge'), countEl=document.getElementById('stockCount');
+  const filter=document.getElementById('stockFilter')?.value||'';
+  if(list) list.innerHTML='<div class="small">Memuat…</div>';
+  try{
+    const r=await fetch(`${API}/stocks?business_id=${BIZ}`);
+    const j=await r.json(); let data=j.data||[];
+    if(filter) data=data.filter(s=> s.computed.status===filter);
+    // alerts
+    const alerts=data.filter(s=> s.computed.status==='habis'||s.computed.status==='menipis');
+    const warn=data.filter(s=> s.computed.status==='waspada');
+    if(pill){ const n=alerts.length; pill.textContent= n? `⚠️ ${n} menipis/habis` : warn.length? `${warn.length} waspada` : '✅ Stok aman'; pill.className='pill '+(n?'':'ok'); if(n) pill.style.background='#FEF2F2'; else pill.style.background=''; }
+    if(badge){ const n=alerts.length; badge.style.display=n?'inline':'none'; badge.textContent=n||''; }
+    if(alertsEl){
+      const toShow=data.filter(s=> s.computed.status!=='aman').slice(0,4);
+      alertsEl.innerHTML=toShow.length? toShow.map(s=>`<div class="insight ${s.computed.status==='habis'?'crit':s.computed.status==='menipis'?'crit':'warn'}"><span class="badge ${s.computed.status==='habis'?'crit':s.computed.status==='menipis'?'crit':'warn'}">${stockStatusLabel(s)}</span><div><div style="font-weight:700;font-size:12px">${s.bahan} — sisa ${s.qty_remaining} ${s.unit} (${s.computed.pct}%)</div><div class="small">${s.computed.daysLeft!=null? `~${s.computed.daysLeft} hari lagi` : ''} • pakai ${s.computed.daily}/hari • ${s.purchased_at}</div></div></div>`).join('')+(data.filter(s=>s.computed.status!=='aman').length>4? `<div class="small">+${data.filter(s=>s.computed.status!=='aman').length-4} lagi menipis — filter untuk lihat semua</div>`:''):'<div class="small" style="padding:6px 8px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px">✅ Semua stok aman</div>';
+    }
+    if(countEl) countEl.textContent=`(${data.length} item${filter? ' • filter:'+filter:''})`;
+    if(!data.length){ if(list) list.innerHTML='<div class="small">Belum ada stok. Tambah di atas: misal Pudding 1 dus / 14 hari.</div>'; return; }
+    if(list){
+      list.innerHTML=`<div class="stock-grid">`+data.map(s=>{
+        const c=s.computed; const pct=c.pct; const col=stockBadgeColor(c.status);
+        const daysTxt=c.daysLeft!=null? (c.daysLeft<=0?'Habis': c.daysLeft<=3? `${c.daysLeft} hari lagi ⚠️` : `${c.daysLeft} hari`) : '-';
+        return `<div class="stock-card" style="border-color:${c.status!=='aman'?col:'#E2E8F0'};background:${c.status==='habis'?'#FEF2F2':c.status==='menipis'?'#FFFBEB':'white'}">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b style="font-size:13px">${s.bahan}</b><span class="badge" style="background:${col}">${stockStatusLabel(s)}</span></div>
+        <div class="small" style="margin-top:4px">Sisa <b>${s.qty_remaining}</b> / ${s.qty_total} ${s.unit} • pakai ${c.daily}/hari • ${daysTxt}</div>
+        <div class="stock-bar"><div style="width:${pct}%;background:${col}"></div></div>
+        <div class="small" style="display:flex;justify-content:space-between;margin-top:4px"><span>${pct}% sisa</span><span>${s.purchased_at} • ${s.duration_days} hari</span></div>
+        <div class="small" style="margin-top:4px;color:#64748B">${s.note||''}</div>
+        <div class="small" style="margin-top:6px;padding:6px 8px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span>Rencana ${c.dailyPlanned}/hari</span><span>${c.actualAvg!=null? `Actual ${c.actualAvg}/hari • total pakai ${c.totalUsed}` : 'Belum ada terpakai harian'}</span></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn ghost" style="padding:5px 8px;font-size:11px" onclick="stockConsume('${s.id}')">− Pakai</button>
+          <button class="btn ghost" style="padding:5px 8px;font-size:11px" onclick="stockRestock('${s.id}')">+ Restock</button>
+          <button class="btn secondary" style="padding:5px 8px;font-size:11px" onclick="toggleUsage('${s.id}')">📅 Harian</button>
+          <button class="btn secondary" style="padding:5px 8px;font-size:11px" onclick="stockEdit('${s.id}')">Edit</button>
+          <button class="btn secondary" style="padding:5px 8px;font-size:11px" onclick="delStock('${s.id}')">Hapus</button>
+        </div>
+        <div id="usage-box-${s.id}" style="display:none;margin-top:8px;padding:8px;border:1px solid #F1E9DA;border-radius:12px;background:#FFFBEB">
+          <div class="card-h" style="font-size:11px">Terpakai harian</div>
+          <div style="display:grid;grid-template-columns:.7fr .6fr 1fr;gap:6px;margin-top:6px">
+            <input id="usage-qty-${s.id}" type="number" step="0.01" placeholder="Qty ${s.unit}">
+            <input id="usage-date-${s.id}" type="date">
+            <input id="usage-note-${s.id}" placeholder="Catatan (opsional)">
+          </div>
+          <div style="display:flex;gap:6px;margin-top:6px;align-items:center"><button class="btn" style="padding:6px 10px;font-size:11px" onclick="submitUsage('${s.id}')">+ Catat</button><span class="small" id="usage-msg-${s.id}"></span></div>
+          <div id="usage-list-${s.id}" style="margin-top:8px"></div>
+        </div>
+        </div>`;
+      }).join('')+`</div>`;
+    }
+  }catch(e){ if(list) list.innerHTML='<div class="small">Error: '+e.message+'</div>'; }
+}
+async function stockConsume(id){ const q=prompt('Pakai berapa hari ini? (mis 1 pcs)'); if(!q) return; const qty=parseFloat(q); if(!qty) return alert('Qty tidak valid'); const note=prompt('Catatan (opsional)','pakai harian')||''; await fetch(`${API}/stocks/${id}/consume`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({qty, date: todayStr, note})}); loadStocks(); if(document.getElementById('usage-box-'+id)?.style.display!=='none') loadUsageBox(id); }
+async function stockRestock(id){ const q=prompt('Restock berapa? (mis 1 dus)'); if(!q) return; const qty=parseFloat(q); if(!qty) return alert('Qty tidak valid'); const d=prompt('Durasi baru (hari) kosongkan jika sama',''); const body={qty}; if(d) body.duration_days=parseInt(d,10); await fetch(`${API}/stocks/${id}/restock`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}); loadStocks(); }
+async function stockEdit(id){ const left=prompt('Sisa berapa sekarang? (mis 0.5)'); if(left===null) return; const v=parseFloat(left); if(isNaN(v)) return; await fetch(`${API}/stocks/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({qty_remaining:v})}); loadStocks(); }
+async function toggleUsage(id){
+  const box=document.getElementById('usage-box-'+id); if(!box) return;
+  const isHidden=box.style.display==='none';
+  if(isHidden){ box.style.display='block'; const d=document.getElementById('usage-date-'+id); if(d&&!d.value) d.value=todayStr; loadUsageBox(id); } else box.style.display='none';
+}
+async function loadUsageBox(id){
+  const box=document.getElementById('usage-list-'+id); if(!box) return; box.innerHTML='<div class="small">Memuat…</div>';
+  try{
+    const r=await fetch(`${API}/stocks/${id}/usages?business_id=${BIZ}`);
+    const j=await r.json(); const data=j.data||[];
+    if(!data.length){ box.innerHTML='<div class="small">Belum ada terpakai harian.</div>'; return; }
+    box.innerHTML='<div style="overflow:auto;max-height:160px;border:1px solid #E2E8F0;border-radius:10px"><table class="table" style="font-size:12px"><thead><tr><th>Tgl</th><th>Qty</th><th>Catatan</th><th></th></tr></thead><tbody>'+data.map(u=>`<tr><td>${u.date}</td><td><b>${u.qty}</b></td><td class="small">${u.note||''}</td><td><button class="btn secondary" style="padding:3px 6px;font-size:10px" onclick="delUsage('${id}','${u.id}')">Hapus</button></td></tr>`).join('')+'</tbody></table></div><div class="small" style="margin-top:4px">Total terpakai: <b>'+j.total+'</b> • rata actual ada di card atas</div>';
+  }catch(e){ box.innerHTML='<div class="small">Error: '+e.message+'</div>'; }
+}
+async function submitUsage(id){
+  const qtyEl=document.getElementById('usage-qty-'+id), dateEl=document.getElementById('usage-date-'+id), noteEl=document.getElementById('usage-note-'+id), msgEl=document.getElementById('usage-msg-'+id);
+  const qty=parseFloat(qtyEl.value||0); const date=(dateEl.value||todayStr).slice(0,10); const note=(noteEl.value||'').trim();
+  if(!qty) { msgEl.textContent='Qty wajib'; return; }
+  msgEl.textContent='Menyimpan...';
+  try{
+    const r=await fetch(`${API}/stocks/${id}/consume`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({qty, date, note})});
+    const j=await r.json(); if(!r.ok) throw new Error(j.error);
+    msgEl.textContent='✅ '+qty+' tercatat'; qtyEl.value=''; noteEl.value=''; loadStocks(); loadUsageBox(id);
+    setTimeout(()=> msgEl.textContent='',1500);
+  }catch(e){ msgEl.textContent='❌ '+e.message; }
+}
+async function delUsage(stockId, uid){ if(!confirm('Hapus terpakai ini? Stok akan balik.')) return; await fetch(`${API}/stocks/${stockId}/usages/${uid}`,{method:'DELETE'}); loadStocks(); loadUsageBox(stockId); }
+async function delStock(id){ if(!confirm('Hapus stok ini?')) return; await fetch(`${API}/stocks/${id}`,{method:'DELETE'}); loadStocks(); }
 fetch(`${API.replace('/api/v1','')}/health`).then(r=>r.json()).then(j=>{ document.getElementById('modePill').textContent=j.mode+':'+(j.model||''); }).catch(()=>{});
 function exportExcelToday(){ const d=document.getElementById('saleDate').value||todayStr; window.open(`${API}/export/excel?from=${d}&to=${d}`,'_blank'); }
 function exportExcelRange(){ const a=document.getElementById('fromDate').value, b=document.getElementById('toDate').value; window.open(`${API}/export/excel?from=${a}&to=${b}`,'_blank'); }

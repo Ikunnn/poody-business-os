@@ -55,8 +55,8 @@ app.get('/api/v1/auth/me', authMiddleware, (req,res)=>res.json({user:req.user}))
 
 app.use('/api/v1', (req,res,next)=>{
   const p = req.path; // sudah strip /api/v1
-  // briefing/forecast/kpi/rag/business/sync/workflows/tasks/memories/export/hpp terbuka tanpa login untuk UMKM
-  if(p.startsWith('/briefing') || p.startsWith('/forecast') || p.startsWith('/kpi') || p.startsWith('/rag') || p.startsWith('/businesses') || p.startsWith('/sync') || p.startsWith('/workflows') || p.startsWith('/tasks') || p.startsWith('/memories') || p.startsWith('/hpp') || p.startsWith('/export/') || p==='/export/excel' || p==='/export/receipt') {
+  // briefing/forecast/kpi/rag/business/sync/workflows/tasks/memories/export/hpp/stocks terbuka tanpa login untuk UMKM
+  if(p.startsWith('/briefing') || p.startsWith('/forecast') || p.startsWith('/kpi') || p.startsWith('/rag') || p.startsWith('/businesses') || p.startsWith('/sync') || p.startsWith('/workflows') || p.startsWith('/tasks') || p.startsWith('/memories') || p.startsWith('/hpp') || p.startsWith('/stocks') || p.startsWith('/export/') || p==='/export/excel' || p==='/export/receipt') {
     const h = req.headers.authorization;
     if(h && h.startsWith('Bearer ')){
       try{ const jwt=require('jsonwebtoken'); const sec=process.env.JWT_SECRET||'dev-secret-change-in-prod-32chars!'; req.user=jwt.verify(h.slice(7), sec);}catch{}
@@ -64,8 +64,8 @@ app.use('/api/v1', (req,res,next)=>{
     if(!req.user) req.user={ id:'usr_anon_poody', role:'owner' };
     return next();
   }
-  const openExact = ['/catalog','/sales','/expenses','/wastes','/hpp','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
-  const openPrefix = ['/catalog','/sales','/expenses','/wastes','/hpp','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
+  const openExact = ['/catalog','/sales','/expenses','/wastes','/stocks','/hpp','/dashboard/overview','/dashboard/summary','/dashboard/today','/dashboard','/briefing/today','/briefing/latest','/briefing/run','/briefing','/forecast/7d','/forecast/stock','/forecast/alerts','/forecast','/agents/ceo/chat','/agents/financial_analyst/chat','/agents/marketing_manager/chat','/agents/copywriter/chat','/agents/social_media/chat','/businesses','/sync/sheets','/kpi/status','/rag/search','/workflows','/tasks','/memories','/image/summarize','/image/transform'];
+  const openPrefix = ['/catalog','/sales','/expenses','/wastes','/stocks','/hpp','/dashboard','/briefing','/forecast','/agents','/businesses','/sync','/kpi','/rag','/workflows','/tasks','/memories','/image','/auth/'];
   const isOpen = openExact.includes(p) || openPrefix.some(pref => p === pref || p.startsWith(pref + '/') || p.startsWith(pref));
   if(isOpen){
     const h = req.headers.authorization;
@@ -244,6 +244,121 @@ app.delete('/api/v1/wastes/:id', async (req,res)=>{
   const removed=db.wastes.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
 });
 
+// === STOCKS ===
+function calcStockStatus(s){
+  const now=new Date();
+  const pur=new Date(s.purchased_at||s.created_at);
+  const daysSince=Math.max(0, Math.floor((now - pur)/86400000));
+  const dailyPlanned= s.daily_use>0 ? s.daily_use : (s.duration_days>0 ? s.qty_total/s.duration_days : 0);
+  // actual avg from usages
+  let actualAvg=null, totalUsed=0;
+  const usages=s.usages||[];
+  if(usages.length){ totalUsed=usages.reduce((a,b)=>a+parseFloat(b.qty||0),0); const span=Math.max(1, daysSince||usages.length); actualAvg= totalUsed/span; }
+  const daily= actualAvg!=null && actualAvg>0 ? actualAvg : dailyPlanned;
+  const daysLeft = daily>0 ? (s.qty_remaining / daily) : (s.duration_days? s.duration_days - daysSince : 999);
+  const pct = s.qty_total>0 ? Math.max(0, Math.min(100, Math.round(s.qty_remaining/s.qty_total*100))) : 0;
+  let status='aman'; if(s.qty_remaining<=0 || daysLeft<=0) status='habis'; else if(s.qty_remaining <= (s.min_threshold||0) || daysLeft<=3 || pct<=15) status='menipis'; else if(daysLeft<=7 || pct<=30) status='waspada';
+  return { daysSince, daily: Math.round(daily*100)/100, dailyPlanned: Math.round(dailyPlanned*100)/100, actualAvg: actualAvg!=null? Math.round(actualAvg*100)/100 : null, totalUsed: Math.round(totalUsed*100)/100, daysLeft: daily>0? Math.round(daysLeft*10)/10 : null, pct, status };
+}
+app.post('/api/v1/stocks', async (req,res)=>{
+  const business_id=req.body.business_id||DEFAULT_BIZ;
+  const bahan=(req.body.bahan||req.body.title||'').toString().trim();
+  if(!bahan) return res.status(400).json({error:'bahan/title required'});
+  const qty_total=Math.max(0, parseFloat(req.body.qty_total||req.body.qty||0));
+  if(!qty_total) return res.status(400).json({error:'qty_total required >0'});
+  let unit=(req.body.unit||'pcs').toString().trim().toLowerCase(); if(!EXP_UNITS.includes(unit)) unit=unit.slice(0,12)||'pcs';
+  const duration_days= req.body.duration_days!=null? Math.max(1, parseInt(req.body.duration_days,10)) : null;
+  let daily_use= req.body.daily_use!=null? parseFloat(req.body.daily_use) : null;
+  if((daily_use==null||isNaN(daily_use)||daily_use<=0) && duration_days) daily_use= qty_total/duration_days;
+  if(daily_use==null||isNaN(daily_use)) daily_use= qty_total/14;
+  const min_threshold= req.body.min_threshold!=null? Math.max(0, parseFloat(req.body.min_threshold)) : Math.round(qty_total*0.2*100)/100 || 0.2;
+  const purchased_at=(req.body.purchased_at||req.body.date||todayStr()).slice(0,10);
+  const note=(req.body.note||'').toString();
+  const db=loadDB(); db.stocks=db.stocks||[];
+  const rec={ id:`stock_${Date.now().toString(36)}`, business_id, bahan, title:bahan, qty_total, qty_remaining: qty_total, unit, duration_days: duration_days||Math.round(qty_total/daily_use)||14, daily_use: Math.round(daily_use*100)/100, min_threshold, purchased_at, last_restock_at: new Date().toISOString(), note, usages:[], created_at:new Date().toISOString(), updated_at:new Date().toISOString(), created_by:req.user?.id||'anon' };
+  db.stocks.push(rec); await saveDB(db);
+  res.status(201).json({...rec, computed: calcStockStatus(rec)});
+});
+app.get('/api/v1/stocks', (req,res)=>{
+  const db=loadDB(); let data=db.stocks||[];
+  // migrate: ensure usages array
+  data.forEach(s=>{ if(!Array.isArray(s.usages)) s.usages=[]; });
+  if(req.query.business_id) data=data.filter(s=>s.business_id===req.query.business_id);
+  if(req.query.status){ const want=req.query.status; data=data.filter(s=> calcStockStatus(s).status===want); }
+  data=data.map(s=> ({...s, computed: calcStockStatus(s)}));
+  data=data.slice().sort((a,b)=> b.created_at.localeCompare(a.created_at));
+  res.json({ data });
+});
+app.get('/api/v1/stocks/alerts', (req,res)=>{
+  const db=loadDB(); let data=db.stocks||[];
+  if(req.query.business_id) data=data.filter(s=>s.business_id===req.query.business_id);
+  data=data.map(s=> ({...s, computed: calcStockStatus(s)})).filter(s=> s.computed.status==='menipis' || s.computed.status==='habis' || s.computed.status==='waspada');
+  data=data.sort((a,b)=> a.computed.daysLeft - b.computed.daysLeft);
+  res.json({ count:data.length, data });
+});
+app.patch('/api/v1/stocks/:id', async (req,res)=>{
+  const db=loadDB(); const s=(db.stocks||[]).find(x=>x.id===req.params.id);
+  if(!s) return res.status(404).json({error:'not_found'});
+  const fields=['bahan','title','unit','note','purchased_at'];
+  for(const f of fields) if(req.body[f]!=null) s[f]=req.body[f];
+  if(req.body.qty_total!=null) s.qty_total=Math.max(0, parseFloat(req.body.qty_total));
+  if(req.body.qty_remaining!=null) s.qty_remaining=Math.max(0, parseFloat(req.body.qty_remaining));
+  if(req.body.duration_days!=null) s.duration_days=Math.max(1, parseInt(req.body.duration_days,10));
+  if(req.body.daily_use!=null) s.daily_use=Math.max(0.01, parseFloat(req.body.daily_use));
+  if(req.body.min_threshold!=null) s.min_threshold=Math.max(0, parseFloat(req.body.min_threshold));
+  // auto recalc daily if duration changed
+  if(req.body.duration_days!=null && (req.body.daily_use==null) && s.qty_total && s.duration_days) s.daily_use=Math.round((s.qty_total/s.duration_days)*100)/100;
+  s.updated_at=new Date().toISOString();
+  await saveDB(db); res.json({...s, computed: calcStockStatus(s)});
+});
+app.post('/api/v1/stocks/:id/consume', async (req,res)=>{
+  const db=loadDB(); const s=(db.stocks||[]).find(x=>x.id===req.params.id);
+  if(!s) return res.status(404).json({error:'not_found'});
+  const qty=Math.max(0, parseFloat(req.body.qty||req.body.qty_used||1));
+  if(!qty) return res.status(400).json({error:'qty >0 required'});
+  const date=(req.body.date||todayStr()).slice(0,10);
+  if(qty > (s.qty_remaining||0)) return res.status(400).json({error:'stok tidak cukup, sisa '+s.qty_remaining+' '+s.unit});
+  s.qty_remaining=Math.max(0, (s.qty_remaining||0) - qty);
+  s.usages=s.usages||[];
+  s.usages.push({ id:`use_${Date.now().toString(36)}`, date, qty, note:(req.body.note||'').toString(), created_at:new Date().toISOString() });
+  if(s.usages.length>200) s.usages=s.usages.slice(-200);
+  s.updated_at=new Date().toISOString();
+  await saveDB(db); res.json({...s, computed: calcStockStatus(s)});
+});
+app.get('/api/v1/stocks/:id/usages', (req,res)=>{
+  const db=loadDB(); const s=(db.stocks||[]).find(x=>x.id===req.params.id);
+  if(!s) return res.status(404).json({error:'not_found'});
+  if(req.query.business_id && s.business_id!==req.query.business_id) return res.status(404).json({error:'not_found'});
+  const data=(s.usages||[]).slice().sort((a,b)=> b.date.localeCompare(a.date) || b.created_at.localeCompare(a.created_at));
+  res.json({ stock_id:s.id, bahan:s.bahan, unit:s.unit, data, total:data.reduce((a,b)=>a+parseFloat(b.qty||0),0) });
+});
+app.delete('/api/v1/stocks/:id/usages/:uid', async (req,res)=>{
+  const db=loadDB(); const s=(db.stocks||[]).find(x=>x.id===req.params.id);
+  if(!s) return res.status(404).json({error:'not_found'});
+  const idx=(s.usages||[]).findIndex(u=>u.id===req.params.uid);
+  if(idx===-1) return res.status(404).json({error:'not_found'});
+  const removed=s.usages.splice(idx,1)[0];
+  s.qty_remaining=Math.min(s.qty_total, (s.qty_remaining||0)+parseFloat(removed.qty||0));
+  s.updated_at=new Date().toISOString(); await saveDB(db); res.json({ok:true, removed, stock:{...s, computed: calcStockStatus(s)}});
+});
+app.post('/api/v1/stocks/:id/restock', async (req,res)=>{
+  const db=loadDB(); const s=(db.stocks||[]).find(x=>x.id===req.params.id);
+  if(!s) return res.status(404).json({error:'not_found'});
+  const qty=Math.max(0, parseFloat(req.body.qty||0));
+  if(!qty) return res.status(400).json({error:'qty >0 required'});
+  s.qty_remaining=(s.qty_remaining||0)+qty;
+  s.qty_total=(s.qty_total||0)+qty;
+  if(req.body.duration_days) s.duration_days=Math.max(1, parseInt(req.body.duration_days,10));
+  if(s.duration_days && s.qty_total) s.daily_use=Math.round((s.qty_total/s.duration_days)*100)/100;
+  s.last_restock_at=new Date().toISOString(); s.updated_at=new Date().toISOString();
+  await saveDB(db); res.json({...s, computed: calcStockStatus(s)});
+});
+app.delete('/api/v1/stocks/:id', async (req,res)=>{
+  const db=loadDB(); const idx=(db.stocks||[]).findIndex(s=>s.id===req.params.id);
+  if(idx===-1) return res.status(404).json({error:'not_found'});
+  const removed=db.stocks.splice(idx,1)[0]; await saveDB(db); res.json({ok:true, removed});
+});
+
 // DASHBOARD SUMMARY per tanggal
 app.get('/api/v1/dashboard/summary', (req,res)=>{
   const business_id=req.query.business_id||DEFAULT_BIZ;
@@ -415,7 +530,7 @@ app.get('/api/v1/rag/search', (req,res)=>{
 
 app.get('/api/v1/dashboard/overview', (req,res)=>{
   const db=loadDB();
-  res.json({ ok:true, persist:{workflows:db.workflows.length, tasks:db.tasks.length, memories:db.memories.length, sales:(db.sales||[]).length, expenses:(db.expenses||[]).length, wastes:(db.wastes||[]).length }, catalog: POODY_CATALOG });
+  res.json({ ok:true, persist:{workflows:db.workflows.length, tasks:db.tasks.length, memories:db.memories.length, sales:(db.sales||[]).length, expenses:(db.expenses||[]).length, wastes:(db.wastes||[]).length, stocks:(db.stocks||[]).length }, catalog: POODY_CATALOG });
 });
 
 // CHAT
